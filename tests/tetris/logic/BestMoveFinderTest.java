@@ -11,6 +11,7 @@ import tetris.logic.BestMoveFinder;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.*;
 import static org.testng.Assert.*;
 
 @Test
@@ -109,7 +110,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxx..\n"
         );
         Tetrimino tetrimino = new Tetrimino("xxxx");
-        List<Tetrimino> nextTetriminoes = Collections.singletonList(new Tetrimino("xxxx"));
+        List<Tetrimino> nextTetriminoes = singletonList(new Tetrimino("xxxx"));
         ActionWithEvaluation action = bestMoveFinder.findBestAction(board, tetrimino, nextTetriminoes, 0);
         assertEquals(action.getAction(), new Action(board.getWidth() - 2, 1));
     }
@@ -233,63 +234,6 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void test777() {
-        Board board = new Board(
-                "....xx....\n" +
-                        "....xx....\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "xxxxxxxx..\n" +
-                        "xxxxxxxx.."
-        );
-        ActionWithEvaluation bestAction = bestMoveFinder.findBestAction(board, board.extractFallingTetrimino().getTetrimino());
-        assertFalse(bestAction.getAction().equals(new Action(board.getWidth() - 2, 0)));
-    }
-
-    @Test
-    void leaveLastColumnEmpty() {
-        Board board = new Board(
-                "" +
-                        "...xx.....\n" +
-                        "...xx.....\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        ".x........\n" +
-                        ".xxxxxxx.."
-        );
-        checkAction(board, new Action(2, 0));
-    }
-
-    @Test
-    void avoidAbrupt() {
-        Board board = new Board(
-                "" +
-                        "...xx.....\n" +
-                        "...xx.....\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        ".xxxxxxx.."
-        );
-        checkAction(board, new Action(2, 0));
-    }
-
-    @Test
     void avoidBigHeight() {
         Board board = new Board(
                 "" +
@@ -342,11 +286,10 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void avoidVirtualHole() {
+    void testNew() {
         Board board = new Board(
                 "" +
-                        "....xx....\n" +
-                        "....xx....\n" +
+                        "...xxxx...\n" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -354,12 +297,78 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
-                        "xxxxxx....\n" +
-                        "xxxxxx....\n" +
-                        "xxxxxxxx..\n" +
-                        "xxxxxxxxx."
+                        "..........\n" +
+                        "..........\n" +
+                        "xx........\n" +
+                        "xx........\n" +
+                        "xx........\n" +
+                        "xx.....x..\n" +
+                        "xx..xxxxx.\n" +
+                        "xx..xxxxx.\n" +
+                        "xx..xxxxx.\n" +
+                        "xxx.xxxxxx\n" +
+                        "xxx.xxxxxx\n" +
+                        "oooooooooo"
         );
-        checkForbidden(board, new Action(6, 0));
+        Action bestAction = bestMoveFinder.findBestAction(board, board.extractFallingTetrimino().getTetrimino(), singletonList(Tetrimino.L), 0).getAction();
+        assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
+    }
+
+    @Test
+    void testBug2() {
+        Board board = new Board(
+                "" +
+                        "...x......\n" +
+                        "...xxx....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "x.........\n" +
+                        "xx........\n" +
+                        "xxxxxxx...\n" +
+                        "xxxxxxx.x.\n" +
+                        "xxxxxxx.x.\n" +
+                        "xx.xxxxxxx\n" +
+                        "oooooooooo"
+        );
+        checkForbidden(board, new Action(board.getWidth() - 3, 1));
+    }
+
+    @Test
+    void testTooHigh() {
+        Board board = new Board(
+                "" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "xxxx......\n" +
+                        "xxxx...x..\n" +
+                        "xxxxx.xx..\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxxxxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        "xxxxxxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        Action action = bestMoveFinder.findBestAction(board, Tetrimino.I).getAction();
+        assertEquals(action, new Action(board.getWidth() - 1, 1));
     }
 
     //-------- utils

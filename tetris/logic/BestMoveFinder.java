@@ -56,7 +56,7 @@ public class BestMoveFinder {
                 EvaluationState curState;
 
                 if (nextPosition == nextTetriminoes.size() || depth == depthLimit) {
-                    curState = evaluator.getEvaluation(newBoard, linesCleared);
+                    curState = evaluator.getEvaluation(newBoard);
                 } else {
                     curState = findBestAction(newBoard, nextTetriminoes.get(nextPosition), nextTetriminoes, nextPosition + 1, linesCleared, depth + 1).getState();
                 }

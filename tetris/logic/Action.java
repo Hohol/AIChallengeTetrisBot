@@ -28,7 +28,7 @@ public class Action {
     @Override
     public String toString() {
         return "Action{" +
-                ", newLeftCol=" + newLeftCol +
+                "newLeftCol=" + newLeftCol +
                 ", cwRotationCnt=" + cwRotationCnt +
                 '}';
     }

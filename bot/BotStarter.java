@@ -55,10 +55,9 @@ public class BotStarter {
 
         ColumnAndOrientation target = bestMoveFinder.findBestMove(gameState);
 
+        System.err.println("Round = " + state.getRound());
         System.err.println(gameState.getFallingTetrimino());
-        System.err.println();
         System.err.println(gameState.getBoard());
-        System.err.println();
         System.err.println(target);
         System.err.println("-----------------------");
 

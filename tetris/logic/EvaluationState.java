@@ -4,22 +4,16 @@ package tetris.logic;
 public class EvaluationState {
     private final int badCnt;
     private final int flatRate;
-    private final int nonTetrisLinesCleared;
-    private final int tetrisLinesCleared;
-    private final int lastColumnHeight;
     private final int holeCnt;
-    private final boolean virtualHole;
     private final boolean tooHigh;
+    private final int maxColumnHeight;
 
-    public EvaluationState(int badCnt, int flatRate, int nonTetrisLinesCleared, int tetrisLinesCleared, int lastColumnHeight, int holeCnt, boolean virtualHole, boolean tooHigh) {
+    public EvaluationState(int badCnt, int flatRate, int holeCnt, boolean tooHigh, int maxColumnHeight) {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
-        this.nonTetrisLinesCleared = nonTetrisLinesCleared;
-        this.tetrisLinesCleared = tetrisLinesCleared;
-        this.lastColumnHeight = lastColumnHeight;
         this.holeCnt = holeCnt;
-        this.virtualHole = virtualHole;
         this.tooHigh = tooHigh;
+        this.maxColumnHeight = maxColumnHeight;
     }
 
     public boolean better(EvaluationState st) {
@@ -29,30 +23,19 @@ public class EvaluationState {
         if (tooHigh != st.tooHigh) {
             return !tooHigh;
         }
+        if (tooHigh) {
+            if (maxColumnHeight != st.maxColumnHeight) {
+                return maxColumnHeight < st.maxColumnHeight;
+            }
+        }
         if (badCnt != st.badCnt) {
             return badCnt < st.badCnt;
-        }
-        if (tetrisLinesCleared != st.tetrisLinesCleared) {
-            return tetrisLinesCleared > st.tetrisLinesCleared;
         }
 
         if (holeCnt != st.holeCnt) {
             return holeCnt < st.holeCnt;
         }
 
-        if (badCnt == 0 && holeCnt == 0) {
-            if (lastColumnHeight != st.lastColumnHeight) {
-                return lastColumnHeight < st.lastColumnHeight;
-            }
-            if (lastColumnHeight == 0) {
-                if (virtualHole != st.virtualHole) {
-                    return !virtualHole;
-                }
-                if (nonTetrisLinesCleared != st.nonTetrisLinesCleared) {
-                    return nonTetrisLinesCleared < st.nonTetrisLinesCleared;
-                }
-            }
-        }
         if (flatRate != st.flatRate) {
             return flatRate < st.flatRate;
         }
@@ -64,7 +47,6 @@ public class EvaluationState {
         return "EvaluationState{" +
                 "badCnt=" + badCnt +
                 ", flatRate=" + flatRate +
-                ", nonTetrisLinesCleared=" + nonTetrisLinesCleared +
                 '}';
     }
 }
