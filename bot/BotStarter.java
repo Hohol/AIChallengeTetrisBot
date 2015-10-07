@@ -150,7 +150,8 @@ public class BotStarter {
         return new GameState(
                 board,
                 fallingTetrimino,
-                convertTetrimino(state.getNextShape())
+                convertTetrimino(state.getNextShape()),
+                state.getMyBot().getCombo()
         );
     }
 

@@ -4,8 +4,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Board {
-    public static final int STANDARD_HEIGHT = 21;
-    public static final int STANDARD_WIDTH = 10;
 
     private final int height;
     private final int width;
@@ -73,7 +71,7 @@ public class Board {
         return r.toString();
     }
 
-    public TetriminoWithPosition extractFallingTetrimino() {
+    public Tetrimino extractFallingTetrimino() {
         int cnt = 0;
         int topRow = 999;
         int leftCol = 999;
@@ -109,7 +107,7 @@ public class Board {
                 this.b[i][j] = false;
             }
         }
-        return new TetriminoWithPosition(topRow, leftCol, new Tetrimino(b));
+        return new Tetrimino(b);
     }
 
     public int getWidth() {

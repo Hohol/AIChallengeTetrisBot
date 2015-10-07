@@ -8,7 +8,7 @@ public class BestMoveFinder {
 
     public ColumnAndOrientation findBestMove(GameState gameState) {
         TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetrimino()).getAction();
+        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getAction();
 
         if (bestAction == null) {
             return null;
@@ -21,7 +21,7 @@ public class BestMoveFinder {
         return new ColumnAndOrientation(bestAction.getNewLeftCol(), tetrimino);
     }
 
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino) {
+    public ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino, int score, int combo) {
         EvaluationState bestState = null;
         Action bestAction = null;
 
@@ -34,12 +34,16 @@ public class BestMoveFinder {
                 }
                 Board newBoard = dropResult.getBoard();
 
+                int scoreDelta = getScore(dropResult.getLinesCleared(), combo);
+                int newScore = score + scoreDelta;
+                int newCombo = dropResult.getLinesCleared() > 0 ? combo + 1 : 0;
+
                 EvaluationState curState;
 
                 if (nextTetrimino == null) {
-                    curState = evaluator.getEvaluation(newBoard);
+                    curState = evaluator.getEvaluation(newBoard, newScore, newCombo);
                 } else {
-                    curState = findBestAction(newBoard, nextTetrimino, null).getState();
+                    curState = findBestAction(newBoard, nextTetrimino, null, newScore, newCombo).getState();
                 }
                 if (curState != null && curState.better(bestState)) {
                     bestState = curState;
@@ -54,7 +58,19 @@ public class BestMoveFinder {
         return new ActionWithEvaluation(bestAction, bestState);
     }
 
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino tetrimino) {
-        return findBestAction(board, tetrimino, null);
+    private int getScore(int linesCleared, int comboBefore) {
+        if (linesCleared == 0) {
+            return 0;
+        }
+        return comboBefore;
+    }
+
+    public Action findBestAction(Board board, Tetrimino tetrimino) {
+        return findBestAction(board, tetrimino, null, 0, 0).getAction();
+    }
+
+
+    public Action findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino) {
+        return findBestAction(board, fallingTetrimino, nextTetrimino, 0, 0).getAction();
     }
 }

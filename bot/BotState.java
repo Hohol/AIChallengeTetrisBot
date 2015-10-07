@@ -122,6 +122,10 @@ public class BotState {
         return null;
     }
 
+    public Player getMyBot() {
+        return myBot;
+    }
+
     public Field getMyField() {
         return this.myBot.getField();
     }
