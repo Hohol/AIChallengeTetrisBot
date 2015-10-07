@@ -1,17 +1,9 @@
-/*
- * Copyright (c) 2008-2014 Maxifier Ltd. All Rights Reserved.
- */
 package tetris.logic;
 
 import tetris.Board;
 
 import java.util.List;
 
-/**
- * Evaluator
- *
- * @author Nikita Glashenko (nikita.glashenko@maxifier.com) (2014-11-22 15:00)
- */
 public class Evaluator {
     public EvaluationState getEvaluation(Board board) {
         int badCnt = 0;

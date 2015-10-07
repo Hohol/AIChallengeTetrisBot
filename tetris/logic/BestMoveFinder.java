@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2008-2014 Maxifier Ltd. All Rights Reserved.
- */
 package tetris.logic;
 
 import tetris.*;
@@ -9,11 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * BestMoveFinder
- *
- * @author Nikita Glashenko (nikita.glashenko@maxifier.com) (2014-11-22 14:30)
- */
 public class BestMoveFinder {
 
     private final Evaluator evaluator;

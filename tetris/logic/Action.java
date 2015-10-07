@@ -1,13 +1,5 @@
-/*
- * Copyright (c) 2008-2014 Maxifier Ltd. All Rights Reserved.
- */
 package tetris.logic;
 
-/**
- * Action
- *
- * @author Nikita Glashenko (nikita.glashenko@maxifier.com) (2014-11-22 15:54)
- */
 public class Action {
     private final int newLeftCol;
     private final int cwRotationCnt;

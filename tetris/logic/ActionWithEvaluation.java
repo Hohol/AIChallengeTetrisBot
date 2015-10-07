@@ -1,13 +1,5 @@
-/*
- * Copyright (c) 2008-2014 Maxifier Ltd. All Rights Reserved.
- */
 package tetris.logic;
 
-/**
- * ActionWithEvaluation
- *
- * @author Nikita Glashenko (nikita.glashenko@maxifier.com) (2014-11-22 18:30)
- */
 public class ActionWithEvaluation {
     private final Action action;
     private final EvaluationState state;

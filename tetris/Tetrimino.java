@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2008-2014 Maxifier Ltd. All Rights Reserved.
- */
 package tetris;
 
 import java.util.Arrays;
