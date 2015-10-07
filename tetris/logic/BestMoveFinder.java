@@ -24,9 +24,9 @@ public class BestMoveFinder {
         this.evaluator = new Evaluator();
     }
 
-    public ColumnAndOrientation findBestMove(GameState gameState, boolean stashAllowed) {
+    public ColumnAndOrientation findBestMove(GameState gameState) {
         TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Action bestAction = findBestAction(gameState.getBoard(), gameState.getTetriminoInStash(), stashAllowed, fallingTetrimino.getTetrimino(), gameState.getNextTetriminoes(), 0).getAction();
+        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetriminoes(), 0).getAction();
 
         if (bestAction == null) {
             return null;
@@ -39,7 +39,7 @@ public class BestMoveFinder {
         return new ColumnAndOrientation(bestAction.getNewLeftCol(), tetrimino);
     }
 
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino tetriminoInStash, boolean stashAllowed, Tetrimino fallingTetrimino, List<Tetrimino> nextTetriminoes, int nextPosition, List<Integer> linesCleared, int depth) {
+    public ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, List<Tetrimino> nextTetriminoes, int nextPosition, List<Integer> linesCleared, int depth) {
         EvaluationState bestState = null;
         Action bestAction = null;
 
@@ -56,10 +56,9 @@ public class BestMoveFinder {
                 EvaluationState curState;
 
                 if (nextPosition == nextTetriminoes.size() || depth == depthLimit) {
-                    boolean lineInStash = tetriminoInStash != null && (tetriminoInStash.getWidth() == 4 || tetriminoInStash.getHeight() == 4);
-                    curState = evaluator.getEvaluation(newBoard, linesCleared, lineInStash);
+                    curState = evaluator.getEvaluation(newBoard, linesCleared);
                 } else {
-                    curState = findBestAction(newBoard, tetriminoInStash, true, nextTetriminoes.get(nextPosition), nextTetriminoes, nextPosition + 1, linesCleared, depth + 1).getState();
+                    curState = findBestAction(newBoard, nextTetriminoes.get(nextPosition), nextTetriminoes, nextPosition + 1, linesCleared, depth + 1).getState();
                 }
                 if (curState != null && curState.better(bestState)) {
                     bestState = curState;
@@ -72,31 +71,14 @@ public class BestMoveFinder {
                 break;
             }
         }
-        if (stashAllowed && (tetriminoInStash != null || nextPosition != nextTetriminoes.size())) {
-            if (tetriminoInStash == null) {
-                tetriminoInStash = fallingTetrimino;
-                fallingTetrimino = nextTetriminoes.get(nextPosition);
-                nextPosition++;
-            } else {
-                Tetrimino oldTetriminoInStash = tetriminoInStash;
-                tetriminoInStash = fallingTetrimino;
-                fallingTetrimino = oldTetriminoInStash;
-            }
-
-            EvaluationState curState = findBestAction(board, tetriminoInStash, false, fallingTetrimino, nextTetriminoes, nextPosition, linesCleared, depth).getState();
-            if (curState != null && curState.better(bestState)) {
-                bestState = curState;
-                bestAction = new Action(true);
-            }
-        }
         return new ActionWithEvaluation(bestAction, bestState);
     }
 
     public ActionWithEvaluation findBestAction(Board board, Tetrimino tetrimino) {
-        return findBestAction(board, null, true, tetrimino, Collections.<Tetrimino>emptyList(), 0);
+        return findBestAction(board, tetrimino, Collections.<Tetrimino>emptyList(), 0);
     }
 
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino tetriminoInStash, boolean stashAllowed, Tetrimino tetrimino, List<Tetrimino> tetriminoes, int nextPosition) {
-        return findBestAction(board, tetriminoInStash, stashAllowed, tetrimino, tetriminoes, nextPosition, new ArrayList<>(), 0);
+    public ActionWithEvaluation findBestAction(Board board, Tetrimino tetrimino, List<Tetrimino> tetriminoes, int nextPosition) {
+        return findBestAction(board, tetrimino, tetriminoes, nextPosition, new ArrayList<>(), 0);
     }
 }

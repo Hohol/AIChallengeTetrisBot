@@ -14,13 +14,11 @@ public class GameState {
     private final Board board;
     private final List<Tetrimino> nextTetriminoes;
     private final TetriminoWithPosition fallingTetrimino;
-    private final Tetrimino tetriminoInStash;
 
-    public GameState(Board board, TetriminoWithPosition fallingTetrimino, List<Tetrimino> nextTetriminoes, Tetrimino tetriminoInStash) {
+    public GameState(Board board, TetriminoWithPosition fallingTetrimino, List<Tetrimino> nextTetriminoes) {
         this.board = board;
         this.nextTetriminoes = nextTetriminoes;
         this.fallingTetrimino = fallingTetrimino;
-        this.tetriminoInStash = tetriminoInStash;
     }
 
     public Board getBoard() {
@@ -55,9 +53,5 @@ public class GameState {
         result = 31 * result + nextTetriminoes.hashCode();
         result = 31 * result + (fallingTetrimino != null ? fallingTetrimino.hashCode() : 0);
         return result;
-    }
-
-    public Tetrimino getTetriminoInStash() {
-        return tetriminoInStash;
     }
 }

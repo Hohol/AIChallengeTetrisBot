@@ -110,7 +110,7 @@ public class BestMoveFinderTest {
         );
         Tetrimino tetrimino = new Tetrimino("xxxx");
         List<Tetrimino> nextTetriminoes = Collections.singletonList(new Tetrimino("xxxx"));
-        ActionWithEvaluation action = bestMoveFinder.findBestAction(board, null, true, tetrimino, nextTetriminoes, 0);
+        ActionWithEvaluation action = bestMoveFinder.findBestAction(board, tetrimino, nextTetriminoes, 0);
         assertEquals(action.getAction(), new Action(board.getWidth() - 2, 1));
     }
 
@@ -360,29 +360,6 @@ public class BestMoveFinderTest {
                         "xxxxxxxxx."
         );
         checkForbidden(board, new Action(6, 0));
-    }
-
-    @Test
-    void betterKeepLineInStash() {
-        Board board = new Board(
-                "" +
-                        "....xxxx..\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        ".........."
-
-        );
-        BestMoveFinder bestMoveFinder = new BestMoveFinder(0);
-        List<Tetrimino> nextTetriminoes = Collections.singletonList(new Tetrimino("xx\nxx"));
-        Action bestAction = bestMoveFinder.findBestAction(board, null, true, board.extractFallingTetrimino().getTetrimino(), nextTetriminoes, 0).getAction();
-        assertEquals(bestAction, new Action(true));
     }
 
     //-------- utils
