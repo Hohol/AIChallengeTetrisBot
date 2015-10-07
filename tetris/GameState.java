@@ -1,15 +1,13 @@
 package tetris;
 
-import java.util.List;
-
 public class GameState {
     private final Board board;
-    private final List<Tetrimino> nextTetriminoes;
+    private final Tetrimino nextTetrimino;
     private final TetriminoWithPosition fallingTetrimino;
 
-    public GameState(Board board, TetriminoWithPosition fallingTetrimino, List<Tetrimino> nextTetriminoes) {
+    public GameState(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino) {
         this.board = board;
-        this.nextTetriminoes = nextTetriminoes;
+        this.nextTetrimino = nextTetrimino;
         this.fallingTetrimino = fallingTetrimino;
     }
 
@@ -17,8 +15,8 @@ public class GameState {
         return board;
     }
 
-    public List<Tetrimino> getNextTetriminoes() {
-        return nextTetriminoes;
+    public Tetrimino getNextTetrimino() {
+        return nextTetrimino;
     }
 
     public TetriminoWithPosition getFallingTetrimino() {
@@ -35,14 +33,14 @@ public class GameState {
         if (!board.equals(gameState.board)) return false;
         if (fallingTetrimino != null ? !fallingTetrimino.equals(gameState.fallingTetrimino) : gameState.fallingTetrimino != null)
             return false;
-        return nextTetriminoes.equals(gameState.nextTetriminoes);
+        return nextTetrimino.equals(gameState.nextTetrimino);
 
     }
 
     @Override
     public int hashCode() {
         int result = board.hashCode();
-        result = 31 * result + nextTetriminoes.hashCode();
+        result = 31 * result + nextTetrimino.hashCode();
         result = 31 * result + (fallingTetrimino != null ? fallingTetrimino.hashCode() : 0);
         return result;
     }

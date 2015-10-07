@@ -1,6 +1,5 @@
 package tests.tetris.logic;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import tetris.Board;
 import tetris.Tetrimino;
@@ -8,16 +7,12 @@ import tetris.logic.Action;
 import tetris.logic.ActionWithEvaluation;
 import tetris.logic.BestMoveFinder;
 
-import java.util.Collections;
-import java.util.List;
-
-import static java.util.Collections.*;
 import static org.testng.Assert.*;
 
 @Test
 public class BestMoveFinderTest {
 
-    private final BestMoveFinder bestMoveFinder = new BestMoveFinder(999);
+    private final BestMoveFinder bestMoveFinder = new BestMoveFinder();
 
     @Test
     void test() {
@@ -41,7 +36,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx."
         );
-        Assert.assertEquals(getAction(board), new Action(board.getWidth() - 1, 1));
+        checkAction(board, new Action(board.getWidth() - 1, 1));
     }
 
     @Test
@@ -110,8 +105,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxx..\n"
         );
         Tetrimino tetrimino = new Tetrimino("xxxx");
-        List<Tetrimino> nextTetriminoes = singletonList(new Tetrimino("xxxx"));
-        ActionWithEvaluation action = bestMoveFinder.findBestAction(board, tetrimino, nextTetriminoes, 0);
+        ActionWithEvaluation action = bestMoveFinder.findBestAction(board, tetrimino, Tetrimino.I);
         assertEquals(action.getAction(), new Action(board.getWidth() - 2, 1));
     }
 
@@ -310,7 +304,7 @@ public class BestMoveFinderTest {
                         "xxx.xxxxxx\n" +
                         "oooooooooo"
         );
-        Action bestAction = bestMoveFinder.findBestAction(board, board.extractFallingTetrimino().getTetrimino(), singletonList(Tetrimino.L), 0).getAction();
+        Action bestAction = bestMoveFinder.findBestAction(board, board.extractFallingTetrimino().getTetrimino(), Tetrimino.L).getAction();
         assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
     }
 

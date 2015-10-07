@@ -41,7 +41,7 @@ import static tetris.Move.DROP;
 
 public class BotStarter {
 
-    private final BestMoveFinder bestMoveFinder = new BestMoveFinder(1);
+    private final BestMoveFinder bestMoveFinder = new BestMoveFinder();
 
     public static void main(String[] args) {
         BotParser parser = new BotParser(new BotStarter());
@@ -150,7 +150,7 @@ public class BotStarter {
         return new GameState(
                 board,
                 fallingTetrimino,
-                Collections.singletonList(convertTetrimino(state.getNextShape()))
+                convertTetrimino(state.getNextShape())
         );
     }
 

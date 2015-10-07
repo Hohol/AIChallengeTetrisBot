@@ -2,23 +2,13 @@ package tetris.logic;
 
 import tetris.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class BestMoveFinder {
 
-    private final Evaluator evaluator;
-    private final int depthLimit;
-
-    public BestMoveFinder(int depthLimit) {
-        this.depthLimit = depthLimit;
-        this.evaluator = new Evaluator();
-    }
+    private final Evaluator evaluator = new Evaluator();
 
     public ColumnAndOrientation findBestMove(GameState gameState) {
         TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetriminoes(), 0).getAction();
+        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetrimino()).getAction();
 
         if (bestAction == null) {
             return null;
@@ -31,7 +21,7 @@ public class BestMoveFinder {
         return new ColumnAndOrientation(bestAction.getNewLeftCol(), tetrimino);
     }
 
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, List<Tetrimino> nextTetriminoes, int nextPosition, List<Integer> linesCleared, int depth) {
+    public ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino) {
         EvaluationState bestState = null;
         Action bestAction = null;
 
@@ -43,20 +33,18 @@ public class BestMoveFinder {
                     continue;
                 }
                 Board newBoard = dropResult.getBoard();
-                linesCleared.add(dropResult.getLinesCleared());
 
                 EvaluationState curState;
 
-                if (nextPosition == nextTetriminoes.size() || depth == depthLimit) {
+                if (nextTetrimino == null) {
                     curState = evaluator.getEvaluation(newBoard);
                 } else {
-                    curState = findBestAction(newBoard, nextTetriminoes.get(nextPosition), nextTetriminoes, nextPosition + 1, linesCleared, depth + 1).getState();
+                    curState = findBestAction(newBoard, nextTetrimino, null).getState();
                 }
                 if (curState != null && curState.better(bestState)) {
                     bestState = curState;
                     bestAction = new Action(newLeftCol, rotateCnt);
                 }
-                linesCleared.remove(linesCleared.size() - 1);
             }
             fallingTetrimino = fallingTetrimino.rotateCW();
             if (fallingTetrimino.equals(originalTetrimino)) {
@@ -67,10 +55,6 @@ public class BestMoveFinder {
     }
 
     public ActionWithEvaluation findBestAction(Board board, Tetrimino tetrimino) {
-        return findBestAction(board, tetrimino, Collections.<Tetrimino>emptyList(), 0);
-    }
-
-    public ActionWithEvaluation findBestAction(Board board, Tetrimino tetrimino, List<Tetrimino> tetriminoes, int nextPosition) {
-        return findBestAction(board, tetrimino, tetriminoes, nextPosition, new ArrayList<>(), 0);
+        return findBestAction(board, tetrimino, null);
     }
 }
