@@ -53,11 +53,14 @@ public class BotStarter {
 
         GameState gameState = getGameState(state);
 
+        ColumnAndOrientation target = bestMoveFinder.findBestMove(gameState);
+
         System.err.println(gameState.getFallingTetrimino());
         System.err.println();
         System.err.println(gameState.getBoard());
-
-        ColumnAndOrientation target = bestMoveFinder.findBestMove(gameState);
+        System.err.println();
+        System.err.println(target);
+        System.err.println("-----------------------");
 
         TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
                 state.getShapeLocation().y,
