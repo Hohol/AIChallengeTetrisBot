@@ -53,6 +53,10 @@ public class BotStarter {
 
         GameState gameState = getGameState(state);
 
+        System.err.println(gameState.getFallingTetrimino());
+        System.err.println();
+        System.err.println(gameState.getBoard());
+
         ColumnAndOrientation target = bestMoveFinder.findBestMove(gameState, false);// todo remove stash logic
 
         TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
