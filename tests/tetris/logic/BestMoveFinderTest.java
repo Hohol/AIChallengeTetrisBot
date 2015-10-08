@@ -394,6 +394,35 @@ public class BestMoveFinderTest {
         assertEquals(action, new Action(board.getWidth() - 3, 2));
     }
 
+    @Test
+    void getDontPutOnTopBad() {
+        Board board = new Board(
+                "" +
+                        "...xx.....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxxxx.\n" +
+                        ".xxxxxxxxx"
+        );
+        checkForbidden(board, new Action(0, 0));
+    }
+
     //-------- utils
 
     private void checkForbidden(Board board, Action forbiddenAction) {

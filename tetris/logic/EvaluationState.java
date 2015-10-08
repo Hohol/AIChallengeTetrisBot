@@ -1,6 +1,5 @@
 package tetris.logic;
 
-// actually it represents not just state but difference between result state and start state
 public class EvaluationState {
     private final int badCnt;
     private final int flatRate;
@@ -9,6 +8,7 @@ public class EvaluationState {
     private final int maxColumnHeight;
     private final int combo;
     private final int score;
+    private final int cellsAboveTopBad;
 
     public EvaluationState(
             int badCnt,
@@ -17,7 +17,8 @@ public class EvaluationState {
             boolean tooHigh,
             int maxColumnHeight,
             int score,
-            int combo
+            int combo,
+            int cellsAboveTopBad
     ) {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
@@ -26,6 +27,7 @@ public class EvaluationState {
         this.maxColumnHeight = maxColumnHeight;
         this.score = score;
         this.combo = combo;
+        this.cellsAboveTopBad = cellsAboveTopBad;
     }
 
     public boolean better(EvaluationState st) {
@@ -47,6 +49,10 @@ public class EvaluationState {
 
         if (holeCnt != st.holeCnt) {
             return holeCnt < st.holeCnt;
+        }
+
+        if (cellsAboveTopBad != st.cellsAboveTopBad) {
+            return cellsAboveTopBad < st.cellsAboveTopBad;
         }
 
         if (flatRate != st.flatRate) {
