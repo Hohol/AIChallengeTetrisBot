@@ -368,36 +368,6 @@ public class BestMoveFinderTest {
     void testCombo() {
         Board board = new Board(
                 "" +
-                        ".....x....\n" +
-                        "...xxx....\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "xxxxxxxxx."
-        );
-        Action action = bestMoveFinder.findBestAction(board, board.extractFallingTetrimino(), null, 0, 1).getAction();
-        assertEquals(action, new Action(board.getWidth() - 2, 3));
-    }
-
-    @Test
-    void testCombo2() {
-        Board board = new Board(
-                "" +
                         "...x......\n" +
                         "...xxx....\n" +
                         "..........\n" +

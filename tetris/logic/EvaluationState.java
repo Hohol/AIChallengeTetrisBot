@@ -41,14 +41,6 @@ public class EvaluationState {
             }
         }
 
-        if (score != st.score) {
-            return score > st.score;
-        }
-
-        if (combo != st.combo) {
-            return combo > st.combo;
-        }
-
         if (badCnt != st.badCnt) {
             return badCnt < st.badCnt;
         }
@@ -60,6 +52,15 @@ public class EvaluationState {
         if (flatRate != st.flatRate) {
             return flatRate < st.flatRate;
         }
+
+        if (score != st.score) {
+            return score > st.score;
+        }
+
+        if (combo != st.combo) {
+            return combo > st.combo;
+        }
+
         return false;
     }
 

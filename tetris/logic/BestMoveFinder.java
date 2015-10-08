@@ -62,7 +62,19 @@ public class BestMoveFinder {
         if (linesCleared == 0) {
             return 0;
         }
-        return comboBefore;
+        if (linesCleared == 1) {
+            return 1 + comboBefore;
+        }
+        if (linesCleared == 2) {
+            return 3 + comboBefore;
+        }
+        if (linesCleared == 3) {
+            return 6 + comboBefore;
+        }
+        if (linesCleared == 4) {
+            return 12 + comboBefore;
+        }
+        throw new RuntimeException();
     }
 
     public Action findBestAction(Board board, Tetrimino tetrimino) {
