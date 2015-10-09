@@ -8,6 +8,7 @@ import tetris.logic.BestMoveFinder;
 import java.util.List;
 
 import static org.testng.Assert.*;
+import static tetris.TetriminoType.*;
 
 @Test
 public class BestMoveFinderTest {
@@ -48,7 +49,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx."
         );
-        Tetrimino tetrimino = Tetrimino.I.rotateCW();
+        Tetrimino tetrimino = Tetrimino.of(I).rotateCW();
         Board newBoard = board.drop(tetrimino, board.getWidth() - 1).getBoard();
         Board expectedNewBoard = new Board(
                 "..........\n" +
@@ -58,34 +59,6 @@ public class BestMoveFinderTest {
                         "x........."
         );
         assertEquals(newBoard, expectedNewBoard);
-    }
-
-    @Test
-    void testNoTetrimino() {
-        Board board = new Board(
-                "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..x..x....\n" +
-                        "x.xxxxxxx.\n" +
-                        ".........."
-        );
-        assertNull(board.extractFallingTetrimino());
     }
 
     @Test
@@ -99,8 +72,8 @@ public class BestMoveFinderTest {
                         "xxxxxxxx..\n" +
                         "xxxxxxxx..\n"
         );
-        Tetrimino tetrimino = Tetrimino.I;
-        Action action = findBestAction(board, tetrimino, Tetrimino.I);
+        Tetrimino tetrimino = Tetrimino.of(I);
+        Action action = findBestAction(board, tetrimino, Tetrimino.of(I));
         assertEquals(action, new Action(board.getWidth() - 2, 1));
     }
 
@@ -116,7 +89,7 @@ public class BestMoveFinderTest {
                         "x.xxxxxxxx.\n" +
                         "x.xxxxxxxx."
         );
-        Tetrimino tetrimino = Tetrimino.I;
+        Tetrimino tetrimino = Tetrimino.of(I);
         Action action = findBestAction(board, tetrimino);
         assertEquals(action, new Action(1, 1));
     }
@@ -299,7 +272,7 @@ public class BestMoveFinderTest {
                         "xxx.xxxxxx\n" +
                         "oooooooooo"
         );
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.L);
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(L));
         assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
     }
 
@@ -356,7 +329,7 @@ public class BestMoveFinderTest {
                         "oooooooooo\n" +
                         "oooooooooo"
         );
-        Action action = findBestAction(board, Tetrimino.I);
+        Action action = findBestAction(board, Tetrimino.of(I));
         assertEquals(action, new Action(board.getWidth() - 1, 1));
     }
 
@@ -386,7 +359,7 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         "xxxxxxxxx."
         );
-        Action action = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.J, 1);
+        Action action = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(J), 1);
         assertEquals(action, new Action(board.getWidth() - 3, 2));
     }
 
@@ -462,12 +435,8 @@ public class BestMoveFinderTest {
                 colShift++;
             }
         }
-        if (cwRotations == 1) {
-            if (fallingTetrimino.getTetrimino().getWidth() == 4) {
-                colShift += 2;
-            } else {
-                colShift++;
-            }
+        for (int i = 0; i < cwRotations; i++) {
+            fallingTetrimino = fallingTetrimino.rotateCW();
         }
         return new Action(fallingTetrimino.getLeftCol() + colShift, cwRotations);
     }

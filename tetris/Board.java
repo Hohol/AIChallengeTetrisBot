@@ -1,6 +1,5 @@
 package tetris;
 
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Board {
@@ -72,80 +71,42 @@ public class Board {
     }
 
     public TetriminoWithPosition extractFallingTetrimino() {
-        int cnt = 0;
-        int topRow = 999;
-        int leftCol = 999;
-        int bottomRow = 0;
-        int rightCol = 0;
-        fori:
-        for (int i = 0; i < height / 2; i++) {
-            boolean foundOnLine = false;
-            for (int j = 0; j < width; j++) {
-                if (b[i][j]) {
-                    foundOnLine = true;
-                    cnt++;
-                    topRow = min(topRow, i);
-                    leftCol = min(leftCol, j);
-                    bottomRow = max(bottomRow, i);
-                    rightCol = max(rightCol, j);
-                    if (cnt == 4) {
-                        break fori;
+        for (int topRow = 0; topRow < height; topRow++) {
+            for (int leftCol = 0; leftCol < width; leftCol++) {
+                for (Tetrimino[] tetriminoes : Tetrimino.ALL) {
+                    for (Tetrimino tetrimino : tetriminoes) {
+                        if (matches(topRow, leftCol, tetrimino)) {
+                            clearTetrimino(topRow, leftCol, tetrimino);
+                            return new TetriminoWithPosition(topRow, leftCol, tetrimino);
+                        }
                     }
                 }
-            }
-            if (cnt > 0 && !foundOnLine) {
-                return null;
-            }
-        }
-        if (cnt != 4) {
-            return null;
-        }
-        boolean[][] b = new boolean[bottomRow - topRow + 1][rightCol - leftCol + 1];
-        for (int i = topRow; i <= bottomRow; i++) {
-            for (int j = leftCol; j <= rightCol; j++) {
-                b[i - topRow][j - leftCol] = this.b[i][j];
-                this.b[i][j] = false;
-            }
-        }
-        return new TetriminoWithPosition(topRow, leftCol, getTetrimino(b));
-    }
-
-    private Tetrimino getTetrimino(boolean[][] b) {
-        if (b.length == 1) {
-            return Tetrimino.I;
-        }
-        if (b.length == 4) {
-            return Tetrimino.I.rotateCW();
-        }
-        if (b.length == 2 && b[0].length == 2) {
-            return Tetrimino.O;
-        }
-        for (Tetrimino tetrimino : Tetrimino.ALL) {
-            if (tetrimino.getWidth() != 3) {
-                continue;
-            }
-            for (int i = 0; i < 4; i++) {
-                if (matches(b, tetrimino)) {
-                    return tetrimino;
-                }
-                tetrimino = tetrimino.rotateCW();
             }
         }
         throw new RuntimeException("cant parse tetrimino");
     }
 
-    private boolean matches(boolean[][] b, Tetrimino tetrimino) {
-        if (tetrimino.getWidth() != 3) {
-            throw new IllegalArgumentException();
+    private void clearTetrimino(int topRow, int leftCol, Tetrimino tetrimino) {
+        for (int row = 0; row < tetrimino.getHeight(); row++) {
+            for (int col = 0; col < tetrimino.getWidth(); col++) {
+                if (tetrimino.get(row, col)) {
+                    set(topRow + row, leftCol + col, false);
+                }
+            }
         }
-        for (int sRow = 0; sRow <= tetrimino.getHeight() - b.length; sRow++) {
-            for (int sCol = 0; sCol <= tetrimino.getWidth() - b[0].length; sCol++) {
-                for (int row = 0; row < b.length; row++) {
-                    for (int col = 0; col < b[0].length; col++) {
-                        if (b[row][col] != tetrimino.get(sRow + row, sCol + col)) {
-                            return false;
-                        }
-                    }
+    }
+
+    private boolean matches(int topRow, int leftCol, Tetrimino tetrimino) {
+        if (topRow + tetrimino.getHeight() - 1 >= height) {
+            return false;
+        }
+        if (leftCol + tetrimino.getWidth() - 1 >= width) {
+            return false;
+        }
+        for (int row = 0; row < tetrimino.getHeight(); row++) {
+            for (int col = 0; col < tetrimino.getWidth(); col++) {
+                if (tetrimino.get(row, col) != b[topRow + row][leftCol + col]) {
+                    return false;
                 }
             }
         }
@@ -158,15 +119,15 @@ public class Board {
 
     public DropResult drop(Tetrimino tetrimino, int leftCol) {
         int minNewTopTetriminoRow = 999;
-        for (int j = 0; j < tetrimino.getWidth(); j++) {
+        for (int col = 0; col < tetrimino.getWidth(); col++) {
             int tetriminoBottomRow = 0;
-            for (int i = tetrimino.getHeight() - 1; i >= 0; i--) {
-                if (tetrimino.get(i, j)) {
-                    tetriminoBottomRow = i;
+            for (int row = tetrimino.getHeight() - 1; row >= 0; row--) {
+                if (tetrimino.get(row, col)) {
+                    tetriminoBottomRow = row;
                     break;
                 }
             }
-            int curCol = leftCol + j;
+            int curCol = leftCol + col;
 
             int boardTopRow = getTopRowInColumn(curCol);
             int newTopTetriminoRow = boardTopRow - tetriminoBottomRow - 1;

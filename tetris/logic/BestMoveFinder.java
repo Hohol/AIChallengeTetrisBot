@@ -17,49 +17,33 @@ public class BestMoveFinder {
         ColumnAndOrientation target = findBestMove(gameState);
         TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
         Tetrimino tetrimino = fallingTetrimino.getTetrimino();
-        int column = fallingTetrimino.getLeftCol();
 
         List<Move> moves = new ArrayList<>();
 
         if (!tetrimino.equals(target.getTetrimino())) {
             if (tetrimino.rotateCW().equals(target.getTetrimino())) {
-                column = rotateCW(fallingTetrimino);
+                fallingTetrimino = fallingTetrimino.rotateCW();
                 moves.add(Move.ROTATE_CW);
             } else if (tetrimino.rotateCW().rotateCW().equals(target.getTetrimino())) {
-                column = rotateCW2(fallingTetrimino);
+                fallingTetrimino = fallingTetrimino.rotateCW().rotateCW();
                 moves.add(Move.ROTATE_CW);
                 moves.add(Move.ROTATE_CW);
             } else {
-                column = rotateCCW(fallingTetrimino);
+                fallingTetrimino = fallingTetrimino.rotateCCW();
                 moves.add(Move.ROTATE_CCW);
             }
         }
-        if (target.getColumn() > column) {
-            for (int i = 0; i < target.getColumn() - column; i++) {
+        if (target.getColumn() > fallingTetrimino.getLeftCol()) {
+            for (int i = 0; i < target.getColumn() - fallingTetrimino.getLeftCol(); i++) {
                 moves.add(RIGHT);
             }
-        } else if (target.getColumn() < column) {
-            for (int i = 0; i < column - target.getColumn(); i++) {
+        } else if (target.getColumn() < fallingTetrimino.getLeftCol()) {
+            for (int i = 0; i < fallingTetrimino.getLeftCol() - target.getColumn(); i++) {
                 moves.add(LEFT);
             }
         }
         moves.add(DROP);
         return moves;
-    }
-
-    private int rotateCW(TetriminoWithPosition twp) {
-        if (twp.getTetrimino().getWidth() == 4) {
-            return twp.getLeftCol() + 2;
-        }
-        return twp.getLeftCol() + 1;
-    }
-
-    private int rotateCW2(TetriminoWithPosition twp) {
-        return twp.getLeftCol();
-    }
-
-    private int rotateCCW(TetriminoWithPosition twp) {
-        return twp.getLeftCol();
     }
 
     private ColumnAndOrientation findBestMove(GameState gameState) {

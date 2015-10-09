@@ -1,59 +1,59 @@
 package tetris;
 
-import java.util.Arrays;
-
 public class Tetrimino {
-    public static final Tetrimino T = new Tetrimino(
-            "" +
-                    ".x.\n" +
-                    "xxx"
 
-    );
-    public static final Tetrimino O = new Tetrimino(
-            "" +
-                    "xx\n" +
-                    "xx"
-    );
-    public static final Tetrimino J = new Tetrimino(
-            "" +
-                    "x..\n" +
-                    "xxx"
-    );
-    public static final Tetrimino S = new Tetrimino(
-            "" +
-                    ".xx\n" +
-                    "xx."
-    );
-    public static final Tetrimino I = new Tetrimino(
-            "" +
-                    "xxxx"
-    );
-    public static final Tetrimino Z = new Tetrimino(
-            "" +
-                    "xx.\n" +
-                    ".xx"
-    );
-    public static final Tetrimino L = new Tetrimino(
-            "" +
-                    "..x\n" +
-                    "xxx"
-    );
-    public static Tetrimino[] ALL = {I, O, J, L, T, S, Z,};
+    public final static Tetrimino[][] ALL = new Tetrimino[TetriminoType.values().length][];
 
-    private final boolean[][] b;
-
-    private Tetrimino(boolean[][] b) {
-        this.b = b;
-    }
-
-    private Tetrimino(String s) {
-        String[] a = s.split("\n");
-        b = new boolean[a.length][a[0].length()];
-        for (int i = 0; i < b.length; i++) {
-            for (int j = 0; j < b[0].length; j++) {
-                b[i][j] = (a[i].charAt(j) == 'x');
+    static {
+        for (TetriminoType type : TetriminoType.values()) {
+            int ordinal = type.ordinal();
+            if (type == TetriminoType.O) {
+                ALL[ordinal] = new Tetrimino[1];
+                ALL[ordinal][0] = new Tetrimino(type, type.b, 0, 0, 0);
+            } else if (type == TetriminoType.I) {
+                ALL[ordinal] = new Tetrimino[4];
+                ALL[ordinal][0] = new Tetrimino(type, type.b, 0, -1, 0);
+                ALL[ordinal][1] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][0].b), 1, 0, -2);
+                ALL[ordinal][2] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][1].b), 2, -2, 0);
+                ALL[ordinal][3] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][2].b), 3, 0, -1);
+            } else {
+                ALL[ordinal] = new Tetrimino[4];
+                ALL[ordinal][0] = new Tetrimino(type, type.b, 0, 0, 0);
+                ALL[ordinal][1] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][0].b), 1, 0, -1);
+                ALL[ordinal][2] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][1].b), 2, -1, 0);
+                ALL[ordinal][3] = new Tetrimino(type, rotateArrayCW(ALL[ordinal][2].b), 3, 0, 0);
             }
         }
+    }
+
+    private final TetriminoType type;
+    private final boolean[][] b;
+    private final int rowShift;
+    private final int colShift;
+    private final int orientation;
+
+    public Tetrimino(TetriminoType type, boolean[][] b, int orientation, int rowShift, int colShift) {
+        this.type = type;
+        this.b = b;
+        this.rowShift = rowShift;
+        this.colShift = colShift;
+        this.orientation = orientation;
+    }
+
+    public TetriminoType getType() {
+        return type;
+    }
+
+    public int getRowShift() {
+        return rowShift;
+    }
+
+    public int getColShift() {
+        return colShift;
+    }
+
+    public int getOrientation() {
+        return orientation;
     }
 
     public int getWidth() {
@@ -68,14 +68,23 @@ public class Tetrimino {
         return b[row][col];
     }
 
-    public Tetrimino rotateCW() {
+    private static boolean[][] rotateArrayCW(boolean[][] b) {
         boolean[][] newB = new boolean[b[0].length][b.length];
         for (int newRow = 0; newRow < newB.length; newRow++) {
             for (int newCol = 0; newCol < newB[0].length; newCol++) {
                 newB[newRow][newCol] = b[newB[0].length - newCol - 1][newRow];
             }
         }
-        return new Tetrimino(newB);
+        return newB;
+    }
+
+    public Tetrimino rotateCW() {
+        return ALL[type.ordinal()][(orientation + 1) % ALL[type.ordinal()].length];
+    }
+
+    public Tetrimino rotateCCW() {
+        int len = ALL[type.ordinal()].length;
+        return ALL[type.ordinal()][(orientation - 1 + len) % len];
     }
 
     @Override
@@ -94,10 +103,7 @@ public class Tetrimino {
         return r.toString();
     }
 
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    @Override
-    public boolean equals(Object o) {
-        Tetrimino t = (Tetrimino) o;
-        return Arrays.deepEquals(b, t.b);
+    public static Tetrimino of(TetriminoType type) {
+        return ALL[type.ordinal()][0];
     }
 }

@@ -27,6 +27,8 @@ import tetris.logic.BestMoveFinder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static tetris.TetriminoType.*;
+
 /**
  * BotStarter class
  * <p>
@@ -109,19 +111,19 @@ public class BotStarter {
     private Tetrimino convertTetrimino(ShapeType shape) {
         switch (shape) {
             case I:
-                return Tetrimino.I;
+                return Tetrimino.of(I);
             case J:
-                return Tetrimino.J;
+                return Tetrimino.of(J);
             case L:
-                return Tetrimino.L;
+                return Tetrimino.of(L);
             case O:
-                return Tetrimino.O;
+                return Tetrimino.of(O);
             case S:
-                return Tetrimino.S;
+                return Tetrimino.of(S);
             case T:
-                return Tetrimino.T;
+                return Tetrimino.of(T);
             case Z:
-                return Tetrimino.Z;
+                return Tetrimino.of(Z);
             default:
                 throw new RuntimeException("None tetrimino?");
         }

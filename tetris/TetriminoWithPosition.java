@@ -36,6 +36,20 @@ public class TetriminoWithPosition {
         return true;
     }
 
+    public TetriminoWithPosition rotateCW() {
+        return rotate(tetrimino.rotateCW());
+    }
+
+    public TetriminoWithPosition rotateCCW() {
+        return rotate(tetrimino.rotateCCW());
+    }
+
+    private TetriminoWithPosition rotate(Tetrimino newTetrimino) {
+        int newTopRow = topRow + tetrimino.getRowShift() - newTetrimino.getRowShift();
+        int newLeftCol = leftCol + tetrimino.getColShift() - newTetrimino.getColShift();
+        return new TetriminoWithPosition(newTopRow, newLeftCol, newTetrimino);
+    }
+
     @Override
     public int hashCode() {
         int result = topRow;
