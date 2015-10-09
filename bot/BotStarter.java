@@ -17,9 +17,6 @@
 
 package bot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import field.CellType;
 import field.Field;
 import field.ShapeType;
@@ -27,8 +24,8 @@ import moves.MoveType;
 import tetris.*;
 import tetris.logic.BestMoveFinder;
 
-import static tetris.Move.*;
-import static tetris.Move.DROP;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BotStarter class
@@ -49,68 +46,22 @@ public class BotStarter {
     }
 
     public ArrayList<MoveType> getMoves(BotState state, long timeout) {
-        ArrayList<MoveType> moves = new ArrayList<>();
-
         GameState gameState = getGameState(state);
-
-        ColumnAndOrientation target = bestMoveFinder.findBestMove(gameState);
+        List<Move> moves = bestMoveFinder.findBestMoves(gameState);
 
         System.err.println("Round = " + state.getRound());
         System.err.println(gameState.getFallingTetrimino());
         System.err.println(gameState.getBoard());
-        System.err.println(target);
+        System.err.println(moves);
         System.err.println("-----------------------");
 
-        TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
-                state.getShapeLocation().y,
-                state.getShapeLocation().x,
-                convertTetrimino(state.getCurrentShape())
-        );
+        ArrayList<MoveType> res = new ArrayList<>();
 
-        Tetrimino tetrimino = fallingTetrimino.getTetrimino();
-
-        int column = fallingTetrimino.getLeftCol(); // todo may improve rotation logic to decrease number of moves
-
-        if (!tetrimino.equals(target.getTetrimino())) {
-            if (tetrimino.rotateCW().equals(target.getTetrimino())) {
-                column = rotateCW(fallingTetrimino);
-                moves.add(convertMove(Move.ROTATE_CW));
-            } else if (tetrimino.rotateCW().rotateCW().equals(target.getTetrimino())) {
-                column = rotateCW2(fallingTetrimino);
-                moves.add(convertMove(Move.ROTATE_CW));
-                moves.add(convertMove(Move.ROTATE_CW));
-            } else {
-                column = rotateCCW(fallingTetrimino);
-                moves.add(convertMove(Move.ROTATE_CCW));
-            }
+        for (Move move : moves) {
+            res.add(convertMove(move));
         }
-        if (target.getColumn() > column) {
-            for (int i = 0; i < target.getColumn() - column; i++) {
-                moves.add(convertMove(RIGHT));
-            }
-        } else if (target.getColumn() < column) {
-            for (int i = 0; i < column - target.getColumn(); i++) {
-                moves.add(convertMove(LEFT));
-            }
-        }
-        moves.add(convertMove(DROP));
 
-        return moves;
-    }
-
-    private int rotateCW(TetriminoWithPosition twp) {
-        if (twp.getTetrimino().getWidth() == 4) {
-            return twp.getLeftCol() + 2;
-        }
-        return twp.getLeftCol() + 1;
-    }
-
-    private int rotateCW2(TetriminoWithPosition twp) {
-        return twp.getLeftCol();
-    }
-
-    private int rotateCCW(TetriminoWithPosition twp) {
-        return twp.getLeftCol();
+        return res;
     }
 
     private MoveType convertMove(Move move) {

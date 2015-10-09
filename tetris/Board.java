@@ -71,7 +71,7 @@ public class Board {
         return r.toString();
     }
 
-    public Tetrimino extractFallingTetrimino() {
+    public TetriminoWithPosition extractFallingTetrimino() {
         int cnt = 0;
         int topRow = 999;
         int leftCol = 999;
@@ -107,7 +107,7 @@ public class Board {
                 this.b[i][j] = false;
             }
         }
-        return new Tetrimino(b);
+        return new TetriminoWithPosition(topRow, leftCol, new Tetrimino(b));
     }
 
     public int getWidth() {
