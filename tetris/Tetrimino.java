@@ -42,11 +42,11 @@ public class Tetrimino {
 
     private final boolean[][] b;
 
-    public Tetrimino(boolean[][] b) {
+    private Tetrimino(boolean[][] b) {
         this.b = b;
     }
 
-    public Tetrimino(String s) {
+    private Tetrimino(String s) {
         String[] a = s.split("\n");
         b = new boolean[a.length][a[0].length()];
         for (int i = 0; i < b.length; i++) {

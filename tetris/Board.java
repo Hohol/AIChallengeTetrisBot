@@ -107,7 +107,49 @@ public class Board {
                 this.b[i][j] = false;
             }
         }
-        return new TetriminoWithPosition(topRow, leftCol, new Tetrimino(b));
+        return new TetriminoWithPosition(topRow, leftCol, getTetrimino(b));
+    }
+
+    private Tetrimino getTetrimino(boolean[][] b) {
+        if (b.length == 1) {
+            return Tetrimino.I;
+        }
+        if (b.length == 4) {
+            return Tetrimino.I.rotateCW();
+        }
+        if (b.length == 2 && b[0].length == 2) {
+            return Tetrimino.O;
+        }
+        for (Tetrimino tetrimino : Tetrimino.ALL) {
+            if (tetrimino.getWidth() != 3) {
+                continue;
+            }
+            for (int i = 0; i < 4; i++) {
+                if (matches(b, tetrimino)) {
+                    return tetrimino;
+                }
+                tetrimino = tetrimino.rotateCW();
+            }
+        }
+        throw new RuntimeException("cant parse tetrimino");
+    }
+
+    private boolean matches(boolean[][] b, Tetrimino tetrimino) {
+        if (tetrimino.getWidth() != 3) {
+            throw new IllegalArgumentException();
+        }
+        for (int sRow = 0; sRow <= tetrimino.getHeight() - b.length; sRow++) {
+            for (int sCol = 0; sCol <= tetrimino.getWidth() - b[0].length; sCol++) {
+                for (int row = 0; row < b.length; row++) {
+                    for (int col = 0; col < b[0].length; col++) {
+                        if (b[row][col] != tetrimino.get(sRow + row, sCol + col)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public int getWidth() {
