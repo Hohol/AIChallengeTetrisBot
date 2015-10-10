@@ -46,7 +46,9 @@ public class BestMoveFinder {
             DropResult dropResult = board.drop(finalPosition);
             Board newBoard = dropResult.getBoard();
 
-            int scoreDelta = getScore(dropResult.getLinesCleared(), combo);
+            boolean wasTSpin = wasTSpin(board, finalPosition, bfs, dropResult.getLinesCleared());
+
+            int scoreDelta = getScore(dropResult.getLinesCleared(), combo, wasTSpin);
             int newScore = score + scoreDelta;
             int newCombo = dropResult.getLinesCleared() > 0 ? combo + 1 : 0;
 
@@ -84,6 +86,36 @@ public class BestMoveFinder {
             cur = prev;
         }
         return new MovesWithEvaluation(moves, bestState);
+    }
+
+    private boolean wasTSpin(Board board, TetriminoWithPosition finalPosition, TetriminoWithPosition[][][] from, int linesCleared) {
+        if (linesCleared == 0) {
+            return false;
+        }
+        Tetrimino t = finalPosition.getTetrimino();
+        if (t.getType() != TetriminoType.T) {
+            return false;
+        }
+        TetriminoWithPosition prev = from[finalPosition.getTopRow()][finalPosition.getLeftCol()][t.getOrientation()];
+        if (t.getOrientation() == prev.getTetrimino().getOrientation()) { // no rotation
+            return false;
+        }
+        int r = finalPosition.getTopRow() + t.getRowShift();
+        int c = finalPosition.getLeftCol() + t.getColShift();
+        int cnt = 0;
+        if (board.get(r, c)) {
+            cnt++;
+        }
+        if (board.get(r + 2, c)) {
+            cnt++;
+        }
+        if (board.get(r, c + 2)) {
+            cnt++;
+        }
+        if (board.get(r + 2, c + 2)) {
+            cnt++;
+        }
+        return cnt == 3;
     }
 
     public static int getFallingCol(int boardWidth, int tetriminoWidth) {
@@ -142,9 +174,18 @@ public class BestMoveFinder {
         return false;
     }
 
-    private int getScore(int linesCleared, int comboBefore) {
+    private int getScore(int linesCleared, int comboBefore, boolean wasTSpin) {
         if (linesCleared == 0) {
             return 0;
+        }
+        if (wasTSpin) {
+            if (linesCleared == 1) {
+                return 6 + comboBefore;
+            } else if (linesCleared == 2) {
+                return 12 + comboBefore;
+            } else {
+                throw new RuntimeException();
+            }
         }
         if (linesCleared == 1) {
             return 1 + comboBefore;

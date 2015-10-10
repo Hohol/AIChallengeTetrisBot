@@ -488,6 +488,28 @@ public class BestMoveFinderTest {
         checkForbidden(board, new Action(board.getWidth() - 3, 2));
     }
 
+    @Test
+    void testPrepareForTSpin() {
+        Board board = new Board(
+                "" +
+                        "....x.....\n" +
+                        "...xxx....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "....xxxxxx\n" +
+                        "xx.xxxxxxx"
+        );
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(T));
+        assertEquals(bestAction, new Action(0, 1));
+    }
+
     // todo test no move
 
     //-------- utils
@@ -513,8 +535,8 @@ public class BestMoveFinderTest {
         return findBestAction(board, tetrimino, null, 0);
     }
 
-    private Action findBestAction(Board board, Tetrimino tetrimino) {
-        return findBestAction(board, tetrimino, null, 0);
+    private Action findBestAction(Board board, Tetrimino fallingTetrimino) {
+        return findBestAction(board, fallingTetrimino, null, 0);
     }
 
     private Action findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino, int combo) {
