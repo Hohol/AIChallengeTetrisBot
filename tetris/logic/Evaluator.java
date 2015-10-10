@@ -58,6 +58,7 @@ public class Evaluator {
         for (int i = 0; i < w; i++) {
             maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
         }
+        boolean higherHalfHeight = maxColumnHeight > board.getHeight() / 2;
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -66,7 +67,8 @@ public class Evaluator {
                 maxColumnHeight,
                 score,
                 combo,
-                cellsAboveTopBad
+                cellsAboveTopBad,
+                higherHalfHeight
         );
     }
 }

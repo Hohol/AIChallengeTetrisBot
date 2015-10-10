@@ -367,7 +367,7 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         "xxxxxxxxx."
         );
-        Action action = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(J), 1);
+        Action action = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(J), 3);
         assertEquals(action, new Action(board.getWidth() - 3, 2));
     }
 
@@ -469,14 +469,35 @@ public class BestMoveFinderTest {
         );
     }
 
+    @Test
+    void aggressiveStart() {
+        Board board = new Board(
+                "" +
+                        "...x......\n" +
+                        "...xxx....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxxxx."
+        );
+        checkForbidden(board, new Action(board.getWidth() - 3, 2));
+    }
+
     // todo test no move
-    // todo test t-spin
 
     //-------- utils
 
-    void check(List<Move> actualMoves, Move... expectedMoves) {
+    private void check(List<Move> actualMoves, Move... expectedMoves) {
         assertEquals(actualMoves, Arrays.asList(expectedMoves), "\n" + "expected: " + Arrays.toString(expectedMoves) + "\n" + "actual: " + actualMoves + "\n");
     }
+
 
     private List<Move> findBestMoves(Board board) {
         return bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), null, 0));
