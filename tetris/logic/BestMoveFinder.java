@@ -2,100 +2,140 @@ package tetris.logic;
 
 import tetris.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static tetris.Move.DROP;
-import static tetris.Move.LEFT;
-import static tetris.Move.RIGHT;
+import java.util.*;
 
 public class BestMoveFinder {
 
     private final Evaluator evaluator = new Evaluator();
 
     public List<Move> findBestMoves(GameState gameState) {
-        ColumnAndOrientation target = findBestMove(gameState);
-        TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Tetrimino tetrimino = fallingTetrimino.getTetrimino();
-
-        List<Move> moves = new ArrayList<>();
-
-        if (!tetrimino.equals(target.getTetrimino())) {
-            if (tetrimino.rotateCW().equals(target.getTetrimino())) {
-                fallingTetrimino = fallingTetrimino.rotateCW();
-                moves.add(Move.ROTATE_CW);
-            } else if (tetrimino.rotateCW().rotateCW().equals(target.getTetrimino())) {
-                fallingTetrimino = fallingTetrimino.rotateCW().rotateCW();
-                moves.add(Move.ROTATE_CW);
-                moves.add(Move.ROTATE_CW);
-            } else {
-                fallingTetrimino = fallingTetrimino.rotateCCW();
-                moves.add(Move.ROTATE_CCW);
-            }
+        List<Move> moves = findBestMoves(gameState.getBoard(), gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getMoves();
+        Collections.reverse(moves);
+        while (moves.size() > 0 && moves.get(moves.size() - 1) == Move.DOWN) {
+            moves.remove(moves.size() - 1);
         }
-        if (target.getColumn() > fallingTetrimino.getLeftCol()) {
-            for (int i = 0; i < target.getColumn() - fallingTetrimino.getLeftCol(); i++) {
-                moves.add(RIGHT);
-            }
-        } else if (target.getColumn() < fallingTetrimino.getLeftCol()) {
-            for (int i = 0; i < fallingTetrimino.getLeftCol() - target.getColumn(); i++) {
-                moves.add(LEFT);
-            }
-        }
-        moves.add(DROP);
+        moves.add(Move.DROP);
         return moves;
     }
 
-    private ColumnAndOrientation findBestMove(GameState gameState) {
-        TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Action bestAction = findBestAction(gameState.getBoard(), fallingTetrimino.getTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getAction();
+    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino, int score, int combo) {
+        EvaluationState bestState = null;
+        TetriminoWithPosition bestPosition = null;
 
-        if (bestAction == null) {
-            return null;
+        TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
+        List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
+        for (int row = 0; row < bfs.length; row++) {
+            for (int col = 0; col < bfs[0].length; col++) {
+                for (int orientation = 0; orientation < bfs[0][0].length; orientation++) {
+                    if (bfs[row][col][orientation] == null) {
+                        continue;
+                    }
+                    TetriminoWithPosition t = new TetriminoWithPosition(row, col, Tetrimino.of(fallingTetrimino.getTetrimino().getType(), orientation));
+                    if (collides(board, t.moveDown())) {
+                        availableFinalPositions.add(t);
+                    }
+                }
+            }
         }
 
-        Tetrimino tetrimino = fallingTetrimino.getTetrimino();
-        for (int i = 0; i < bestAction.getCwRotationCnt(); i++) {
-            tetrimino = tetrimino.rotateCW();
+        for (TetriminoWithPosition finalPosition : availableFinalPositions) {
+            DropResult dropResult = board.drop(finalPosition);
+            Board newBoard = dropResult.getBoard();
+
+            int scoreDelta = getScore(dropResult.getLinesCleared(), combo);
+            int newScore = score + scoreDelta;
+            int newCombo = dropResult.getLinesCleared() > 0 ? combo + 1 : 0;
+
+            EvaluationState curState;
+
+            if (nextTetrimino == null) {
+                curState = evaluator.getEvaluation(newBoard, newScore, newCombo);
+            } else {
+                int nextTopRow = nextTetrimino.getType() == TetriminoType.I ? 1 : 0;
+                TetriminoWithPosition nextTwp = new TetriminoWithPosition(nextTopRow, getFallingCol(board.getWidth(), nextTetrimino.getWidth()), nextTetrimino);
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo).getState();
+            }
+            if (curState != null && curState.better(bestState)) {
+                bestState = curState;
+                bestPosition = finalPosition;
+            }
         }
-        return new ColumnAndOrientation(bestAction.getNewLeftCol(), tetrimino);
+        List<Move> moves = new ArrayList<>();
+        TetriminoWithPosition cur = bestPosition;
+        while (!cur.equals(fallingTetrimino)) {
+            TetriminoWithPosition prev = bfs[cur.getTopRow()][cur.getLeftCol()][cur.getTetrimino().getOrientation()];
+            if (prev.moveLeft().equals(cur)) {
+                moves.add(Move.LEFT);
+            } else if (prev.moveRight().equals(cur)) {
+                moves.add(Move.RIGHT);
+            } else if (prev.moveDown().equals(cur)) {
+                moves.add(Move.DOWN);
+            } else if (prev.rotateCW().equals(cur)) {
+                moves.add(Move.ROTATE_CW);
+            } else if (prev.rotateCCW().equals(cur)) {
+                moves.add(Move.ROTATE_CCW);
+            } else {
+                throw new RuntimeException("no move from transforms " + prev + " to " + cur);
+            }
+            cur = prev;
+        }
+        return new MovesWithEvaluation(moves, bestState);
     }
 
-    private ActionWithEvaluation findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino, int score, int combo) {
-        EvaluationState bestState = null;
-        Action bestAction = null;
+    public static int getFallingCol(int boardWidth, int tetriminoWidth) {
+        if (tetriminoWidth == 2) {
+            return boardWidth / 2 - 1;
+        } else {
+            return boardWidth / 2 - 2;
+        }
+    }
 
-        Tetrimino originalTetrimino = fallingTetrimino;
-        for (int rotateCnt = 0; rotateCnt < 4; rotateCnt++) {
-            for (int newLeftCol = 0; newLeftCol + fallingTetrimino.getWidth() - 1 < board.getWidth(); newLeftCol++) {
-                DropResult dropResult = board.drop(fallingTetrimino, newLeftCol);
-                if (dropResult == null) {
+    private TetriminoWithPosition[][][] bfs(Board board, TetriminoWithPosition t) {
+        TetriminoWithPosition[][][] from = new TetriminoWithPosition[board.getHeight()][board.getWidth()][t.getTetrimino().getOrientationsCnt()];
+        from[t.getTopRow()][t.getLeftCol()][t.getTetrimino().getOrientation()] = t;
+        Queue<TetriminoWithPosition> q = new ArrayDeque<>();
+        q.add(t);
+        while (!q.isEmpty()) {
+            t = q.remove();
+            List<TetriminoWithPosition> nextPositions = new ArrayList<>(); // todo not recreate?
+            nextPositions.add(t.rotateCW());
+            nextPositions.add(t.rotateCCW());
+            nextPositions.add(t.moveLeft());
+            nextPositions.add(t.moveRight());
+            nextPositions.add(t.moveDown());
+            for (TetriminoWithPosition p : nextPositions) {
+                if (collides(board, p)) {
                     continue;
                 }
-                Board newBoard = dropResult.getBoard();
-
-                int scoreDelta = getScore(dropResult.getLinesCleared(), combo);
-                int newScore = score + scoreDelta;
-                int newCombo = dropResult.getLinesCleared() > 0 ? combo + 1 : 0;
-
-                EvaluationState curState;
-
-                if (nextTetrimino == null) {
-                    curState = evaluator.getEvaluation(newBoard, newScore, newCombo);
-                } else {
-                    curState = findBestAction(newBoard, nextTetrimino, null, newScore, newCombo).getState();
+                if (from[p.getTopRow()][p.getLeftCol()][p.getTetrimino().getOrientation()] != null) {
+                    continue;
                 }
-                if (curState != null && curState.better(bestState)) {
-                    bestState = curState;
-                    bestAction = new Action(newLeftCol, rotateCnt);
-                }
-            }
-            fallingTetrimino = fallingTetrimino.rotateCW();
-            if (fallingTetrimino.equals(originalTetrimino)) {
-                break;
+                from[p.getTopRow()][p.getLeftCol()][p.getTetrimino().getOrientation()] = t;
+                q.add(p);
             }
         }
-        return new ActionWithEvaluation(bestAction, bestState);
+        return from;
+    }
+
+    private boolean collides(Board board, TetriminoWithPosition p) {
+        if (p.getLeftCol() < 0) {
+            return true;
+        }
+        Tetrimino t = p.getTetrimino();
+        if (p.getLeftCol() + t.getWidth() - 1 >= board.getWidth()) {
+            return true;
+        }
+        if (p.getTopRow() + t.getHeight() - 1 >= board.getHeight()) {
+            return true;
+        }
+        for (int row = 0; row < t.getHeight(); row++) {
+            for (int col = 0; col < t.getWidth(); col++) {
+                if (t.get(row, col) && board.get(p.getTopRow() + row, p.getLeftCol() + col)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private int getScore(int linesCleared, int comboBefore) {

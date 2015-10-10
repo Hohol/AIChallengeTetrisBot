@@ -90,6 +90,7 @@ public class Tetrimino {
     @Override
     public String toString() {
         StringBuilder r = new StringBuilder();
+        r.append("{");
         for (boolean[] aB : b) {
             for (int j = 0; j < b[0].length; j++) {
                 if (aB[j]) {
@@ -100,10 +101,20 @@ public class Tetrimino {
             }
             r.append("\n");
         }
+        r.append("orientation=").append(orientation);
+        r.append("}");
         return r.toString();
     }
 
     public static Tetrimino of(TetriminoType type) {
-        return ALL[type.ordinal()][0];
+        return of(type, 0);
+    }
+
+    public static Tetrimino of(TetriminoType type, int orientation) {
+        return ALL[type.ordinal()][orientation];
+    }
+
+    public int getOrientationsCnt() {
+        return ALL[type.ordinal()].length;
     }
 }

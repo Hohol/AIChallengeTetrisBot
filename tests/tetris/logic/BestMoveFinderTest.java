@@ -5,9 +5,12 @@ import tetris.*;
 import tetris.logic.Action;
 import tetris.logic.BestMoveFinder;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static tetris.Move.*;
 import static tetris.TetriminoType.*;
 
 @Test
@@ -19,16 +22,8 @@ public class BestMoveFinderTest {
     void test() {
         Board board = new Board(
                 "" +
+                        "..........\n" +
                         "....xxxx..\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
                         "..........\n" +
                         "..........\n" +
                         "x.........\n" +
@@ -43,16 +38,18 @@ public class BestMoveFinderTest {
     @Test
     void testClearFull() {
         Board board = new Board(
-                "x.........\n" +
+                "" +
+                        "x.........\n" +
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx."
         );
         Tetrimino tetrimino = Tetrimino.of(I).rotateCW();
-        Board newBoard = board.drop(tetrimino, board.getWidth() - 1).getBoard();
+        Board newBoard = board.drop(new TetriminoWithPosition(1, board.getWidth() - 1, tetrimino)).getBoard();
         Board expectedNewBoard = new Board(
-                "..........\n" +
+                "" +
+                        "..........\n" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -65,6 +62,14 @@ public class BestMoveFinderTest {
     void testNextTetrimino() {
         Board board = new Board(
                 "" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
                         ".......x..\n" +
                         ".......x..\n" +
                         "xxxxxxxx..\n" +
@@ -80,7 +85,8 @@ public class BestMoveFinderTest {
     @Test
     void minimizeLowTiles() {
         Board board = new Board(
-                "......x....\n" +
+                "" +
+                        "......x....\n" +
                         "......x....\n" +
                         "......x....\n" +
                         "......x....\n" +
@@ -152,6 +158,7 @@ public class BestMoveFinderTest {
     void testBug() {
         Board board = new Board(
                 "" +
+                        "..........\n" +
                         "...xxxx...\n" +
                         "..........\n" +
                         "..........\n" +
@@ -251,6 +258,7 @@ public class BestMoveFinderTest {
     void testNew() {
         Board board = new Board(
                 "" +
+                        "..........\n" +
                         "...xxxx...\n" +
                         "..........\n" +
                         "..........\n" +
@@ -392,7 +400,87 @@ public class BestMoveFinderTest {
         checkForbidden(board, new Action(0, 0));
     }
 
+    @Test
+    void testComplexMove() {
+        Board board = new Board(
+                "" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        "....x....\n" +
+                        "....x....\n" +
+                        "...xx....\n" +
+                        "x........\n" +
+                        "........."
+        );
+        List<Move> bestMoves = findBestMoves(board);
+        check(
+                bestMoves,
+                LEFT,
+                LEFT,
+                DOWN,
+                DOWN,
+                LEFT,
+                DROP
+        );
+    }
+
+    @Test
+    void testIRotation() {
+        TetriminoWithPosition t0 = new TetriminoWithPosition(0, 0, Tetrimino.of(I));
+        TetriminoWithPosition t1 = new TetriminoWithPosition(-1, 2, Tetrimino.of(I, 1));
+        TetriminoWithPosition t2 = new TetriminoWithPosition(1, 0, Tetrimino.of(I, 2));
+        TetriminoWithPosition t3 = new TetriminoWithPosition(-1, 1, Tetrimino.of(I, 3));
+
+        assertEquals(t0.rotateCW(), t1);
+        assertEquals(t1.rotateCW(), t2);
+        assertEquals(t2.rotateCW(), t3);
+        assertEquals(t3.rotateCW(), t0);
+    }
+
+    @Test
+    void testTSpin() {
+        Board board = new Board(
+                "" +
+                        ".........\n" +
+                        ".........\n" +
+                        "...x.....\n" +
+                        "..xx.....\n" +
+                        "...x.....\n" +
+                        ".........\n" +
+                        "xx.......\n" +
+                        "x...xxxxx\n" +
+                        "xx.xxxxxx"
+        );
+        List<Move> bestMoves = findBestMoves(board);
+        check(
+                bestMoves,
+                ROTATE_CW,
+                ROTATE_CW,
+                LEFT,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                ROTATE_CW,
+                DROP
+        );
+    }
+
+    // todo test no move
+    // todo test t-spin
+
     //-------- utils
+
+    void check(List<Move> actualMoves, Move... expectedMoves) {
+        assertEquals(actualMoves, Arrays.asList(expectedMoves), "\n" + "expected: " + Arrays.toString(expectedMoves) + "\n" + "actual: " + actualMoves + "\n");
+    }
+
+    private List<Move> findBestMoves(Board board) {
+        return bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), null, 0));
+    }
 
     private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino) {
         return findBestAction(board, fallingTetrimino, nextTetrimino, 0);
@@ -411,8 +499,9 @@ public class BestMoveFinderTest {
     }
 
     private Action findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino, int combo) {
-        int fallingCol = getFallingCol(board.getWidth(), fallingTetrimino.getWidth());
-        TetriminoWithPosition tetriminoWithPosition = new TetriminoWithPosition(-1, fallingCol, fallingTetrimino);
+        int fallingCol = BestMoveFinder.getFallingCol(board.getWidth(), fallingTetrimino.getWidth());
+        int topRow = fallingTetrimino.getType() == TetriminoType.I ? 1 : 0;
+        TetriminoWithPosition tetriminoWithPosition = new TetriminoWithPosition(topRow, fallingCol, fallingTetrimino);
         return findBestAction(board, tetriminoWithPosition, nextTetrimino, combo);
     }
 
@@ -425,13 +514,13 @@ public class BestMoveFinderTest {
         int cwRotations = 0;
         int colShift = 0;
         for (Move move : moves) {
-            if (move == Move.ROTATE_CW) {
+            if (move == ROTATE_CW) {
                 cwRotations = (cwRotations + 1) % 4;
-            } else if (move == Move.ROTATE_CCW) {
+            } else if (move == ROTATE_CCW) {
                 cwRotations = (cwRotations + 3) % 4;
-            } else if (move == Move.LEFT) {
+            } else if (move == LEFT) {
                 colShift--;
-            } else if (move == Move.RIGHT) {
+            } else if (move == RIGHT) {
                 colShift++;
             }
         }
@@ -443,27 +532,19 @@ public class BestMoveFinderTest {
 
     private boolean isSimpleAction(List<Move> moves) {
         int pos = 0;
-        while (pos < moves.size() && moves.get(pos) == Move.ROTATE_CW || moves.get(pos) == Move.ROTATE_CCW) {
+        while (pos < moves.size() && moves.get(pos) == ROTATE_CW || moves.get(pos) == ROTATE_CCW) {
             pos++;
         }
         if (pos == moves.size()) {
             return false;
         }
-        while (pos < moves.size() && moves.get(pos) == Move.LEFT || moves.get(pos) == Move.RIGHT) {
+        while (pos < moves.size() && moves.get(pos) == LEFT || moves.get(pos) == RIGHT) {
             pos++;
         }
         if (pos == moves.size()) {
             return false;
         }
-        return pos == moves.size() - 1 && moves.get(pos) == Move.DROP;
-    }
-
-    private int getFallingCol(int boardWidth, int tetriminoWidth) {
-        if (tetriminoWidth == 2) {
-            return boardWidth / 2 - 1;
-        } else {
-            return boardWidth / 2 - 2;
-        }
+        return pos == moves.size() - 1 && moves.get(pos) == DROP;
     }
 
     private void checkForbidden(Board board, Action forbiddenAction) {

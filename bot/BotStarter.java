@@ -78,6 +78,8 @@ public class BotStarter {
                 return MoveType.TURNRIGHT;
             case ROTATE_CCW:
                 return MoveType.TURNLEFT;
+            case DOWN:
+                return MoveType.DOWN;
             default:
                 throw new RuntimeException();
         }
@@ -85,20 +87,21 @@ public class BotStarter {
 
     private GameState getGameState(BotState state) {
         Field field = state.getMyField();
-        Board board = new Board(field.getWidth(), field.getHeight());
+        Board board = new Board(field.getWidth(), field.getHeight() + 1);
         for (int i = 0; i < field.getHeight(); i++) {
             for (int j = 0; j < field.getWidth(); j++) {
                 CellType cellType = field.getCell(j, i).getState();
-                board.set(i, j, cellType == CellType.SOLID || cellType == CellType.BLOCK);
+                board.set(i + 1, j, cellType == CellType.SOLID || cellType == CellType.BLOCK);
                 if (cellType == CellType.SOLID && board.getPenalty() == 0) {
-                    board.setPenalty(board.getHeight() - i);
+                    board.setPenalty(field.getHeight() - i);
                 }
             }
         }
+        Tetrimino tetrimino = convertTetrimino(state.getCurrentShape());
         TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
-                state.getShapeLocation().y,
+                state.getShapeLocation().y + (tetrimino.getType() == I ? 2 : 1),
                 state.getShapeLocation().x,
-                convertTetrimino(state.getCurrentShape())
+                tetrimino
         );
         return new GameState(
                 board,

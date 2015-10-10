@@ -1,16 +1,20 @@
 package tetris.logic;
 
-public class ActionWithEvaluation {
-    private final Action action;
+import tetris.Move;
+
+import java.util.List;
+
+public class MovesWithEvaluation {
+    private final List<Move> moves;
     private final EvaluationState state;
 
-    public ActionWithEvaluation(Action action, EvaluationState state) {
-        this.action = action;
+    public MovesWithEvaluation(List<Move> moves, EvaluationState state) {
+        this.moves = moves;
         this.state = state;
     }
 
-    public Action getAction() {
-        return action;
+    public List<Move> getMoves() {
+        return moves;
     }
 
     public EvaluationState getState() {
@@ -20,7 +24,7 @@ public class ActionWithEvaluation {
     @Override
     public String toString() {
         return "ActionWithEvaluation{" +
-                "action=" + action +
+                "moves=" + moves +
                 ", state=" + state +
                 '}';
     }

@@ -117,31 +117,18 @@ public class Board {
         return width;
     }
 
-    public DropResult drop(Tetrimino tetrimino, int leftCol) {
-        int minNewTopTetriminoRow = 999;
-        for (int col = 0; col < tetrimino.getWidth(); col++) {
-            int tetriminoBottomRow = 0;
-            for (int row = tetrimino.getHeight() - 1; row >= 0; row--) {
-                if (tetrimino.get(row, col)) {
-                    tetriminoBottomRow = row;
-                    break;
-                }
-            }
-            int curCol = leftCol + col;
-
-            int boardTopRow = getTopRowInColumn(curCol);
-            int newTopTetriminoRow = boardTopRow - tetriminoBottomRow - 1;
-            minNewTopTetriminoRow = min(minNewTopTetriminoRow, newTopTetriminoRow);
-        }
-
+    public DropResult drop(TetriminoWithPosition twp) {
+        int leftCol = twp.getLeftCol();
+        Tetrimino tetrimino = twp.getTetrimino();
+        int topRow = twp.getTopRow();
         Board r = new Board(this);
         for (int i = 0; i < tetrimino.getHeight(); i++) {
             for (int j = 0; j < tetrimino.getWidth(); j++) {
                 if (tetrimino.get(i, j)) {
-                    if (minNewTopTetriminoRow + i < 0) {
+                    if (topRow + i < 0) {
                         return null;
                     }
-                    r.set(minNewTopTetriminoRow + i, leftCol + j, true);
+                    r.set(topRow + i, leftCol + j, true);
                 }
             }
         }

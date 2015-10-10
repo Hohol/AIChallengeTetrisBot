@@ -50,6 +50,7 @@ public class TetriminoWithPosition {
         return new TetriminoWithPosition(newTopRow, newLeftCol, newTetrimino);
     }
 
+
     @Override
     public int hashCode() {
         int result = topRow;
@@ -65,5 +66,17 @@ public class TetriminoWithPosition {
                 ", leftCol=" + leftCol +
                 ", tetrimino=" + tetrimino +
                 '}';
+    }
+
+    public TetriminoWithPosition moveLeft() {
+        return new TetriminoWithPosition(topRow, leftCol - 1, tetrimino);
+    }
+
+    public TetriminoWithPosition moveRight() {
+        return new TetriminoWithPosition(topRow, leftCol + 1, tetrimino);
+    }
+
+    public TetriminoWithPosition moveDown() {
+        return new TetriminoWithPosition(topRow + 1, leftCol, tetrimino);
     }
 }
