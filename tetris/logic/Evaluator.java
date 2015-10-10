@@ -61,12 +61,11 @@ public class Evaluator {
         for (int i = 0; i < w; i++) {
             maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
         }
-        boolean higherHalfHeight = maxColumnHeight > board.getHeight() / 2;
         return new EvaluationState(
                 badCnt,
                 flatRate,
                 holeCnt,
-                higherHalfHeight,
+                maxColumnHeight > board.getHeight() - 4,
                 maxColumnHeight,
                 score,
                 combo,

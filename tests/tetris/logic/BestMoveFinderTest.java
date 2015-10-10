@@ -538,6 +538,50 @@ public class BestMoveFinderTest {
         checkAction(board, new Action(2, 0));
     }
 
+    @Test
+    void testBug5() {
+        Board board = new Board(
+                "" +
+                        ".....x....\n" +
+                        "...xxx....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "......xx..\n" +
+                        ".......xx.\n" +
+                        ".......xxx\n" +
+                        ".xx.xxxxxx\n" +
+                        ".xx.xxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        check(
+                bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), Tetrimino.of(T), 0)),
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                DOWN,
+                RIGHT
+        );
+    }
+
     // todo test no move
 
     //-------- utils
