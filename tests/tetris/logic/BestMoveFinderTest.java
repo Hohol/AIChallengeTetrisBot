@@ -468,27 +468,6 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void aggressiveStart() {
-        Board board = new Board(
-                "" +
-                        "...x......\n" +
-                        "...xxx....\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "xxxxxxxxx."
-        );
-        checkForbidden(board, new Action(board.getWidth() - 3, 2));
-    }
-
-    @Test
     void testPrepareForTSpin() {
         Board board = new Board(
                 "" +

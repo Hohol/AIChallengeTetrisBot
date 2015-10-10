@@ -61,13 +61,11 @@ public class Evaluator {
                 badCnt,
                 flatRate,
                 holeCnt,
-                //maxColumnHeight > board.getHeight() - 4,
                 higherHalfHeight,
                 maxColumnHeight,
                 score,
                 combo,
-                cellsAboveTopBad,
-                higherHalfHeight
+                cellsAboveTopBad
         );
     }
 }
