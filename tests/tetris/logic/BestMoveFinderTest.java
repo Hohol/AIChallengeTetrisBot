@@ -510,6 +510,34 @@ public class BestMoveFinderTest {
         assertEquals(bestAction, new Action(0, 1));
     }
 
+    @Test
+    void badIsNotSoBad() {
+        Board board = new Board(
+                "" +
+                        "...xx.....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".......xx.\n" +
+                        ".x.x.x.xxx"
+        );
+        checkForbidden(board, new Action(board.getWidth() - 3, 0));
+    }
+
     // todo test no move
 
     //-------- utils

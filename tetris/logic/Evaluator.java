@@ -2,8 +2,6 @@ package tetris.logic;
 
 import tetris.Board;
 
-import java.util.List;
-
 public class Evaluator {
     public EvaluationState getEvaluation(Board board, int score, int combo) {
         int badCnt = 0;
@@ -63,7 +61,8 @@ public class Evaluator {
                 badCnt,
                 flatRate,
                 holeCnt,
-                maxColumnHeight > board.getHeight() - 4,
+                //maxColumnHeight > board.getHeight() - 4,
+                higherHalfHeight,
                 maxColumnHeight,
                 score,
                 combo,
