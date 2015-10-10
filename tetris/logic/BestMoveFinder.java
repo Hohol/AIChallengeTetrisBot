@@ -11,10 +11,14 @@ public class BestMoveFinder {
     public List<Move> findBestMoves(GameState gameState) {
         List<Move> moves = findBestMoves(gameState.getBoard(), gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getMoves();
         Collections.reverse(moves);
+        boolean removedSomeDowns = false;
         while (moves.size() > 0 && moves.get(moves.size() - 1) == Move.DOWN) {
             moves.remove(moves.size() - 1);
+            removedSomeDowns = true;
         }
-        moves.add(Move.DROP);
+        if (removedSomeDowns) {
+            moves.add(Move.DROP);
+        }
         return moves;
     }
 

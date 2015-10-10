@@ -422,8 +422,7 @@ public class BestMoveFinderTest {
                 LEFT,
                 DOWN,
                 DOWN,
-                LEFT,
-                DROP
+                LEFT
         );
     }
 
@@ -464,8 +463,7 @@ public class BestMoveFinderTest {
                 DOWN,
                 DOWN,
                 DOWN,
-                ROTATE_CW,
-                DROP
+                ROTATE_CW
         );
     }
 
