@@ -517,6 +517,27 @@ public class BestMoveFinderTest {
         checkForbidden(board, new Action(board.getWidth() - 3, 0));
     }
 
+    @Test
+    void testNotSoBad() {
+        Board board = new Board(
+                "" +
+                        "....xx....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".x........"
+        );
+        checkAction(board, new Action(2, 0));
+    }
+
     // todo test no move
 
     //-------- utils

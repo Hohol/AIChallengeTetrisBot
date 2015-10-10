@@ -9,6 +9,7 @@ public class EvaluationState {
     private final int combo;
     private final int score;
     private final int cellsAboveTopBad;
+    private final int semiBadCnt;
 
     public EvaluationState(
             int badCnt,
@@ -18,7 +19,8 @@ public class EvaluationState {
             int maxColumnHeight,
             int score,
             int combo,
-            int cellsAboveTopBad
+            int cellsAboveTopBad,
+            int semiBadCnt
     ) {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
@@ -28,6 +30,7 @@ public class EvaluationState {
         this.score = score;
         this.combo = combo;
         this.cellsAboveTopBad = cellsAboveTopBad;
+        this.semiBadCnt = semiBadCnt;
     }
 
     public boolean better(EvaluationState st) {
@@ -49,6 +52,10 @@ public class EvaluationState {
 
         if (holeCnt != st.holeCnt) {
             return holeCnt < st.holeCnt;
+        }
+
+        if (semiBadCnt != st.semiBadCnt) {
+            return semiBadCnt < st.semiBadCnt;
         }
 
         if (cellsAboveTopBad != st.cellsAboveTopBad) {

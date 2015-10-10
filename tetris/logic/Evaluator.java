@@ -5,6 +5,7 @@ import tetris.Board;
 public class Evaluator {
     public EvaluationState getEvaluation(Board board, int score, int combo) {
         int badCnt = 0;
+        int semiBadCnt = 0;
         int w = board.getWidth();
 
         int topBadRow = -1;
@@ -17,10 +18,14 @@ public class Evaluator {
                     found = true;
                 } else {
                     if (found) {
-                        badCnt++;
-                        if (topBadRow == -1 || row < topBadRow) {
-                            topBadRow = row;
-                            topBadCol = col;
+                        if (isSemiBad(board, row, col)) {
+                            semiBadCnt++;
+                        } else {
+                            badCnt++;
+                            if (topBadRow == -1 || row < topBadRow) {
+                                topBadRow = row;
+                                topBadCol = col;
+                            }
                         }
                     }
                 }
@@ -65,7 +70,18 @@ public class Evaluator {
                 maxColumnHeight,
                 score,
                 combo,
-                cellsAboveTopBad
+                cellsAboveTopBad,
+                semiBadCnt
         );
+    }
+
+    private boolean isSemiBad(Board board, int row, int col) {
+        if (col >= 2 && board.getTopRowInColumn(col - 1) > row && board.getTopRowInColumn(col - 2) > row) {
+            return true;
+        }
+        if (col <= board.getWidth() - 3 && board.getTopRowInColumn(col + 1) > row && board.getTopRowInColumn(col + 2) > row) {
+            return true;
+        }
+        return false;
     }
 }
