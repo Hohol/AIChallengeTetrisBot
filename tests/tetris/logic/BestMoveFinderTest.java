@@ -518,7 +518,7 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void testNotSoBad() {
+    void testSemiBad() {
         Board board = new Board(
                 "" +
                         "....xx....\n" +

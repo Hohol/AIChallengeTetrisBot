@@ -75,10 +75,10 @@ public class Evaluator {
     }
 
     private boolean isSemiBad(Board board, int row, int col) {
-        if (col >= 2 && board.getTopRowInColumn(col - 1) > row && board.getTopRowInColumn(col - 2) > row) {
+        if (col >= 3 && board.getTopRowInColumn(col - 1) > row && board.getTopRowInColumn(col - 2) > row) {
             return true;
         }
-        if (col <= board.getWidth() - 3 && board.getTopRowInColumn(col + 1) > row && board.getTopRowInColumn(col + 2) > row) {
+        if (col <= board.getWidth() - 4 && board.getTopRowInColumn(col + 1) > row && board.getTopRowInColumn(col + 2) > row) {
             return true;
         }
         return false;
