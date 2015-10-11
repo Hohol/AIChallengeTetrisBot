@@ -210,4 +210,9 @@ public class BestMoveFinder {
         }
         throw new RuntimeException();
     }
+
+    @SuppressWarnings("unused")
+    private static boolean stopOn(TetriminoWithPosition twp, TetriminoType type, int row, int col, int orientation) {
+        return twp.getTopRow() == row && twp.getLeftCol() == col && twp.getTetrimino().getType() == type && twp.getTetrimino().getOrientation() == orientation;
+    }
 }
