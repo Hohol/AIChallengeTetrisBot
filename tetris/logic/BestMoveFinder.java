@@ -31,7 +31,7 @@ public class BestMoveFinder {
 
         TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
         List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
-        for (int row = 1; row < bfs.length; row++) {
+        for (int row = bfs.length - 1; row >= 1; row--) {
             for (int col = 0; col < bfs[0].length; col++) {
                 for (int orientation = 0; orientation < bfs[0][0].length; orientation++) {
                     if (bfs[row][col][orientation] == null) {
