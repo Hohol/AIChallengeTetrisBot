@@ -677,34 +677,33 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void testBug6() {
+    void testScore() {
         Board board = new Board(
                 "" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "..........\n" +
-                        "...x......\n" +
-                        "...xx.....\n" +
+                        "....x.....\n" +
+                        "....x.....\n" +
+                        "....x.....\n" +
                         "....x.....\n" +
                         "..........\n" +
-                        ".x....xx.x\n" +
-                        "xxxx.xxxxx\n" +
-                        "xxxx.xxxxx\n" +
-                        "xxxxxxxx.x\n" +
-                        "xxxxxxxxx.\n" +
-                        "x.xxxxxxxx\n" +
-                        "xxxxxxxxx.\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo"
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".xxxxxxxxx"
         );
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(S), 1);
-        assertFalse(bestAction.equals(new Action(3, 0)));
+        checkAction(board, new Action(0, 0));
     }
+
 
     // todo test no move
 

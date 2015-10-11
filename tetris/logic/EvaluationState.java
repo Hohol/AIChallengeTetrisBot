@@ -54,10 +54,6 @@ public class EvaluationState {
             return flatRate < st.flatRate;
         }
 
-        if (score != st.score) {
-            return score > st.score;
-        }
-
         if (combo != st.combo) {
             return combo > st.combo;
         }
@@ -69,7 +65,8 @@ public class EvaluationState {
         double x = badCnt;
         x += holeCnt;
         x += getHeightFactor(maxColumnHeight);
-        x += semiBadCnt / 2.0;
+        x += semiBadCnt * 0.5;
+        x -= score * 0.2;
         return x;
     }
 
