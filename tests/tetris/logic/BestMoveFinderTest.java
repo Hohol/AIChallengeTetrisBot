@@ -518,6 +518,90 @@ public class BestMoveFinderTest {
     }
 
     @Test
+    void badIsNotSoBad2() {
+        Board board = new Board(
+                "" +
+                        "...xx.....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        ".x.x.x.x.x"
+        );
+        checkForbidden(board, new Action(4, 0));
+    }
+
+    @Test
+    void badIsNotSoBad3() {
+        Board board = new Board(
+                "" +
+                        "...xx.....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx."
+        );
+        checkForbidden(board, new Action(board.getWidth() - 2, 0));
+    }
+
+    @Test
+    void badIsNotSoBad4() {
+        Board board = new Board(
+                "" +
+                        "...xx.....\n" +
+                        "...xx.....\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        ".x.x.x.x.x"
+        );
+        checkAction(board, new Action(4, 0));
+    }
+
+    @Test
     void testSemiBad() {
         Board board = new Board(
                 "" +
