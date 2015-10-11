@@ -46,7 +46,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxxx."
         );
         Tetrimino tetrimino = Tetrimino.of(I).rotateCW();
-        Board newBoard = board.drop(new TetriminoWithPosition(1, board.getWidth() - 1, tetrimino)).getBoard();
+        Board newBoard = board.drop(new TetriminoWithPosition(board.getHeight() - 4, board.getWidth() - 1, tetrimino)).getBoard();
         Board expectedNewBoard = new Board(
                 "" +
                         "..........\n" +
@@ -409,6 +409,16 @@ public class BestMoveFinderTest {
                         ".........\n" +
                         ".........\n" +
                         ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
+                        ".........\n" +
                         "....x....\n" +
                         "....x....\n" +
                         "...xx....\n" +
@@ -664,6 +674,36 @@ public class BestMoveFinderTest {
                 DOWN,
                 RIGHT
         );
+    }
+
+    @Test
+    void testBug6() {
+        Board board = new Board(
+                "" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "...x......\n" +
+                        "...xx.....\n" +
+                        "....x.....\n" +
+                        "..........\n" +
+                        ".x....xx.x\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxxxxxxx.x\n" +
+                        "xxxxxxxxx.\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxxxxxxxx.\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(S), 1);
+        assertFalse(bestAction.equals(new Action(3, 0)));
     }
 
     // todo test no move

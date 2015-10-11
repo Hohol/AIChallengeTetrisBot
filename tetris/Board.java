@@ -1,8 +1,8 @@
 package tetris;
 
-import static java.lang.Math.min;
-
 public class Board {
+
+    public static int STANDARD_HEIGHT = 21;
 
     private final int height;
     private final int width;
@@ -10,12 +10,15 @@ public class Board {
     private int penalty;
 
     public Board(int width, int height) {
+        if (height != STANDARD_HEIGHT) {
+            throw new RuntimeException("non-standard height");
+        }
         this.height = height;
         this.width = width;
         b = new boolean[height][width];
     }
 
-    public Board(Board board) {
+    private Board(Board board) {
         width = board.width;
         height = board.height;
         b = new boolean[height][width];
@@ -26,6 +29,24 @@ public class Board {
 
     public Board(String s) {
         String[] a = s.split("\n");
+        if (a.length < STANDARD_HEIGHT) {
+            StringBuilder b = new StringBuilder();
+            for (int i = 0; i < a[0].length(); i++) {
+                b.append(".");
+            }
+            String empty = b.toString();
+            String[] tmp = new String[STANDARD_HEIGHT];
+            int delta = STANDARD_HEIGHT - a.length;
+            for (int i = 0; i < delta; i++) {
+                tmp[i] = empty;
+            }
+            for (int i = 0; i < a.length; i++) {
+                tmp[delta + i] = a[i];
+            }
+            a = tmp;
+        } else if (a.length > STANDARD_HEIGHT) {
+            throw new RuntimeException("non-standard board height");
+        }
         height = a.length;
         width = a[0].length();
         b = new boolean[height][width];

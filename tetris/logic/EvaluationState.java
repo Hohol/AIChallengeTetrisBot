@@ -1,10 +1,13 @@
 package tetris.logic;
 
+import tetris.Board;
+
 public class EvaluationState {
+    public static final double HEIGHT_RATIO_Q = 2.3;
+
     private final int badCnt;
     private final int flatRate;
     private final int holeCnt;
-    private final boolean tooHigh;
     private final int maxColumnHeight;
     private final int combo;
     private final int score;
@@ -15,7 +18,6 @@ public class EvaluationState {
             int badCnt,
             int flatRate,
             int holeCnt,
-            boolean tooHigh,
             int maxColumnHeight,
             int score,
             int combo,
@@ -25,7 +27,6 @@ public class EvaluationState {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
         this.holeCnt = holeCnt;
-        this.tooHigh = tooHigh;
         this.maxColumnHeight = maxColumnHeight;
         this.score = score;
         this.combo = combo;
@@ -37,25 +38,12 @@ public class EvaluationState {
         if (st == null) {
             return true;
         }
-        if (tooHigh != st.tooHigh) {
-            return !tooHigh;
-        }
-        if (tooHigh) {
-            if (maxColumnHeight != st.maxColumnHeight) {
-                return maxColumnHeight < st.maxColumnHeight;
-            }
-        }
 
-        if (badCnt != st.badCnt) {
-            return badCnt < st.badCnt;
-        }
+        double x = getX();
+        double stX = st.getX();
 
-        if (holeCnt != st.holeCnt) {
-            return holeCnt < st.holeCnt;
-        }
-
-        if (semiBadCnt != st.semiBadCnt) {
-            return semiBadCnt < st.semiBadCnt;
+        if (x != stX) {
+            return x < stX;
         }
 
         if (cellsAboveTopBad != st.cellsAboveTopBad) {
@@ -77,11 +65,32 @@ public class EvaluationState {
         return false;
     }
 
+    private double getX() {
+        double x = badCnt;
+        x += holeCnt;
+        x += getHeightFactor(maxColumnHeight);
+        x += semiBadCnt / 2.0;
+        return x;
+    }
+
+    private static double sqr(double x) {
+        return x * x;
+    }
+
     @Override
     public String toString() {
         return "EvaluationState{" +
                 "badCnt=" + badCnt +
                 ", flatRate=" + flatRate +
                 '}';
+    }
+
+    private static double getHeightFactor(int maxColumnHeight) {
+        double heightRatio = maxColumnHeight / (double) Board.STANDARD_HEIGHT;
+        return cube(heightRatio * HEIGHT_RATIO_Q);
+    }
+
+    private static double cube(double x) {
+        return x * x * x;
     }
 }

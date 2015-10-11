@@ -65,7 +65,6 @@ public class Evaluator {
                 badCnt,
                 flatRate,
                 holeCnt,
-                maxColumnHeight > board.getHeight() - 4,
                 maxColumnHeight,
                 score,
                 combo,
