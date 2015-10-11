@@ -236,4 +236,12 @@ public class Board {
     public void setPenalty(int penalty) {
         this.penalty = penalty;
     }
+
+    public int getMaxColumnHeight() {
+        int r = 0;
+        for (int col = 0; col < width; col++) {
+            r = Math.max(r, getColumnHeight(col));
+        }
+        return r;
+    }
 }

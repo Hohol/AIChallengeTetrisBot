@@ -792,7 +792,36 @@ public class BestMoveFinderTest {
         assertEquals(bestAction, new Action(board.getWidth()-2, 0));
     }
 
-    // todo test no move
+    @Test
+    void testEndGame4() {
+        Board board = new Board(
+                "" +
+                        "..........\n" +
+                        "xxxx..xxxx\n" +
+                        "xxxxxxxx.x\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxxx.\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxxxxxxx.x\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xxxxx.xxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        check(
+                bestMoveFinder.findBestMoves(new GameState(board, new TetriminoWithPosition(0, 4, Tetrimino.of(O)), null, 0))
+        );
+    }
 
     //-------- utils
 

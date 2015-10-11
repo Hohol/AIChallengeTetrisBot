@@ -31,7 +31,7 @@ public class BestMoveFinder {
 
         TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
         List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
-        for (int row = bfs.length - 1; row >= 1; row--) {
+        for (int row = bfs.length - 1; row >= 0; row--) {
             for (int col = 0; col < bfs[0].length; col++) {
                 for (int orientation = 0; orientation < bfs[0][0].length; orientation++) {
                     if (bfs[row][col][orientation] == null) {
@@ -48,6 +48,9 @@ public class BestMoveFinder {
         for (TetriminoWithPosition finalPosition : availableFinalPositions) {
             DropResult dropResult = board.drop(finalPosition);
             Board newBoard = dropResult.getBoard();
+            if (newBoard.getMaxColumnHeight() == board.getHeight()) {
+                continue;
+            }
 
             boolean wasTSpin = wasTSpin(board, finalPosition, bfs, dropResult.getLinesCleared());
 
