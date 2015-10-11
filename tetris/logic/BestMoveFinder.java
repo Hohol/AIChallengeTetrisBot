@@ -23,12 +23,15 @@ public class BestMoveFinder {
     }
 
     private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino, int score, int combo) {
+        if (collides(board, fallingTetrimino)) {
+            return new MovesWithEvaluation(null, null);
+        }
         EvaluationState bestState = null;
         TetriminoWithPosition bestPosition = null;
 
         TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
         List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
-        for (int row = 0; row < bfs.length; row++) {
+        for (int row = 1; row < bfs.length; row++) {
             for (int col = 0; col < bfs[0].length; col++) {
                 for (int orientation = 0; orientation < bfs[0][0].length; orientation++) {
                     if (bfs[row][col][orientation] == null) {
@@ -65,6 +68,9 @@ public class BestMoveFinder {
                 bestState = curState;
                 bestPosition = finalPosition;
             }
+        }
+        if (bestPosition == null) {
+            return new MovesWithEvaluation(null, null);
         }
         List<Move> moves = new ArrayList<>();
         TetriminoWithPosition cur = bestPosition;

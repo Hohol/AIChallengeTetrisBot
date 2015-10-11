@@ -704,6 +704,93 @@ public class BestMoveFinderTest {
         checkAction(board, new Action(0, 0));
     }
 
+    @Test
+    void testEndGame() {
+        Board board = new Board(
+                "" +
+                        "..........\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx."
+        );
+        Action bestAction = findBestAction(board, Tetrimino.of(O), Tetrimino.of(I));
+        assertEquals(bestAction, new Action(board.getWidth() - 2, 0));
+    }
+
+    @Test
+    void testEndGame2() {
+        Board board = new Board(
+                "" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxx.....\n" +
+                        "xxxxx....x\n" +
+                        "xxxxxx..xx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxx.xxxxxx\n" +
+                        "xxx.xxxxxx\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        findBestAction(board, Tetrimino.of(O), Tetrimino.of(Z));
+    }
+
+    @Test
+    void testEndGame3() {
+        Board board = new Board(
+                "" +
+                        "..........\n" +
+                        ".xx.......\n" +
+                        ".xxxxxx...\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxxxxxxx.x\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xxxxx.xxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        Action bestAction = findBestAction(board, Tetrimino.of(O), Tetrimino.of(S));
+        assertEquals(bestAction, new Action(board.getWidth()-2, 0));
+    }
 
     // todo test no move
 
@@ -768,19 +855,16 @@ public class BestMoveFinderTest {
 
     private boolean isSimpleAction(List<Move> moves) {
         int pos = 0;
-        while (pos < moves.size() && moves.get(pos) == ROTATE_CW || moves.get(pos) == ROTATE_CCW) {
+        while (pos < moves.size() && (moves.get(pos) == ROTATE_CW || moves.get(pos) == ROTATE_CCW)) {
             pos++;
         }
         if (pos == moves.size()) {
             return false;
         }
-        while (pos < moves.size() && moves.get(pos) == LEFT || moves.get(pos) == RIGHT) {
+        while (pos < moves.size() && (moves.get(pos) == LEFT || moves.get(pos) == RIGHT)) {
             pos++;
         }
-        if (pos == moves.size()) {
-            return false;
-        }
-        return pos == moves.size() - 1 && moves.get(pos) == DROP;
+        return pos == moves.size() || pos == moves.size() - 1 && moves.get(pos) == DROP;
     }
 
     private void checkForbidden(Board board, Action forbiddenAction) {
