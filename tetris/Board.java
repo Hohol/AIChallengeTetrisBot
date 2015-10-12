@@ -254,4 +254,25 @@ public class Board {
         int topRow = type == TetriminoType.I ? 1 : 0;
         return new TetriminoWithPosition(topRow, fallingCol, tetrimino);
     }
+
+    public boolean collides(TetriminoWithPosition p) {
+        if (p.getLeftCol() < 0) {
+            return true;
+        }
+        Tetrimino t = p.getTetrimino();
+        if (p.getLeftCol() + t.getWidth() - 1 >= getWidth()) {
+            return true;
+        }
+        if (p.getTopRow() + t.getHeight() - 1 >= getHeight()) {
+            return true;
+        }
+        for (int row = 0; row < t.getHeight(); row++) {
+            for (int col = 0; col < t.getWidth(); col++) {
+                if (t.get(row, col) && get(p.getTopRow() + row, p.getLeftCol() + col)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

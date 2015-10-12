@@ -79,4 +79,27 @@ public class TetriminoWithPosition {
     public TetriminoWithPosition moveDown() {
         return new TetriminoWithPosition(topRow + 1, leftCol, tetrimino);
     }
+
+    public TetriminoWithPosition move(Move move, Board board) {
+        switch (move) {
+            case LEFT:
+                return moveLeft();
+            case RIGHT:
+                return moveRight();
+            case DOWN:
+                return moveDown();
+            case DROP:
+                TetriminoWithPosition r = this;
+                while (!board.collides(r.moveDown())) {
+                    r = r.moveDown();
+                }
+                return r;
+            case ROTATE_CW:
+                return rotateCW();
+            case ROTATE_CCW:
+                return rotateCCW();
+            default:
+                throw new RuntimeException();
+        }
+    }
 }

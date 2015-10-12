@@ -23,7 +23,7 @@ public class BestMoveFinder {
     }
 
     private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo) {
-        if (collides(board, fallingTetrimino)) {
+        if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(null, null);
         }
         EvaluationState bestState = null;
@@ -38,7 +38,7 @@ public class BestMoveFinder {
                         continue;
                     }
                     TetriminoWithPosition t = new TetriminoWithPosition(row, col, Tetrimino.of(fallingTetrimino.getTetrimino().getType(), orientation));
-                    if (collides(board, t.moveDown())) {
+                    if (board.collides(t.moveDown())) {
                         availableFinalPositions.add(t);
                     }
                 }
@@ -148,7 +148,7 @@ public class BestMoveFinder {
             nextPositions.add(t.moveRight());
             nextPositions.add(t.moveDown());
             for (TetriminoWithPosition p : nextPositions) {
-                if (collides(board, p)) {
+                if (board.collides(p)) {
                     continue;
                 }
                 if (from[p.getTopRow()][p.getLeftCol()][p.getTetrimino().getOrientation()] != null) {
@@ -159,27 +159,6 @@ public class BestMoveFinder {
             }
         }
         return from;
-    }
-
-    private boolean collides(Board board, TetriminoWithPosition p) {
-        if (p.getLeftCol() < 0) {
-            return true;
-        }
-        Tetrimino t = p.getTetrimino();
-        if (p.getLeftCol() + t.getWidth() - 1 >= board.getWidth()) {
-            return true;
-        }
-        if (p.getTopRow() + t.getHeight() - 1 >= board.getHeight()) {
-            return true;
-        }
-        for (int row = 0; row < t.getHeight(); row++) {
-            for (int col = 0; col < t.getWidth(); col++) {
-                if (t.get(row, col) && board.get(p.getTopRow() + row, p.getLeftCol() + col)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private int getScore(int linesCleared, int comboBefore, boolean wasTSpin) {
