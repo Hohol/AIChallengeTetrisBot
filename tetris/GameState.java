@@ -2,11 +2,11 @@ package tetris;
 
 public class GameState {
     private final Board board;
-    private final Tetrimino nextTetrimino;
+    private final TetriminoType nextTetrimino;
     private final TetriminoWithPosition fallingTetrimino;
     private final int combo;
 
-    public GameState(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino, int combo) {
+    public GameState(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo) {
         this.board = board;
         this.nextTetrimino = nextTetrimino;
         this.fallingTetrimino = fallingTetrimino;
@@ -17,7 +17,7 @@ public class GameState {
         return board;
     }
 
-    public Tetrimino getNextTetrimino() {
+    public TetriminoType getNextTetrimino() {
         return nextTetrimino;
     }
 

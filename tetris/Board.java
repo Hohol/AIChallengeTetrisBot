@@ -1,15 +1,18 @@
 package tetris;
 
+import tetris.logic.BestMoveFinder;
+
 public class Board {
 
     public static int STANDARD_HEIGHT = 21;
+    public static int STANDARD_WIDTH = 10;
 
     private final int height;
     private final int width;
     private final boolean b[][];
     private int penalty;
 
-    public Board(int width, int height) {
+    public Board(int height, int width) {
         if (height != STANDARD_HEIGHT) {
             throw new RuntimeException("non-standard height");
         }
@@ -243,5 +246,12 @@ public class Board {
             r = Math.max(r, getColumnHeight(col));
         }
         return r;
+    }
+
+    public TetriminoWithPosition newFallingTetrimino(TetriminoType type) {
+        Tetrimino tetrimino = Tetrimino.of(type);
+        int fallingCol = BestMoveFinder.getFallingCol(width, tetrimino.getWidth());
+        int topRow = type == TetriminoType.I ? 1 : 0;
+        return new TetriminoWithPosition(topRow, fallingCol, tetrimino);
     }
 }

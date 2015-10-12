@@ -78,7 +78,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxx..\n"
         );
         Tetrimino tetrimino = Tetrimino.of(I);
-        Action action = findBestAction(board, tetrimino, Tetrimino.of(I));
+        Action action = findBestAction(board, tetrimino, I);
         assertEquals(action, new Action(board.getWidth() - 2, 1));
     }
 
@@ -280,7 +280,7 @@ public class BestMoveFinderTest {
                         "xxx.xxxxxx\n" +
                         "oooooooooo"
         );
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(L));
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), L);
         assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
     }
 
@@ -367,7 +367,7 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         "xxxxxxxxx."
         );
-        Action action = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(J), 3);
+        Action action = findBestAction(board, board.extractFallingTetrimino(), J, 3);
         assertEquals(action, new Action(board.getWidth() - 3, 2));
     }
 
@@ -495,7 +495,7 @@ public class BestMoveFinderTest {
                         "....xxxxxx\n" +
                         "xx.xxxxxxx"
         );
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), Tetrimino.of(T));
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), T);
         assertEquals(bestAction, new Action(0, 1));
     }
 
@@ -659,7 +659,7 @@ public class BestMoveFinderTest {
                         "oooooooooo"
         );
         check(
-                bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), Tetrimino.of(T), 0)),
+                bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), T, 0)),
                 DOWN,
                 DOWN,
                 DOWN,
@@ -729,7 +729,7 @@ public class BestMoveFinderTest {
                         "xxxxxxxxx.\n" +
                         "xxxxxxxxx."
         );
-        Action bestAction = findBestAction(board, Tetrimino.of(O), Tetrimino.of(I));
+        Action bestAction = findBestAction(board, Tetrimino.of(O), I);
         assertEquals(bestAction, new Action(board.getWidth() - 2, 0));
     }
 
@@ -759,7 +759,7 @@ public class BestMoveFinderTest {
                         "oooooooooo\n" +
                         "oooooooooo"
         );
-        findBestAction(board, Tetrimino.of(O), Tetrimino.of(Z));
+        findBestAction(board, Tetrimino.of(O), Z);
     }
 
     @Test
@@ -788,7 +788,7 @@ public class BestMoveFinderTest {
                         "oooooooooo\n" +
                         "oooooooooo"
         );
-        Action bestAction = findBestAction(board, Tetrimino.of(O), Tetrimino.of(S));
+        Action bestAction = findBestAction(board, Tetrimino.of(O), S);
         assertEquals(bestAction, new Action(board.getWidth()-2, 0));
     }
 
@@ -834,11 +834,11 @@ public class BestMoveFinderTest {
         return bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), null, 0));
     }
 
-    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino) {
+    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino) {
         return findBestAction(board, fallingTetrimino, nextTetrimino, 0);
     }
 
-    private Action findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino) {
+    private Action findBestAction(Board board, Tetrimino fallingTetrimino, TetriminoType nextTetrimino) {
         return findBestAction(board, fallingTetrimino, nextTetrimino, 0);
     }
 
@@ -850,14 +850,12 @@ public class BestMoveFinderTest {
         return findBestAction(board, fallingTetrimino, null, 0);
     }
 
-    private Action findBestAction(Board board, Tetrimino fallingTetrimino, Tetrimino nextTetrimino, int combo) {
-        int fallingCol = BestMoveFinder.getFallingCol(board.getWidth(), fallingTetrimino.getWidth());
-        int topRow = fallingTetrimino.getType() == TetriminoType.I ? 1 : 0;
-        TetriminoWithPosition tetriminoWithPosition = new TetriminoWithPosition(topRow, fallingCol, fallingTetrimino);
+    private Action findBestAction(Board board, Tetrimino fallingTetrimino, TetriminoType nextTetrimino, int combo) {
+        TetriminoWithPosition tetriminoWithPosition = board.newFallingTetrimino(fallingTetrimino.getType());
         return findBestAction(board, tetriminoWithPosition, nextTetrimino, combo);
     }
 
-    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino, int combo) {
+    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo) {
         GameState gameState = new GameState(board, fallingTetrimino, nextTetrimino, combo);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
         if (!isSimpleAction(moves)) {

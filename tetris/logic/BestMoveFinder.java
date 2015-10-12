@@ -22,7 +22,7 @@ public class BestMoveFinder {
         return moves;
     }
 
-    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, Tetrimino nextTetrimino, int score, int combo) {
+    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo) {
         if (collides(board, fallingTetrimino)) {
             return new MovesWithEvaluation(null, null);
         }
@@ -63,8 +63,7 @@ public class BestMoveFinder {
             if (nextTetrimino == null) {
                 curState = evaluator.getEvaluation(newBoard, newScore, newCombo);
             } else {
-                int nextTopRow = nextTetrimino.getType() == TetriminoType.I ? 1 : 0;
-                TetriminoWithPosition nextTwp = new TetriminoWithPosition(nextTopRow, getFallingCol(board.getWidth(), nextTetrimino.getWidth()), nextTetrimino);
+                TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
                 curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo).getState();
             }
             if (curState != null && curState.better(bestState)) {

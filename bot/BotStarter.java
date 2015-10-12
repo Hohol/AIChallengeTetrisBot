@@ -87,7 +87,7 @@ public class BotStarter {
 
     private GameState getGameState(BotState state) {
         Field field = state.getMyField();
-        Board board = new Board(field.getWidth(), field.getHeight() + 1);
+        Board board = new Board(field.getHeight() + 1, field.getWidth());
         for (int i = 0; i < field.getHeight(); i++) {
             for (int j = 0; j < field.getWidth(); j++) {
                 CellType cellType = field.getCell(j, i).getState();
@@ -97,11 +97,11 @@ public class BotStarter {
                 }
             }
         }
-        Tetrimino tetrimino = convertTetrimino(state.getCurrentShape());
+        TetriminoType tetrimino = convertTetrimino(state.getCurrentShape());
         TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
-                state.getShapeLocation().y + (tetrimino.getType() == I ? 2 : 1),
+                state.getShapeLocation().y + (tetrimino == I ? 2 : 1),
                 state.getShapeLocation().x,
-                tetrimino
+                Tetrimino.of(tetrimino)
         );
         return new GameState(
                 board,
@@ -111,22 +111,22 @@ public class BotStarter {
         );
     }
 
-    private Tetrimino convertTetrimino(ShapeType shape) {
+    private TetriminoType convertTetrimino(ShapeType shape) {
         switch (shape) {
             case I:
-                return Tetrimino.of(I);
+                return TetriminoType.I;
             case J:
-                return Tetrimino.of(J);
+                return TetriminoType.J;
             case L:
-                return Tetrimino.of(L);
+                return TetriminoType.L;
             case O:
-                return Tetrimino.of(O);
+                return TetriminoType.O;
             case S:
-                return Tetrimino.of(S);
+                return TetriminoType.S;
             case T:
-                return Tetrimino.of(T);
+                return TetriminoType.T;
             case Z:
-                return Tetrimino.of(Z);
+                return TetriminoType.Z;
             default:
                 throw new RuntimeException("None tetrimino?");
         }
