@@ -15,16 +15,21 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package field;
+package submit.moves;
 
 /**
- * ShapeType class
+ * MoveType class
  * 
- * Enum for all possible Shape types
+ * Enum for all possible move types
  * 
  * @author Jim van Eeden <jim@starapple.nl>
  */
 
-public enum ShapeType {
-	I, J, L, O, S, T, Z, NONE;
+public enum MoveType {
+	DOWN, LEFT, RIGHT, TURNLEFT, TURNRIGHT, DROP;
+	
+	@Override
+	public String toString() {
+		return this.name().toLowerCase();
+	}
 }

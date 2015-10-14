@@ -1,4 +1,4 @@
-package tetris;
+package submit.tetris;
 
 public class DropResult {
     private final Board board;

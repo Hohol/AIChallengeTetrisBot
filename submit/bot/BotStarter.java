@@ -15,19 +15,19 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package bot;
+package submit.bot;
 
-import field.CellType;
-import field.Field;
-import field.ShapeType;
-import moves.MoveType;
-import tetris.*;
-import tetris.logic.BestMoveFinder;
+import submit.field.CellType;
+import submit.field.Field;
+import submit.field.ShapeType;
+import submit.moves.MoveType;
+import submit.tetris.*;
+import submit.tetris.logic.BestMoveFinder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static tetris.TetriminoType.*;
+import static submit.tetris.TetriminoType.*;
 
 /**
  * BotStarter class

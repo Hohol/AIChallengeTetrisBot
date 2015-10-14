@@ -15,9 +15,9 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package player;
+package submit.player;
 
-import field.Field;
+import submit.field.Field;
 
 /**
  * Player class

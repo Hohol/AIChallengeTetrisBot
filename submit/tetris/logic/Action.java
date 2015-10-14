@@ -1,4 +1,4 @@
-package tetris.logic;
+package submit.tetris.logic;
 
 public class Action {
     private final int newLeftCol;

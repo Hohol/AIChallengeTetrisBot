@@ -1,17 +1,17 @@
 package tests.tetris.logic;
 
 import org.testng.annotations.Test;
-import tetris.*;
-import tetris.logic.Action;
-import tetris.logic.BestMoveFinder;
+import submit.tetris.*;
+import submit.tetris.logic.Action;
+import submit.tetris.logic.BestMoveFinder;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static tetris.Move.*;
-import static tetris.TetriminoType.*;
+import static submit.tetris.Move.*;
+import static submit.tetris.TetriminoType.*;
 
 @Test
 public class BestMoveFinderTest {

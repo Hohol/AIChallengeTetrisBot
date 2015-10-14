@@ -1,4 +1,4 @@
-package tetris;
+package submit.tetris;
 
 public final class Cell {
     public final int x, y;

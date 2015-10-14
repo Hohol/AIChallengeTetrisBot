@@ -15,17 +15,17 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package bot;
+package submit.bot;
 
 import java.awt.Point; // todo wtf awt
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import player.Player;
+import submit.player.Player;
 
-import field.Field;
-import field.ShapeType;
+import submit.field.Field;
+import submit.field.ShapeType;
 
 /**
  * BotState class
@@ -102,7 +102,7 @@ public class BotState {
             case "combo":
                 this.players.get(player).setCombo(Integer.parseInt(value));
                 break;
-            case "field":
+            case "submit/field":
                 this.players.get(player).setField(new Field(this.FIELD_WIDTH, this.FIELD_HEIGHT, value));
                 break;
             case "this_piece_position":

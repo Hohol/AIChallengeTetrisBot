@@ -1,6 +1,6 @@
-package tetris;
+package submit.tetris;
 
-import tetris.logic.BestMoveFinder;
+import submit.tetris.logic.BestMoveFinder;
 
 public class Board {
 

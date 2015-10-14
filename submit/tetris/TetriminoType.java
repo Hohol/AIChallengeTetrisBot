@@ -1,4 +1,4 @@
-package tetris;
+package submit.tetris;
 
 public enum TetriminoType {
     T(
