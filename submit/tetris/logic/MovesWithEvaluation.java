@@ -1,6 +1,6 @@
-package submit.tetris.logic;
+package tetris.logic;
 
-import submit.tetris.Move;
+import tetris.Move;
 
 import java.util.List;
 

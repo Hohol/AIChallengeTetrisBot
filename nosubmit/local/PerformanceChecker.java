@@ -1,7 +1,7 @@
-package nosubmit;
+package local;
 
-import submit.tetris.*;
-import submit.tetris.logic.BestMoveFinder;
+import tetris.*;
+import tetris.logic.BestMoveFinder;
 
 import java.util.List;
 import java.util.Random;

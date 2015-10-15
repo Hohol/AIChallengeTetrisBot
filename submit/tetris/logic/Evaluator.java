@@ -1,6 +1,6 @@
-package submit.tetris.logic;
+package tetris.logic;
 
-import submit.tetris.Board;
+import tetris.Board;
 
 public class Evaluator {
     public EvaluationState getEvaluation(Board board, int score, int combo) {

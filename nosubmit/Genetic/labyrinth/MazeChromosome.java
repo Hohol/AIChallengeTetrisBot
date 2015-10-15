@@ -1,6 +1,6 @@
-package nosubmit.Genetic.labyrinth;
+package genetic.labyrinth;
 
-import nosubmit.Genetic.Chromosome;
+import genetic.Chromosome;
 
 import java.util.Random;
 

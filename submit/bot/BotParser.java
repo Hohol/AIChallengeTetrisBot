@@ -15,12 +15,12 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package submit.bot;
+package bot;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import submit.moves.MoveType;
+import moves.MoveType;
 
 /**
  * BotParser class

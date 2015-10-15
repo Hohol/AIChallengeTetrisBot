@@ -1,4 +1,4 @@
-package submit.tetris;
+package tetris;
 
 public class Tetrimino {
 

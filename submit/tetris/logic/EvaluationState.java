@@ -1,6 +1,6 @@
-package submit.tetris.logic;
+package tetris.logic;
 
-import submit.tetris.Board;
+import tetris.Board;
 
 public class EvaluationState {
     public static final double HEIGHT_RATIO_Q = 2.3;

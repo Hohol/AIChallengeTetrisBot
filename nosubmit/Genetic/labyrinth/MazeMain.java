@@ -1,6 +1,6 @@
-package nosubmit.Genetic.labyrinth;
+package genetic.labyrinth;
 
-import nosubmit.Genetic.GeneticAlgorithm;
+import genetic.GeneticAlgorithm;
 
 public class MazeMain {
 

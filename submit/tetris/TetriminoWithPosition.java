@@ -1,4 +1,4 @@
-package submit.tetris;
+package tetris;
 
 public class TetriminoWithPosition {
     private final int topRow, leftCol;

@@ -1,6 +1,6 @@
-package submit.tetris.logic;
+package tetris.logic;
 
-import submit.tetris.*;
+import tetris.*;
 
 import java.util.*;
 

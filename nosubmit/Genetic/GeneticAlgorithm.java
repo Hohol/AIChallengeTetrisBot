@@ -1,4 +1,4 @@
-package nosubmit.Genetic;
+package genetic;
 
 import java.util.*;
 
