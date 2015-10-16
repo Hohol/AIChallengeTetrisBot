@@ -1,7 +1,5 @@
 package tetris;
 
-import tetris.logic.BestMoveFinder;
-
 public class Board {
 
     public static int STANDARD_HEIGHT = 21;
@@ -32,24 +30,6 @@ public class Board {
 
     public Board(String s) {
         String[] a = s.split("\n");
-        if (a.length < STANDARD_HEIGHT) {
-            StringBuilder b = new StringBuilder();
-            for (int i = 0; i < a[0].length(); i++) {
-                b.append(".");
-            }
-            String empty = b.toString();
-            String[] tmp = new String[STANDARD_HEIGHT];
-            int delta = STANDARD_HEIGHT - a.length;
-            for (int i = 0; i < delta; i++) {
-                tmp[i] = empty;
-            }
-            for (int i = 0; i < a.length; i++) {
-                tmp[delta + i] = a[i];
-            }
-            a = tmp;
-        } else if (a.length > STANDARD_HEIGHT) {
-            throw new RuntimeException("non-standard board height");
-        }
         height = a.length;
         width = a[0].length();
         b = new boolean[height][width];
@@ -141,7 +121,7 @@ public class Board {
         return width;
     }
 
-    public DropResult drop(TetriminoWithPosition twp) {
+    public DropResult drop(TetriminoWithPosition twp, Move lastMove, int combo) {
         int leftCol = twp.getLeftCol();
         Tetrimino tetrimino = twp.getTetrimino();
         int topRow = twp.getTopRow();
@@ -158,7 +138,74 @@ public class Board {
         }
         r.setPenalty(penalty);
         int linesCleared = r.clearFullRows();
-        return new DropResult(r, linesCleared);
+
+        boolean wasTSpin = wasTSpin(twp, lastMove, linesCleared);
+
+        int scoreDelta;
+        if (r.getMaxColumnHeight() == 0) { // perfect clear
+            scoreDelta = 24;
+        } else {
+            scoreDelta = getScore(linesCleared, combo, wasTSpin);
+        }
+
+        return new DropResult(r, scoreDelta);
+    }
+
+    private int getScore(int linesCleared, int comboBefore, boolean wasTSpin) {
+        if (linesCleared == 0) {
+            return 0;
+        }
+        if (wasTSpin) {
+            if (linesCleared == 1) {
+                return 6 + comboBefore;
+            } else if (linesCleared == 2) {
+                return 12 + comboBefore;
+            } else {
+                throw new RuntimeException();
+            }
+        }
+        if (linesCleared == 1) {
+            return 1 + comboBefore;
+        }
+        if (linesCleared == 2) {
+            return 3 + comboBefore;
+        }
+        if (linesCleared == 3) {
+            return 6 + comboBefore;
+        }
+        if (linesCleared == 4) {
+            return 12 + comboBefore;
+        }
+        throw new RuntimeException();
+    }
+
+    private boolean wasTSpin(TetriminoWithPosition finalPosition, Move lastMove, int linesCleared) {
+        if (linesCleared == 0) {
+            return false;
+        }
+        Tetrimino t = finalPosition.getTetrimino();
+        if (t.getType() != TetriminoType.T) {
+            return false;
+        }
+        if (lastMove != Move.ROTATE_CW && lastMove != Move.ROTATE_CCW) {
+            return false;
+        }
+        int r = finalPosition.getTopRow() + t.getRowShift();
+        int c = finalPosition.getLeftCol() + t.getColShift();
+        int cnt = 0;
+        if (get(r, c)) {
+            cnt++;
+        }
+        if (get(r + 2, c)) {
+            cnt++;
+        }
+        if (get(r, c + 2)) {
+            cnt++;
+        }
+        if (get(r + 2, c + 2)) {
+            cnt++;
+        }
+        return cnt == 3;
     }
 
     private int clearFullRows() {
@@ -249,10 +296,13 @@ public class Board {
     }
 
     public TetriminoWithPosition newFallingTetrimino(TetriminoType type) {
-        Tetrimino tetrimino = Tetrimino.of(type);
-        int fallingCol = BestMoveFinder.getFallingCol(width, tetrimino.getWidth());
-        int topRow = type == TetriminoType.I ? 1 : 0;
-        return new TetriminoWithPosition(topRow, fallingCol, tetrimino);
+        if (height == STANDARD_HEIGHT) {
+            int leftCol = width / 2 - (type == TetriminoType.O ? 1 : 2);
+            int topRow = type == TetriminoType.I ? 1 : 0;
+            return new TetriminoWithPosition(topRow, leftCol, Tetrimino.of(type));
+        } else { // to simplify tests logic
+            return new TetriminoWithPosition(0, 0, Tetrimino.of(type));
+        }
     }
 
     public boolean collides(TetriminoWithPosition p) {
@@ -274,5 +324,36 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public void addPenalty() {
+        for (int row = 0; row < height - 1; row++) {
+            for (int col = 0; col < width; col++) {
+                b[row][col] = b[row + 1][col];
+            }
+        }
+        for (int col = 0; col < width; col++) {
+            b[height - 1][col] = true;
+        }
+        penalty++;
+    }
+
+    public void addGarbage(int... emptyCols) {
+        int linesAdded = emptyCols.length;
+        for (int row = 0; row < height - penalty - linesAdded; row++) {
+            for (int col = 0; col < width; col++) {
+                b[row][col] = b[row + linesAdded][col];
+            }
+        }
+        for (int row = 0; row < linesAdded; row++) {
+            for (int col = 0; col < width; col++) {
+                int realRow = height - penalty - linesAdded + row;
+                if (col == emptyCols[row]) {
+                    b[realRow][col] = false;
+                } else {
+                    b[realRow][col] = true;
+                }
+            }
+        }
     }
 }

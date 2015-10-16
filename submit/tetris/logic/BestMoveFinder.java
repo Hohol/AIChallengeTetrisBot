@@ -4,27 +4,30 @@ import tetris.*;
 
 import java.util.*;
 
+import static tetris.Move.*;
+
 public class BestMoveFinder {
 
     private final Evaluator evaluator = new Evaluator();
 
     public List<Move> findBestMoves(GameState gameState) {
-        List<Move> moves = findBestMoves(gameState.getBoard(), gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getMoves();
+        Board board = gameState.getBoard();
+        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
-        while (moves.size() > 0 && moves.get(moves.size() - 1) == Move.DOWN) {
+        while (moves.size() > 0 && moves.get(moves.size() - 1) == DOWN) {
             moves.remove(moves.size() - 1);
             removedSomeDowns = true;
         }
         if (removedSomeDowns) {
-            moves.add(Move.DROP);
+            moves.add(DROP);
         }
         return moves;
     }
 
     private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo) {
         if (board.collides(fallingTetrimino)) {
-            return new MovesWithEvaluation(null, null);
+            return new MovesWithEvaluation(null, EvaluationState.LOST);
         }
         EvaluationState bestState = null;
         TetriminoWithPosition bestPosition = null;
@@ -46,17 +49,19 @@ public class BestMoveFinder {
         }
 
         for (TetriminoWithPosition finalPosition : availableFinalPositions) {
-            DropResult dropResult = board.drop(finalPosition);
+
+            DropResult dropResult = board.drop(finalPosition, getPrevMove(
+                            finalPosition,
+                            bfs[finalPosition.getTopRow()][finalPosition.getLeftCol()][finalPosition.getTetrimino().getOrientation()]),
+                    combo
+            );
             Board newBoard = dropResult.getBoard();
             if (newBoard.getMaxColumnHeight() == board.getHeight()) {
                 continue;
             }
 
-            boolean wasTSpin = wasTSpin(board, finalPosition, bfs, dropResult.getLinesCleared());
-
-            int scoreDelta = getScore(dropResult.getLinesCleared(), combo, wasTSpin);
-            int newScore = score + scoreDelta;
-            int newCombo = dropResult.getLinesCleared() > 0 ? combo + 1 : 0;
+            int newScore = score + dropResult.getScoreAdded();
+            int newCombo = dropResult.getScoreAdded() > 0 ? combo + 1 : 0;
 
             EvaluationState curState;
 
@@ -72,66 +77,37 @@ public class BestMoveFinder {
             }
         }
         if (bestPosition == null) {
-            return new MovesWithEvaluation(null, null);
+            return new MovesWithEvaluation(Collections.emptyList(), EvaluationState.LOST);
         }
         List<Move> moves = new ArrayList<>();
         TetriminoWithPosition cur = bestPosition;
         while (!cur.equals(fallingTetrimino)) {
             TetriminoWithPosition prev = bfs[cur.getTopRow()][cur.getLeftCol()][cur.getTetrimino().getOrientation()];
-            if (prev.moveLeft().equals(cur)) {
-                moves.add(Move.LEFT);
-            } else if (prev.moveRight().equals(cur)) {
-                moves.add(Move.RIGHT);
-            } else if (prev.moveDown().equals(cur)) {
-                moves.add(Move.DOWN);
-            } else if (prev.rotateCW().equals(cur)) {
-                moves.add(Move.ROTATE_CW);
-            } else if (prev.rotateCCW().equals(cur)) {
-                moves.add(Move.ROTATE_CCW);
-            } else {
-                throw new RuntimeException("no move from transforms " + prev + " to " + cur);
-            }
+            Move prevMove = getPrevMove(cur, prev);
+            moves.add(prevMove);
             cur = prev;
         }
         return new MovesWithEvaluation(moves, bestState);
     }
 
-    private boolean wasTSpin(Board board, TetriminoWithPosition finalPosition, TetriminoWithPosition[][][] from, int linesCleared) {
-        if (linesCleared == 0) {
-            return false;
-        }
-        Tetrimino t = finalPosition.getTetrimino();
-        if (t.getType() != TetriminoType.T) {
-            return false;
-        }
-        TetriminoWithPosition prev = from[finalPosition.getTopRow()][finalPosition.getLeftCol()][t.getOrientation()];
-        if (t.getOrientation() == prev.getTetrimino().getOrientation()) { // no rotation
-            return false;
-        }
-        int r = finalPosition.getTopRow() + t.getRowShift();
-        int c = finalPosition.getLeftCol() + t.getColShift();
-        int cnt = 0;
-        if (board.get(r, c)) {
-            cnt++;
-        }
-        if (board.get(r + 2, c)) {
-            cnt++;
-        }
-        if (board.get(r, c + 2)) {
-            cnt++;
-        }
-        if (board.get(r + 2, c + 2)) {
-            cnt++;
-        }
-        return cnt == 3;
-    }
-
-    public static int getFallingCol(int boardWidth, int tetriminoWidth) {
-        if (tetriminoWidth == 2) {
-            return boardWidth / 2 - 1;
+    private Move getPrevMove(TetriminoWithPosition cur, TetriminoWithPosition prev) {
+        Move prevMove;
+        if (prev.moveLeft().equals(cur)) {
+            prevMove = LEFT;
+        } else if (prev.moveRight().equals(cur)) {
+            prevMove = RIGHT;
+        } else if (prev.moveDown().equals(cur)) {
+            prevMove = DOWN;
+        } else if (prev.rotateCW().equals(cur)) {
+            prevMove = ROTATE_CW;
+        } else if (prev.rotateCCW().equals(cur)) {
+            prevMove = ROTATE_CCW;
+        } else if (prev.equals(cur)) {
+            return null;
         } else {
-            return boardWidth / 2 - 2;
+            throw new RuntimeException("no move transforms " + prev + " to " + cur);
         }
+        return prevMove;
     }
 
     private TetriminoWithPosition[][][] bfs(Board board, TetriminoWithPosition t) {
@@ -159,34 +135,6 @@ public class BestMoveFinder {
             }
         }
         return from;
-    }
-
-    private int getScore(int linesCleared, int comboBefore, boolean wasTSpin) {
-        if (linesCleared == 0) {
-            return 0;
-        }
-        if (wasTSpin) {
-            if (linesCleared == 1) {
-                return 6 + comboBefore;
-            } else if (linesCleared == 2) {
-                return 12 + comboBefore;
-            } else {
-                throw new RuntimeException();
-            }
-        }
-        if (linesCleared == 1) {
-            return 1 + comboBefore;
-        }
-        if (linesCleared == 2) {
-            return 3 + comboBefore;
-        }
-        if (linesCleared == 3) {
-            return 6 + comboBefore;
-        }
-        if (linesCleared == 4) {
-            return 12 + comboBefore;
-        }
-        throw new RuntimeException();
     }
 
     @SuppressWarnings("unused")

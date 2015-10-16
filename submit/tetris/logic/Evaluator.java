@@ -69,7 +69,8 @@ public class Evaluator {
                 score,
                 combo,
                 cellsAboveTopBad,
-                semiBadCnt
+                semiBadCnt,
+                false
         );
     }
 

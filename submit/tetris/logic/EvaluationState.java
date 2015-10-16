@@ -4,6 +4,7 @@ import tetris.Board;
 
 public class EvaluationState {
     public static final double HEIGHT_RATIO_Q = 2.3;
+    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, true);
 
     private final int badCnt;
     private final int flatRate;
@@ -13,6 +14,7 @@ public class EvaluationState {
     private final int score;
     private final int cellsAboveTopBad;
     private final int semiBadCnt;
+    private final boolean lost;
 
     public EvaluationState(
             int badCnt,
@@ -22,7 +24,8 @@ public class EvaluationState {
             int score,
             int combo,
             int cellsAboveTopBad,
-            int semiBadCnt
+            int semiBadCnt,
+            boolean lost
     ) {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
@@ -32,11 +35,16 @@ public class EvaluationState {
         this.combo = combo;
         this.cellsAboveTopBad = cellsAboveTopBad;
         this.semiBadCnt = semiBadCnt;
+        this.lost = lost;
     }
 
     public boolean better(EvaluationState st) {
         if (st == null) {
             return true;
+        }
+
+        if (lost != st.lost) {
+            return !lost;
         }
 
         double x = getX();
