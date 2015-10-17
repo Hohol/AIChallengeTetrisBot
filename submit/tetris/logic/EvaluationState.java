@@ -2,9 +2,10 @@ package tetris.logic;
 
 import tetris.Board;
 
+import static tetris.logic.EvaluationParameter.*;
+
 public class EvaluationState {
-    public static final double HEIGHT_RATIO_Q = 2.3;
-    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, true);
+    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, true, null);
 
     private final int badCnt;
     private final int flatRate;
@@ -16,6 +17,8 @@ public class EvaluationState {
     private final int semiBadCnt;
     private final boolean lost;
 
+    private final double evaluation;
+
     public EvaluationState(
             int badCnt,
             int flatRate,
@@ -25,7 +28,8 @@ public class EvaluationState {
             int combo,
             int cellsAboveTopBad,
             int semiBadCnt,
-            boolean lost
+            boolean lost,
+            ParameterWeights parameterWeight
     ) {
         this.badCnt = badCnt;
         this.flatRate = flatRate;
@@ -36,6 +40,7 @@ public class EvaluationState {
         this.cellsAboveTopBad = cellsAboveTopBad;
         this.semiBadCnt = semiBadCnt;
         this.lost = lost;
+        this.evaluation = calcEvaluation(parameterWeight);
     }
 
     public boolean better(EvaluationState st) {
@@ -47,11 +52,8 @@ public class EvaluationState {
             return !lost;
         }
 
-        double x = getX();
-        double stX = st.getX();
-
-        if (x != stX) {
-            return x < stX;
+        if (evaluation != st.evaluation) {
+            return evaluation < st.evaluation;
         }
 
         if (cellsAboveTopBad != st.cellsAboveTopBad) {
@@ -69,17 +71,17 @@ public class EvaluationState {
         return false;
     }
 
-    private double getX() {
-        double x = badCnt;
-        x += holeCnt;
-        x += getHeightFactor(maxColumnHeight);
-        x += semiBadCnt * 0.5;
-        x -= score * 0.2;
+    private double calcEvaluation(ParameterWeights parameterWeight) {
+        if (parameterWeight == null) {
+            return 0;
+        }
+        double x = 0;
+        x += badCnt * parameterWeight.get(BAD_CNT);
+        x += holeCnt * parameterWeight.get(HOLE_CNT);
+        x += getHeightFactor(maxColumnHeight, parameterWeight.get(HEIGHT));
+        x += semiBadCnt * parameterWeight.get(SEMI_BAD_CNT);
+        x -= score * parameterWeight.get(SCORE);
         return x;
-    }
-
-    private static double sqr(double x) {
-        return x * x;
     }
 
     @Override
@@ -90,9 +92,9 @@ public class EvaluationState {
                 '}';
     }
 
-    private static double getHeightFactor(int maxColumnHeight) {
+    private static double getHeightFactor(int maxColumnHeight, double heightRatioQ) {
         double heightRatio = maxColumnHeight / (double) Board.STANDARD_HEIGHT;
-        return cube(heightRatio * HEIGHT_RATIO_Q);
+        return cube(heightRatio * heightRatioQ);
     }
 
     private static double cube(double x) {

@@ -16,7 +16,7 @@ import static tetris.TetriminoType.*;
 @Test
 public class BestMoveFinderTest {
 
-    private final BestMoveFinder bestMoveFinder = new BestMoveFinder();
+    private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
 
     @Test
     void test() {

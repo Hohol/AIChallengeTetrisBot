@@ -5,7 +5,6 @@ import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
@@ -14,8 +13,8 @@ import static local.MatchResult.*;
 public class MatchMaker {
 
     public static void main(String[] args) {
-        BestMoveFinder first = new BestMoveFinder();
-        BestMoveFinder second = new BestMoveFinder();
+        BestMoveFinder first = BestMoveFinder.getBest();
+        BestMoveFinder second = BestMoveFinder.getBest();
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
         while (true) {

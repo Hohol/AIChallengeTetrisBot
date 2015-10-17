@@ -40,7 +40,7 @@ import static tetris.TetriminoType.*;
 
 public class BotStarter {
 
-    private final BestMoveFinder bestMoveFinder = new BestMoveFinder();
+    private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
 
     public static void main(String[] args) {
         BotParser parser = new BotParser(new BotStarter());

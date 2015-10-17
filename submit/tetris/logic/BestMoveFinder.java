@@ -5,10 +5,26 @@ import tetris.*;
 import java.util.*;
 
 import static tetris.Move.*;
+import static tetris.logic.EvaluationParameter.*;
 
 public class BestMoveFinder {
 
-    private final Evaluator evaluator = new Evaluator();
+    public static final ParameterWeights BEST_PARAMETERS = new ParameterWeights()
+            .put(BAD_CNT, 1)
+            .put(HOLE_CNT, 1)
+            .put(HEIGHT, 2.3)
+            .put(SEMI_BAD_CNT, 0.5)
+            .put(SCORE, 0.2);
+
+    private final Evaluator evaluator;
+
+    public static BestMoveFinder getBest() {
+        return new BestMoveFinder(BEST_PARAMETERS);
+    }
+
+    public BestMoveFinder(ParameterWeights parameterWeight) {
+        this.evaluator = new Evaluator(parameterWeight);
+    }
 
     public List<Move> findBestMoves(GameState gameState) {
         Board board = gameState.getBoard();

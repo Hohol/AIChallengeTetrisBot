@@ -31,7 +31,7 @@ public class PerformanceChecker {
     }
 
     private static int getMoveCnt(Random rnd) {
-        BestMoveFinder bestMoveFinder = new BestMoveFinder();
+        BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
         Board board = new Board(Board.STANDARD_HEIGHT, Board.STANDARD_WIDTH);
         for (int row = 9; row < board.getHeight(); row++) {
             int emptyCol = rnd.nextInt(board.getWidth());
@@ -53,7 +53,7 @@ public class PerformanceChecker {
             for (Move move : moves) {
                 fallingTetrimino = fallingTetrimino.move(move, board);
             }
-            board = board.drop(fallingTetrimino).getBoard();
+            board = board.drop(fallingTetrimino, null, 0).getBoard();
             log(board);
             cur = next;
             next = getRandomTetrimino(rnd);

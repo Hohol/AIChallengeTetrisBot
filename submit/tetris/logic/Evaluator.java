@@ -3,6 +3,12 @@ package tetris.logic;
 import tetris.Board;
 
 public class Evaluator {
+    private final ParameterWeights parameterWeight;
+
+    public Evaluator(ParameterWeights parameterWeight) {
+        this.parameterWeight = parameterWeight;
+    }
+
     public EvaluationState getEvaluation(Board board, int score, int combo) {
         int badCnt = 0;
         int semiBadCnt = 0;
@@ -70,7 +76,8 @@ public class Evaluator {
                 combo,
                 cellsAboveTopBad,
                 semiBadCnt,
-                false
+                false,
+                parameterWeight
         );
     }
 
