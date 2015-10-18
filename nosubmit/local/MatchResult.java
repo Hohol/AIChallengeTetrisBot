@@ -1,5 +1,5 @@
 package local;
 
-enum MatchResult {
+public enum MatchResult {
     FIRST_WON, SECOND_WON, DRAW;
 }

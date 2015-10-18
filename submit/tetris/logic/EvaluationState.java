@@ -80,7 +80,7 @@ public class EvaluationState {
         x += holeCnt * parameterWeight.get(HOLE_CNT);
         x += getHeightFactor(maxColumnHeight, parameterWeight.get(HEIGHT));
         x += semiBadCnt * parameterWeight.get(SEMI_BAD_CNT);
-        x -= score * parameterWeight.get(SCORE);
+        x += score * parameterWeight.get(SCORE);
         return x;
     }
 

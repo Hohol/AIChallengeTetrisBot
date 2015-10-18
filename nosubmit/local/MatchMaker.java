@@ -3,24 +3,29 @@ package local;
 import tetris.Board;
 import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
+import tetris.logic.ParameterWeights;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static local.MatchResult.*;
+import static tetris.logic.EvaluationParameter.*;
 
 public class MatchMaker {
 
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
-        BestMoveFinder second = BestMoveFinder.getBest();
+        BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
+                .put(BAD_CNT,6.759867567378628).put(HOLE_CNT,8.099280011454944).put(HEIGHT,3.1920040375398493).put(SEMI_BAD_CNT,6.262288484633578).put(SCORE,-0.5043296097237968)
+        );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
         while (true) {
             MatchResult matchResult = new MatchMaker().playMatch(first, second);
             matchCnt++;
             resultToCnt[matchResult.ordinal()]++;
+            System.out.println("matchCnt = " + matchCnt);
             System.out.println(matchResult);
             for (int i = 0; i < 3; i++) {
                 System.out.println(MatchResult.values()[i] + " " + (resultToCnt[i] / (double) matchCnt));

@@ -14,7 +14,7 @@ public class BestMoveFinder {
             .put(HOLE_CNT, 1)
             .put(HEIGHT, 2.3)
             .put(SEMI_BAD_CNT, 0.5)
-            .put(SCORE, 0.2);
+            .put(SCORE, -0.2);
 
     private final Evaluator evaluator;
 

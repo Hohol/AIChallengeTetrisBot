@@ -102,7 +102,7 @@ public class BotState {
             case "combo":
                 this.players.get(player).setCombo(Integer.parseInt(value));
                 break;
-            case "submit/field":
+            case "field":
                 this.players.get(player).setField(new Field(this.FIELD_WIDTH, this.FIELD_HEIGHT, value));
                 break;
             case "this_piece_position":
