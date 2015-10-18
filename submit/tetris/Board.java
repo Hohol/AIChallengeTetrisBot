@@ -121,7 +121,7 @@ public class Board {
         return width;
     }
 
-    public DropResult drop(TetriminoWithPosition twp, Move lastMove, int combo) {
+    public DropResult drop(TetriminoWithPosition twp, Move lastMove, int combo, int round) {
         int leftCol = twp.getLeftCol();
         Tetrimino tetrimino = twp.getTetrimino();
         int topRow = twp.getTopRow();
@@ -137,6 +137,9 @@ public class Board {
             }
         }
         r.setPenalty(penalty);
+        if (round % 20 == 0) {
+            r.addPenalty();
+        }
         int linesCleared = r.clearFullRows();
 
         boolean wasTSpin = wasTSpin(twp, lastMove, linesCleared);

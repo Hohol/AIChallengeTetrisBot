@@ -49,11 +49,11 @@ public class PerformanceChecker {
             log(cur);
             cnt++;
             TetriminoWithPosition fallingTetrimino = board.newFallingTetrimino(cur);
-            List<Move> moves = bestMoveFinder.findBestMoves(new GameState(board, fallingTetrimino, next, 0));
+            List<Move> moves = bestMoveFinder.findBestMoves(new GameState(board, fallingTetrimino, next, 0, 1));
             for (Move move : moves) {
                 fallingTetrimino = fallingTetrimino.move(move, board);
             }
-            board = board.drop(fallingTetrimino, null, 0).getBoard();
+            board = board.drop(fallingTetrimino, null, 0, 1).getBoard();
             log(board);
             cur = next;
             next = getRandomTetrimino(rnd);

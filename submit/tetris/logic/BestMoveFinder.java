@@ -28,7 +28,7 @@ public class BestMoveFinder {
 
     public List<Move> findBestMoves(GameState gameState) {
         Board board = gameState.getBoard();
-        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo()).getMoves();
+        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo(), gameState.getRound()).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
         while (moves.size() > 0 && moves.get(moves.size() - 1) == DOWN) {
@@ -41,7 +41,7 @@ public class BestMoveFinder {
         return moves;
     }
 
-    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo) {
+    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round) {
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(null, EvaluationState.LOST);
         }
@@ -69,7 +69,8 @@ public class BestMoveFinder {
             DropResult dropResult = board.drop(finalPosition, getPrevMove(
                             finalPosition,
                             bfs[finalPosition.getTopRow()][finalPosition.getLeftCol()][finalPosition.getTetrimino().getOrientation()]),
-                    combo
+                    combo,
+                    round
             );
             Board newBoard = dropResult.getBoard();
             if (newBoard.getMaxColumnHeight() == board.getHeight()) {
@@ -85,7 +86,7 @@ public class BestMoveFinder {
                 curState = evaluator.getEvaluation(newBoard, newScore, newCombo);
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
-                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo).getState();
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1).getState();
             }
             if (curState != null && curState.better(bestState)) {
                 bestState = curState;

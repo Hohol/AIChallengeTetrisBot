@@ -107,7 +107,8 @@ public class BotStarter {
                 board,
                 fallingTetrimino,
                 convertTetrimino(state.getNextShape()),
-                state.getMyBot().getCombo()
+                state.getMyBot().getCombo(),
+                state.getRound()
         );
     }
 

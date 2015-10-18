@@ -5,12 +5,14 @@ public class GameState {
     private final TetriminoType nextTetrimino;
     private final TetriminoWithPosition fallingTetrimino;
     private final int combo;
+    private final int round;
 
-    public GameState(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo) {
+    public GameState(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo, int round) {
         this.board = board;
         this.nextTetrimino = nextTetrimino;
         this.fallingTetrimino = fallingTetrimino;
         this.combo = combo;
+        this.round = round;
     }
 
     public Board getBoard() {
@@ -49,5 +51,9 @@ public class GameState {
 
     public int getCombo() {
         return combo;
+    }
+
+    public int getRound() {
+        return round;
     }
 }
