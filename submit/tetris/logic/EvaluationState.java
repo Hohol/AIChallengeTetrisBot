@@ -78,7 +78,7 @@ public class EvaluationState {
         double x = 0;
         x += badCnt * parameterWeight.get(BAD_CNT);
         x += holeCnt * parameterWeight.get(HOLE_CNT);
-        x += getHeightFactor(maxColumnHeight, parameterWeight.get(HEIGHT));
+        x += getHeightFactor(maxColumnHeight, parameterWeight.get(HEIGHT), parameterWeight.get(HEIGHT_POW));
         x += semiBadCnt * parameterWeight.get(SEMI_BAD_CNT);
         x += score * parameterWeight.get(SCORE);
         return x;
@@ -92,12 +92,8 @@ public class EvaluationState {
                 '}';
     }
 
-    private static double getHeightFactor(int maxColumnHeight, double heightRatioQ) {
+    private static double getHeightFactor(int maxColumnHeight, double heightRatioQ, double heightPow) {
         double heightRatio = maxColumnHeight / (double) Board.STANDARD_HEIGHT;
-        return cube(heightRatio * heightRatioQ);
-    }
-
-    private static double cube(double x) {
-        return x * x * x;
+        return Math.pow(heightRatio * heightRatioQ, heightPow);
     }
 }
