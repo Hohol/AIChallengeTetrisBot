@@ -17,7 +17,7 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT,6.759867567378628).put(HOLE_CNT,8.099280011454944).put(HEIGHT,3.1920040375398493).put(SEMI_BAD_CNT,6.262288484633578).put(SCORE,-0.5043296097237968)
+                .put(BAD_CNT,6.418005898052314).put(HOLE_CNT,6.365440588102819).put(HEIGHT,3.1962434412772933).put(SEMI_BAD_CNT,14.801536326381152).put(SCORE,-1.7429675954381298).put(HEIGHT_POW,2.7270093080974545)
         );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
@@ -26,7 +26,6 @@ public class MatchMaker {
             matchCnt++;
             resultToCnt[matchResult.ordinal()]++;
             System.out.println("matchCnt = " + matchCnt);
-            System.out.println(matchResult);
             for (int i = 0; i < 3; i++) {
                 System.out.println(MatchResult.values()[i] + " " + (resultToCnt[i] / (double) matchCnt));
             }
