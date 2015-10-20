@@ -56,18 +56,6 @@ public class EvaluationState {
             return evaluation < st.evaluation;
         }
 
-        if (cellsAboveTopBad != st.cellsAboveTopBad) {
-            return cellsAboveTopBad < st.cellsAboveTopBad;
-        }
-
-        if (flatRate != st.flatRate) {
-            return flatRate < st.flatRate;
-        }
-
-        if (combo != st.combo) {
-            return combo > st.combo;
-        }
-
         return false;
     }
 
@@ -81,6 +69,10 @@ public class EvaluationState {
         x += getHeightFactor(maxColumnHeight, parameterWeight.get(HEIGHT), parameterWeight.get(HEIGHT_POW));
         x += semiBadCnt * parameterWeight.get(SEMI_BAD_CNT);
         x += score * parameterWeight.get(SCORE);
+        x += cellsAboveTopBad * parameterWeight.get(CELLS_ABOVE_TOP);
+        x += flatRate * parameterWeight.get(FLAT_RATE);
+        x += combo * parameterWeight.get(COMBO);
+
         return x;
     }
 

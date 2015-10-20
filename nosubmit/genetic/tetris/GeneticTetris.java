@@ -13,19 +13,25 @@ import static local.MatchResult.*;
 
 public class GeneticTetris {
 
+    public static final int GAMES_CNT = 1;
+
     public static void main(String[] args) {
         Random rnd = new Random();
 
         AtomicReference<ParameterWeights> currentBestRef = new AtomicReference<>();
         MatchMaker matchMaker = new MatchMaker();
         List<CreatureAndWinCnt> species = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             species.add(new CreatureAndWinCnt(
-                    randomParameters(rnd)
-                    //zeroParameters()
+                    //randomParameters(rnd)
+                    zeroParameters()
             ));
             //species.add(BestMoveFinder.BEST_PARAMETERS);
         }
+
+        // todo remove
+        species.get(0).parameterWeights.put(EvaluationParameter.BAD_CNT, 1); // todo remove
+
         new Thread(new ResultsLogger(currentBestRef)).start();
         int round = 0;
         while (true) {
@@ -42,7 +48,7 @@ public class GeneticTetris {
             ParameterWeights first = firstPair.parameterWeights;
             ParameterWeights second = secondPair.parameterWeights;
 
-            MatchResult matchResult = matchMaker.playMatch(new BestMoveFinder(first), new BestMoveFinder(second));
+            MatchResult matchResult = getMatchSeriesResult(matchMaker, first, second);
             if (matchResult == FIRST_WON) {
                 species.set(b, new CreatureAndWinCnt(child(first, rnd)));
                 firstPair.winCnt++;
@@ -57,6 +63,25 @@ public class GeneticTetris {
             for (CreatureAndWinCnt specy : species) {
                 System.out.println("winCnt = " + specy.winCnt + " " + specy.parameterWeights);
             }
+        }
+    }
+
+    private static MatchResult getMatchSeriesResult(MatchMaker matchMaker, ParameterWeights first, ParameterWeights second) {
+        int pts = 0; // 0 for loss, 1 for draw, 2 for win
+        for (int i = 0; i < GAMES_CNT; i++) {
+            MatchResult matchResult = matchMaker.playMatch(new BestMoveFinder(first), new BestMoveFinder(second));
+            if (matchResult == FIRST_WON) {
+                pts += 2;
+            } else if (matchResult == DRAW) {
+                pts += 1;
+            }
+        }
+        if (pts == GAMES_CNT) {
+            return DRAW;
+        } else if (pts < GAMES_CNT) {
+            return SECOND_WON;
+        } else {
+            return FIRST_WON;
         }
     }
 

@@ -15,7 +15,10 @@ public class BestMoveFinder {
             .put(HEIGHT, 2.3)
             .put(HEIGHT_POW, 3)
             .put(SEMI_BAD_CNT, 0.5)
-            .put(SCORE, -0.2);
+            .put(SCORE, -0.2)
+            .put(CELLS_ABOVE_TOP, 0.04)
+            .put(FLAT_RATE, 0.02)
+            .put(COMBO, -0.01);
 
     private final Evaluator evaluator;
 

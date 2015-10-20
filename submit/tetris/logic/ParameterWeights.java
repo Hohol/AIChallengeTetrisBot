@@ -46,4 +46,11 @@ public class ParameterWeights {
         }
         return r;
     }
+
+    public ParameterWeights zeroOut() {
+        for (EvaluationParameter parameter : EvaluationParameter.values()) {
+            put(parameter, 0);
+        }
+        return this;
+    }
 }
