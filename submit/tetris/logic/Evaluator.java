@@ -9,7 +9,7 @@ public class Evaluator {
         this.parameterWeight = parameterWeight;
     }
 
-    public EvaluationState getEvaluation(Board board, int score, int combo) {
+    public EvaluationState getEvaluation(Board board, int score, int combo, double prevStateEval) {
         int badCnt = 0;
         int semiBadCnt = 0;
         int w = board.getWidth();
@@ -76,6 +76,7 @@ public class Evaluator {
                 combo,
                 cellsAboveTopBad,
                 semiBadCnt,
+                prevStateEval,
                 false,
                 parameterWeight
         );

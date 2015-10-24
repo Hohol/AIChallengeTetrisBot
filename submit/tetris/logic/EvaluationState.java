@@ -5,7 +5,7 @@ import tetris.Board;
 import static tetris.logic.EvaluationParameter.*;
 
 public class EvaluationState {
-    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, true, null);
+    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, 0, true, null);
 
     private final int badCnt;
     private final int flatRate;
@@ -15,9 +15,10 @@ public class EvaluationState {
     private final int score;
     private final int cellsAboveTopBad;
     private final int semiBadCnt;
+    private final double prevStateEval;
     private final boolean lost;
 
-    private final double evaluation;
+    final double evaluation;
 
     public EvaluationState(
             int badCnt,
@@ -28,6 +29,7 @@ public class EvaluationState {
             int combo,
             int cellsAboveTopBad,
             int semiBadCnt,
+            double prevStateEval,
             boolean lost,
             ParameterWeights parameterWeight
     ) {
@@ -39,6 +41,7 @@ public class EvaluationState {
         this.combo = combo;
         this.cellsAboveTopBad = cellsAboveTopBad;
         this.semiBadCnt = semiBadCnt;
+        this.prevStateEval = prevStateEval;
         this.lost = lost;
         this.evaluation = calcEvaluation(parameterWeight);
     }
@@ -72,6 +75,7 @@ public class EvaluationState {
         x += cellsAboveTopBad * parameterWeight.get(CELLS_ABOVE_TOP);
         x += flatRate * parameterWeight.get(FLAT_RATE);
         x += combo * parameterWeight.get(COMBO);
+        x += prevStateEval * parameterWeight.get(PREV_STATE);
 
         return x;
     }

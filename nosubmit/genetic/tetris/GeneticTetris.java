@@ -101,25 +101,6 @@ public class GeneticTetris {
         return parameterWeights;
     }
 
-    /*private static ParameterWeights child(ParameterWeights parameterWeights, Random rnd) {
-        int x = rnd.nextInt(6);
-        ParameterWeights child = new ParameterWeights(parameterWeights);
-        EvaluationParameter parameter = EvaluationParameter.values()[rnd.nextInt(EvaluationParameter.values().length)];
-        if (x == 0) {
-        } else if (x == 1) {
-            child.put(parameter, child.get(parameter) + 0.1);
-        } else if (x == 2) {
-            child.put(parameter, child.get(parameter) - 0.1);
-        } else if (x == 3) {
-            child.put(parameter, child.get(parameter) * 0.9);
-        } else if (x == 4) {
-            child.put(parameter, child.get(parameter) * 1.1);
-        } else if (x == 5) {
-            child.put(parameter, rnd.nextDouble());
-        }
-        return child;
-    }*/
-
     private static ParameterWeights child(ParameterWeights parameterWeights, Random rnd) {
         ParameterWeights child = new ParameterWeights(parameterWeights);
         EvaluationParameter parameter = EvaluationParameter.values()[rnd.nextInt(EvaluationParameter.values().length)];
