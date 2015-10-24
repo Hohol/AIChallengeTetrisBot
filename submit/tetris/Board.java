@@ -145,7 +145,7 @@ public class Board {
         boolean wasTSpin = wasTSpin(twp, lastMove, linesCleared);
 
         int scoreDelta;
-        if (r.getMaxColumnHeight() == 0) { // perfect clear
+        if (r.getMaxColumnHeight() == penalty) { // perfect clear
             scoreDelta = 24;
         } else {
             scoreDelta = getScore(linesCleared, combo, wasTSpin);

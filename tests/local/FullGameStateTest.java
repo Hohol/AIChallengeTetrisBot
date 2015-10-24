@@ -442,6 +442,32 @@ public class FullGameStateTest {
                 ));
     }
 
+    @Test
+    void perfectClearWithSolidBlocks() {
+        FullGameState state = new FullGameState(new Board(
+                "" +
+                        "....\n" +
+                        "..xx\n" +
+                        "..xx\n" +
+                        "oooo"
+        ));
+        state.makeMove(
+                O,
+                null,
+                bmf()
+        );
+        check(
+                state,
+                24, 1, false, 6,
+                new Board(
+                        "" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "oooo"
+                ));
+    }
+
     // --------------- utils
 
     private void check(
