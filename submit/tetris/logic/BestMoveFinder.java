@@ -75,7 +75,7 @@ public class BestMoveFinder {
             }
 
             int newScore = score + dropResult.getScoreAdded();
-            int newCombo = dropResult.getScoreAdded() > 0 ? combo + 1 : 0;
+            int newCombo = dropResult.getCombo();
 
             EvaluationState curState;
 

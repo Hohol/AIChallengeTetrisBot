@@ -1,6 +1,7 @@
 package local;
 
 import tetris.Board;
+import tetris.Holes;
 import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
 import tetris.logic.ParameterWeights;
@@ -17,7 +18,7 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT,6.418005898052314).put(HOLE_CNT,6.365440588102819).put(HEIGHT,3.1962434412772933).put(SEMI_BAD_CNT,14.801536326381152).put(SCORE,-1.7429675954381298).put(HEIGHT_POW,2.7270093080974545)
+                .put(BAD_CNT, 6.418005898052314).put(HOLE_CNT,6.365440588102819).put(HEIGHT,3.1962434412772933).put(SEMI_BAD_CNT,14.801536326381152).put(SCORE,-1.7429675954381298).put(HEIGHT_POW,2.7270093080974545)
         );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
@@ -88,19 +89,16 @@ public class MatchMaker {
     }
 
     private void generateGarbage(FullGameState state, Random rnd, int garbageSentOnLastMove) {
-        List<Integer> emptyCols = new ArrayList<>();
-        while (emptyCols.size() != garbageSentOnLastMove) {
-            int col = rnd.nextInt(state.board.getWidth());
-            if (emptyCols.contains(col)) {
-                continue;
-            }
-            emptyCols.add(col);
+        throw new UnsupportedOperationException("need to know if we can put two holes in same column");
+        /*List<Holes> holes = new ArrayList<>();
+        while (holes.size() != garbageSentOnLastMove) {
+
         }
-        int[] ar = new int[emptyCols.size()];
-        for (int i = 0; i < emptyCols.size(); i++) {
-            ar[i] = emptyCols.get(i);
+        int[] ar = new int[holes.size()];
+        for (int i = 0; i < holes.size(); i++) {
+            ar[i] = holes.get(i);
         }
-        state.addGarbage(ar);
+        state.addGarbage(ar);*/
     }
 
     private static TetriminoType getRandomTetrimino(Random rnd) {

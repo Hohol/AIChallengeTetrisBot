@@ -2,6 +2,7 @@ package local;
 
 import org.testng.annotations.Test;
 import tetris.Board;
+import tetris.Holes;
 import tetris.Move;
 
 import static tetris.Move.*;
@@ -61,7 +62,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                6, 3, false, 1,
+                4, 2, false, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -89,7 +90,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                6, 1, false, 1,
+                5, 0, false, 1,
                 new Board(
                         "" +
                                 "....\n" +
@@ -119,7 +120,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                12, 1, false, 3,
+                10, 1, false, 3,
                 new Board(
                         "" +
                                 "....\n" +
@@ -149,7 +150,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                24, 1, false, 6,
+                18, 1, false, 6,
                 new Board(
                         "" +
                                 "....\n" +
@@ -177,7 +178,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                1, 1, false, 0,
+                0, 0, false, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -197,7 +198,7 @@ public class FullGameStateTest {
                         "....\n" +
                         "x..."
         ));
-        state.round = 20;
+        state.round = 15;
         state.makeMove(
                 L,
                 null,
@@ -225,7 +226,7 @@ public class FullGameStateTest {
                         "....\n" +
                         "x..."
         ));
-        state.addGarbage(0);
+        state.addGarbage(new Holes(0));
         check(
                 state,
                 0, 0, false, 0,
@@ -272,7 +273,7 @@ public class FullGameStateTest {
                         "oooo\n" +
                         "oooo"
         ));
-        state.addGarbage(2, 3);
+        state.addGarbage(new Holes(2), new Holes(3));
         check(
                 state,
                 0, 0, false, 0,
@@ -323,7 +324,7 @@ public class FullGameStateTest {
                         "...x\n" +
                         "...x"
         ));
-        state.round = 40;
+        state.round = 30;
         state.makeMove(
                 O,
                 null,
@@ -350,7 +351,7 @@ public class FullGameStateTest {
                         "...x\n" +
                         "...x"
         ));
-        state.addGarbage(0);
+        state.addGarbage(new Holes(0));
         check(
                 state,
                 0, 0, true, 0,
@@ -379,7 +380,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                1, 1, false, 0,
+                0, 0, false, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -458,7 +459,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                24, 1, false, 6,
+                18, 1, false, 6,
                 new Board(
                         "" +
                                 "....\n" +

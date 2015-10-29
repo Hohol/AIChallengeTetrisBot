@@ -41,6 +41,7 @@ import static tetris.TetriminoType.*;
 public class BotStarter {
 
     private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
+    static int expectedScore;
 
     public static void main(String[] args) {
         BotParser parser = new BotParser(new BotStarter());
@@ -48,8 +49,13 @@ public class BotStarter {
     }
 
     public ArrayList<MoveType> getMoves(BotState state, long timeout) {
+        /*if (state.getMyBot().getPoints() != expectedScore) {
+            throw new RuntimeException("wrong score. expected = " + expectedScore + ", actual = " + state.getMyBot().getPoints());
+        }*/
         GameState gameState = getGameState(state);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
+
+        updateExpectedScore(gameState, moves);
 
         System.err.println("Round = " + state.getRound());
         System.err.println(gameState.getFallingTetrimino());
@@ -64,6 +70,21 @@ public class BotStarter {
         }
 
         return res;
+    }
+
+    private void updateExpectedScore(GameState gameState, List<Move> moves) {
+        TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
+        Board board = gameState.getBoard();
+        for (Move move : moves) {
+            fallingTetrimino = fallingTetrimino.move(move, board);
+        }
+        Move lastMove = moves.isEmpty() ? null : moves.get(moves.size() - 1);
+        if (!board.collides(fallingTetrimino.moveDown())) {
+            fallingTetrimino = fallingTetrimino.move(Move.DROP, board);
+            lastMove = Move.DROP;
+        }
+        DropResult dropResult = board.drop(fallingTetrimino, lastMove, gameState.getCombo(), gameState.getRound());
+        expectedScore += dropResult.getScoreAdded();
     }
 
     private MoveType convertMove(Move move) {

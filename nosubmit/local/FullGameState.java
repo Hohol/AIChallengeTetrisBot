@@ -37,13 +37,9 @@ class FullGameState {
         }
         DropResult dropResult = board.drop(fallingTetrimino, lastMove, combo, round);
         board = dropResult.getBoard();
-        if (dropResult.getScoreAdded() > 0) {
-            combo++;
-        } else {
-            combo = 0;
-        }
+        combo = dropResult.getCombo();
         int newScore = score + dropResult.getScoreAdded();
-        garbageSentOnLastMove = newScore / 4 - score / 4;
+        garbageSentOnLastMove = newScore / 3 - score / 3;
         score = newScore;
         round++;
         if (board.getMaxColumnHeight() == board.getHeight()) {
@@ -51,11 +47,11 @@ class FullGameState {
         }
     }
 
-    public void addGarbage(int... emptyCols) {
+    public void addGarbage(Holes ...holes) {
         if (lost) {
             throw new RuntimeException();
         }
-        board.addGarbage(emptyCols);
+        board.addGarbage(holes);
         if (board.getMaxColumnHeight() == board.getHeight()) {
             lost = true;
         }

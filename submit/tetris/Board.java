@@ -137,47 +137,57 @@ public class Board {
             }
         }
         r.setPenalty(penalty);
-        if (round % 20 == 0) {
+        if (round % 15 == 0) {
             r.addPenalty();
         }
         int linesCleared = r.clearFullRows();
 
         boolean wasTSpin = wasTSpin(twp, lastMove, linesCleared);
 
-        int scoreDelta;
-        if (r.getMaxColumnHeight() == penalty) { // perfect clear
-            scoreDelta = 24;
-        } else {
-            scoreDelta = getScore(linesCleared, combo, wasTSpin);
+        int newCombo;
+        if (linesCleared == 0) {
+            newCombo = 0;
+        } else if (linesCleared == 1) {
+            newCombo = combo;
+        } else { // linesCleared >= 2
+            newCombo = combo + 1;
         }
 
-        return new DropResult(r, scoreDelta);
+        int scoreDelta;
+        if (r.getMaxColumnHeight() == penalty) { // perfect clear
+            scoreDelta = 18;
+        } else {
+            int comboScore = Math.max(0, newCombo - 1);
+            scoreDelta = getScore(linesCleared, comboScore, wasTSpin);
+        }
+
+        return new DropResult(r, scoreDelta, newCombo);
     }
 
-    private int getScore(int linesCleared, int comboBefore, boolean wasTSpin) {
+    private int getScore(int linesCleared, int comboScore, boolean wasTSpin) {
         if (linesCleared == 0) {
             return 0;
         }
         if (wasTSpin) {
             if (linesCleared == 1) {
-                return 6 + comboBefore;
+                return 5 + comboScore;
             } else if (linesCleared == 2) {
-                return 12 + comboBefore;
+                return 10 + comboScore;
             } else {
                 throw new RuntimeException();
             }
         }
         if (linesCleared == 1) {
-            return 1 + comboBefore;
+            return comboScore;
         }
         if (linesCleared == 2) {
-            return 3 + comboBefore;
+            return 3 + comboScore;
         }
         if (linesCleared == 3) {
-            return 6 + comboBefore;
+            return 6 + comboScore;
         }
         if (linesCleared == 4) {
-            return 12 + comboBefore;
+            return 10 + comboScore;
         }
         throw new RuntimeException();
     }
@@ -341,8 +351,8 @@ public class Board {
         penalty++;
     }
 
-    public void addGarbage(int... emptyCols) {
-        int linesAdded = emptyCols.length;
+    public void addGarbage(Holes... holes) {
+        int linesAdded = holes.length;
         for (int row = 0; row < height - penalty - linesAdded; row++) {
             for (int col = 0; col < width; col++) {
                 b[row][col] = b[row + linesAdded][col];
@@ -351,7 +361,7 @@ public class Board {
         for (int row = 0; row < linesAdded; row++) {
             for (int col = 0; col < width; col++) {
                 int realRow = height - penalty - linesAdded + row;
-                if (col == emptyCols[row]) {
+                if (col == holes[row].firstCol || col == holes[row].secondCol) {
                     b[realRow][col] = false;
                 } else {
                     b[realRow][col] = true;
