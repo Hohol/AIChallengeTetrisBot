@@ -24,13 +24,10 @@ public class GeneticTetris {
         for (int i = 0; i < 50; i++) {
             species.add(new CreatureAndWinCnt(
                     //randomParameters(rnd)
-                    zeroParameters()
+                    BestMoveFinder.BEST_PARAMETERS
             ));
             //species.add(BestMoveFinder.BEST_PARAMETERS);
         }
-
-        // todo remove
-        species.get(0).parameterWeights.put(EvaluationParameter.BAD_CNT, 1); // todo remove
 
         new Thread(new ResultsLogger(currentBestRef)).start();
         int round = 0;

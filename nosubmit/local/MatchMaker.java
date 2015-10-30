@@ -18,8 +18,8 @@ public class MatchMaker {
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
                 .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 2.878471664579383).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 2.133187913129006).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 4.672254358240745).put(CELLS_ABOVE_TOP, 0.8587277875132031).put(FLAT_RATE, 0.733147384274665).put(COMBO, -0.16547251812410724)
                 .put(PREV_STATE, 0.2)
-                .put(SKIP_CNT, -4)
-                .put(T_SPIN_PATTERN, -8));
+                .put(SKIP_CNT, -2)
+                .put(T_SPIN_PATTERN, -12));
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
         while (true) {
