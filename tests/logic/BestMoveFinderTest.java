@@ -1007,7 +1007,7 @@ public class BestMoveFinderTest {
         assertFalse(bestAction.equals(forbiddenAction));
     }
 
-    private Board board(String s) {
+    public static Board board(String s) {
         String[] a = s.split("\n");
         if (a.length < Board.STANDARD_HEIGHT) {
             StringBuilder b = new StringBuilder();

@@ -376,4 +376,14 @@ public class Board {
             }
         }
     }
+
+    public int blocksInRowCnt(int row) {
+        int r = 0;
+        for (int col = 0; col < width; col++) {
+            if (get(row, col)) {
+                r++;
+            }
+        }
+        return r;
+    }
 }

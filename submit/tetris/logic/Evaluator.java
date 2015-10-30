@@ -67,6 +67,7 @@ public class Evaluator {
         for (int i = 0; i < w; i++) {
             maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
         }
+        boolean tSpinPattern = checkTSpinPattern(board);
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -78,9 +79,47 @@ public class Evaluator {
                 semiBadCnt,
                 prevStateEval,
                 skipCnt,
+                tSpinPattern,
                 false,
                 parameterWeight
         );
+    }
+
+    private boolean checkTSpinPattern(Board board) {
+        for (int leftCol = 0; leftCol + 3 - 1 < board.getWidth(); leftCol++) {
+            int midTop = board.getTopRowInColumn(leftCol + 1);
+            if (checkTSpinPatternLeft(board, leftCol, midTop)) {
+                return true;
+            }
+            if (checkTSpinPatternRight(board, leftCol, midTop)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkTSpinPatternLeft(Board board, int leftCol, int midTop) {
+        int leftTop = board.getTopRowInColumn(leftCol);
+        if (leftTop < 3) {
+            return false;
+        }
+        return leftTop < midTop &&
+                !board.get(leftTop - 1, leftCol + 2) &&
+                board.get(leftTop - 2, leftCol + 2) &&
+                board.blocksInRowCnt(leftTop - 1) == board.getWidth() - 3 &&
+                board.blocksInRowCnt(leftTop) == board.getWidth() - 1;
+    }
+
+    private boolean checkTSpinPatternRight(Board board, int leftCol, int midTop) {
+        int rightTop = board.getTopRowInColumn(leftCol + 2);
+        if (rightTop < 3) {
+            return false;
+        }
+        return rightTop < midTop &&
+                !board.get(rightTop - 1, leftCol) &&
+                board.get(rightTop - 2, leftCol) &&
+                board.blocksInRowCnt(rightTop - 1) == board.getWidth() - 3 &&
+                board.blocksInRowCnt(rightTop) == board.getWidth() - 1;
     }
 
     private boolean isSemiBad(Board board, int row, int col) {
