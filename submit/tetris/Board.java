@@ -368,7 +368,7 @@ public class Board {
         for (int row = 0; row < linesAdded; row++) {
             for (int col = 0; col < width; col++) {
                 int realRow = height - penalty - linesAdded + row;
-                if (col == holes[row].firstCol || col == holes[row].secondCol) {
+                if (col == holes[row].oneCol || col == holes[row].otherCol) {
                     b[realRow][col] = false;
                 } else {
                     b[realRow][col] = true;

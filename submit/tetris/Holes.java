@@ -1,15 +1,15 @@
 package tetris;
 
 public class Holes {
-    public final int firstCol;
-    public final int secondCol;
+    public final int oneCol;
+    public final int otherCol;
 
-    public Holes(int firstCol, int secondCol) {
-        this.firstCol = firstCol;
-        this.secondCol = secondCol;
+    public Holes(int oneCol, int otherCol) {
+        this.oneCol = oneCol;
+        this.otherCol = otherCol;
     }
 
-    public Holes(int firstCol) {
-        this(firstCol, -1);
+    public Holes(int oneCol) {
+        this(oneCol, -1);
     }
 }

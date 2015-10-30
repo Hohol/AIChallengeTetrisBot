@@ -6,8 +6,6 @@ import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
 import tetris.logic.ParameterWeights;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static local.MatchResult.*;
@@ -18,8 +16,10 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT, 6.418005898052314).put(HOLE_CNT,6.365440588102819).put(HEIGHT,3.1962434412772933).put(SEMI_BAD_CNT,14.801536326381152).put(SCORE,-1.7429675954381298).put(HEIGHT_POW,2.7270093080974545)
-        );
+                .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 2.878471664579383).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 2.133187913129006).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 4.672254358240745).put(CELLS_ABOVE_TOP, 0.8587277875132031).put(FLAT_RATE, 0.733147384274665).put(COMBO, -0.16547251812410724)
+                .put(PREV_STATE, 0.2)
+                .put(SKIP_CNT, -4)
+                .put(T_SPIN_PATTERN, -8));
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
         while (true) {
@@ -57,8 +57,8 @@ public class MatchMaker {
                 return FIRST_WON;
             }
 
-            generateGarbage(firstGameState, rnd, secondGameState.garbageSentOnLastMove);
-            generateGarbage(secondGameState, rnd, firstGameState.garbageSentOnLastMove);
+            generateGarbage(firstGameState, rnd, secondGameState);
+            generateGarbage(secondGameState, rnd, firstGameState);
 
             log("cur = " + curTetrimino);
             log("next = " + nextTetrimino);
@@ -88,17 +88,24 @@ public class MatchMaker {
         //System.out.println(o);
     }
 
-    private void generateGarbage(FullGameState state, Random rnd, int garbageSentOnLastMove) {
-        throw new UnsupportedOperationException("need to know if we can put two holes in same column");
-        /*List<Holes> holes = new ArrayList<>();
-        while (holes.size() != garbageSentOnLastMove) {
-
+    private void generateGarbage(FullGameState state, Random rnd, FullGameState opponent) {
+        Holes[] holes = new Holes[opponent.garbageSentOnLastMove];
+        boolean twoHoles = (opponent.garbageSentSum % 2 == 0);
+        for (int i = 0; i < opponent.garbageSentOnLastMove; i++) {
+            int a = rnd.nextInt(Board.STANDARD_WIDTH);
+            int b;
+            if (twoHoles) {
+                b = rnd.nextInt(Board.STANDARD_WIDTH - 1);
+                if (b >= a) {
+                    b++;
+                }
+            } else {
+                b = -1;
+            }
+            holes[i] = new Holes(a, b);
+            twoHoles = !twoHoles;
         }
-        int[] ar = new int[holes.size()];
-        for (int i = 0; i < holes.size(); i++) {
-            ar[i] = holes.get(i);
-        }
-        state.addGarbage(ar);*/
+        state.addGarbage(holes);
     }
 
     private static TetriminoType getRandomTetrimino(Random rnd) {
