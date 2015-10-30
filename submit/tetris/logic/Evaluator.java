@@ -68,6 +68,7 @@ public class Evaluator {
             maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
         }
         boolean tSpinPattern = checkTSpinPattern(board);
+        boolean semiTSpinPattern = checkSemiTSpinPattern(board);
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -80,9 +81,71 @@ public class Evaluator {
                 prevStateEval,
                 skipCnt,
                 tSpinPattern,
+                semiTSpinPattern,
                 false,
                 parameterWeight
         );
+    }
+
+    private boolean checkSemiTSpinPattern(Board board) {
+        for (int leftCol = 0; leftCol + 3 - 1 < board.getWidth(); leftCol++) {
+            int leftTop = board.getTopRowInColumn(leftCol);
+            int midTop = board.getTopRowInColumn(leftCol + 1);
+            int rightTop = board.getTopRowInColumn(leftCol + 2);
+            if (leftTop == rightTop && leftTop < midTop) {
+                if (existsBadInRow(board, leftTop) || existsBadInRow(board, leftTop - 1)) {
+                    continue;
+                }
+
+                if (leftCol > 0) {
+                    if (board.getTopRowInColumn(leftCol - 1) == leftTop - 1) {
+                        return true;
+                    }
+                }
+                if (leftCol + 3 - 1 < board.getWidth() - 1) {
+                    if (board.getTopRowInColumn(leftCol + 3) == leftTop - 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean existsBadInRow(Board board, int row) {
+        for (int col = 0; col < board.getWidth(); col++) {
+            if (bad(board, row, col)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean bad(Board board, int row, int col) {
+        if (board.get(row, col)) {
+            return false;
+        }
+        boolean leftWall;
+        boolean rightWall;
+        if (col == 0) {
+            leftWall = true;
+        } else {
+            leftWall = board.getTopRowInColumn(col - 1) < row - 1;
+        }
+        if (col == board.getWidth() - 1) {
+            rightWall = true;
+        } else {
+            rightWall = board.getTopRowInColumn(col + 1) < row - 1;
+        }
+        if (leftWall && rightWall) {
+            return true;
+        }
+        for (int r = row - 1; r >= 0; r--) {
+            if (board.get(r, col)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean checkTSpinPattern(Board board) {

@@ -826,7 +826,7 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test
+    @Test (enabled = false)
     void dontWasteSkip() {
         Board board = board("" +
                 "..........\n" +
@@ -844,7 +844,7 @@ public class BestMoveFinderTest {
         assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
     }
 
-    @Test
+    @Test (enabled = false)
     void testBug2() {
         Board board = board("" +
                 "..........\n" +
@@ -924,6 +924,23 @@ public class BestMoveFinderTest {
 
     @Test
     void tSpinPattern() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "...xxxxxxx\n" +
+                        "x.xxxxxxxx"
+        );
+        checkAction(board, I, 2, 0);
+    }
+
+    @Test
+    void semiTSpinPattern() {
         Board board = board("" +
                         "..........\n" +
                         "..........\n" +

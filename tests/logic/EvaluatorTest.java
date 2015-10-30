@@ -113,7 +113,76 @@ public class EvaluatorTest {
                 true);
     }
 
+    @Test
+    void semiTSpinPattern() {
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "..........\n" +
+                                "...xxxxxxx\n" +
+                                "x.xxxxxxxx"
+                ),
+                true);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "...x......\n" +
+                                "...xxxxxxx\n" +
+                                "x.xxxxxxxx"
+                ),
+                false);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "......x...\n" +
+                                "xxxxxxx...\n" +
+                                "xxxxxxxx.x"
+                ),
+                false);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "..........\n" +
+                                "...xxxxxxx\n" +
+                                "x.xxxxxxx."
+                ),
+                false);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "..........\n" +
+                                "....xxxxx.\n" +
+                                "....xxxxx.\n" +
+                                "....xxxxx.\n" +
+                                "....xxxxx.\n" +
+                                "...xxxxxx.\n" +
+                                "x.xxxxxxx."
+                ),
+                false);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "..........\n" +
+                                "....xxxxx.\n" +
+                                "...xxxxxx.\n" +
+                                "x.xxxxxxx."
+                ),
+                false);
+        checkSemiTSpinPattern(
+                board("" +
+                                "..........\n" +
+                                "..........\n" +
+                                "...xxxxxx.\n" +
+                                "x.xxxxxxx."
+                ),
+                true);
+    }
+
     //--------- utils
+
+    private void checkSemiTSpinPattern(Board board, boolean expected) {
+        assertEquals(getEvaluation(board).semiTSpinPattern, expected);
+    }
 
     private void checkTSpinPattern(Board board, boolean expected) {
         assertEquals(getEvaluation(board).tSpinPattern, expected);
