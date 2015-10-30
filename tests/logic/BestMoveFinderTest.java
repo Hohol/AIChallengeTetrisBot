@@ -374,7 +374,7 @@ public class BestMoveFinderTest {
                 "x........\n" +
                 ".........");
         List<Move> bestMoves = findBestMoves(board);
-        check(
+        checkMoves(
                 bestMoves,
                 LEFT,
                 LEFT,
@@ -410,7 +410,7 @@ public class BestMoveFinderTest {
                 "x...xxxxx\n" +
                 "xx.xxxxxx");
         List<Move> bestMoves = findBestMoves(board);
-        check(
+        checkMoves(
                 bestMoves,
                 ROTATE_CW,
                 ROTATE_CW,
@@ -565,7 +565,7 @@ public class BestMoveFinderTest {
                 "xx.xxxxxxx\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        check(
+        checkMoves(
                 bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), T, 0, 1, 0)),
                 DOWN,
                 DOWN,
@@ -716,7 +716,7 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        check(
+        checkMoves(
                 bestMoveFinder.findBestMoves(new GameState(board, new TetriminoWithPosition(0, 4, Tetrimino.of(O)), null, 0, 1, 0))
         );
     }
@@ -829,7 +829,103 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        check(
+        checkMoves(
+                bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), I, 0, 1, 1)),
+                SKIP
+        );
+    }
+
+    @Test
+    void dontWasteSkip() {
+        Board board = board("" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........");
+        List<Move> actualMoves = bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(S), null, 0, 1, 1));
+        assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
+    }
+
+    @Test
+    void testBug2() {
+        Board board = board("" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                ".x........\n" +
+                "xx........\n" +
+                ".x........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..xxx.....\n" +
+                "...xx...xx\n" +
+                "x.xxxxxxxx\n" +
+                "xxxxx..xxx\n" +
+                ".xxxxxxxxx\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo");
+        List<Move> actualMoves = bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), T, 0, 1, 0));
+        assertFalse(actualMoves.equals(Arrays.asList(DOWN, DOWN, DOWN, DOWN, DOWN, ROTATE_CCW)));
+    }
+
+    @Test
+    void testBug6() {
+        Board board = board("" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "xxxxxx..xx\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo");
+        bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), Z, 0, 1, 1));
+    }
+
+    @Test
+    void useSkip() {
+        Board board = board("" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "x.x.x.x.x.\n" +
+                "x.x.x.x.x.\n" +
+                "x.x.x.x.x.\n" +
+                "x.x.x.x.x.\n" +
+                "x.x.x.x.x."
+        );
+
+        checkMoves(
                 bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), I, 0, 1, 1)),
                 SKIP
         );
@@ -837,7 +933,7 @@ public class BestMoveFinderTest {
 
     //-------- utils
 
-    private void check(List<Move> actualMoves, Move... expectedMoves) {
+    private void checkMoves(List<Move> actualMoves, Move... expectedMoves) {
         assertEquals(actualMoves, Arrays.asList(expectedMoves), "\n" + "expected: " + Arrays.toString(expectedMoves) + "\n" + "actual: " + actualMoves + "\n");
     }
 

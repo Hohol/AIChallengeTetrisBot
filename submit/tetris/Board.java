@@ -24,6 +24,7 @@ public class Board {
         width = board.width;
         height = board.height;
         b = new boolean[height][width];
+        this.penalty = board.penalty;
         for (int i = 0; i < height; i++) {
             System.arraycopy(board.b[i], 0, b[i], 0, width);
         }
@@ -137,7 +138,6 @@ public class Board {
                 }
             }
         }
-        r.setPenalty(penalty);
         r.addPenaltyIfNeeded(round);
         int linesCleared = r.clearFullRows();
 

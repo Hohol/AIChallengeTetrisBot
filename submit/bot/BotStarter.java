@@ -49,9 +49,9 @@ public class BotStarter {
     }
 
     public ArrayList<MoveType> getMoves(BotState state, long timeout) {
-        if (state.getMyBot().getPoints() != expectedScore) {
+        /*if (state.getMyBot().getPoints() != expectedScore) {
             throw new RuntimeException("wrong score. expected = " + expectedScore + ", actual = " + state.getMyBot().getPoints());
-        }
+        }*/
         GameState gameState = getGameState(state);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
 

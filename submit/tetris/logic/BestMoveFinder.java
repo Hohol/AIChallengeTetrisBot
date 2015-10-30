@@ -11,7 +11,8 @@ public class BestMoveFinder {
 
     public static final ParameterWeights BEST_PARAMETERS = new ParameterWeights()
             .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 2.878471664579383).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 2.133187913129006).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 4.672254358240745).put(CELLS_ABOVE_TOP, 0.8587277875132031).put(FLAT_RATE, 0.733147384274665).put(COMBO, -0.16547251812410724)
-            .put(PREV_STATE, 0.2);
+            .put(PREV_STATE, 0.2)
+            .put(SKIP_CNT, -8);
 
     private final Evaluator evaluator;
 
@@ -48,11 +49,11 @@ public class BestMoveFinder {
         if (skipCnt > 0) {
             Board newBoard = new Board(board);
             newBoard.addPenaltyIfNeeded(round);
+            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1);
             if (nextTetrimino == null) {
-                bestState = evaluator.getEvaluation(newBoard, score, combo, prevStateEval);
+                bestState = curEvaluation;
             } else {
-                double curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval).evaluation;
-                bestState = findBestMoves(newBoard, newBoard.newFallingTetrimino(nextTetrimino), null, score, combo, round + 1, curEvaluation, skipCnt - 1).getState();
+                bestState = findBestMoves(newBoard, newBoard.newFallingTetrimino(nextTetrimino), null, score, combo, round + 1, curEvaluation.evaluation, skipCnt - 1).getState();
             }
         }
 
@@ -93,12 +94,12 @@ public class BestMoveFinder {
 
             EvaluationState curState;
 
+            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval, newSkipCnt);
             if (nextTetrimino == null) {
-                curState = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval);
+                curState = curEvaluation;
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
-                double curStateEvaluation = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval).evaluation;
-                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curStateEvaluation, newSkipCnt).getState();
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curEvaluation.evaluation, newSkipCnt).getState();
             }
             if (curState != null && curState.better(bestState)) {
                 bestState = curState;
