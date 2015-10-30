@@ -922,6 +922,23 @@ public class BestMoveFinderTest {
         );
     }
 
+    @Test
+    void tSpinPattern() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "...xxxxxxx\n" +
+                        "x.xxxxxxxx"
+        );
+        checkAction(board, I, 2, 0);
+    }
+
     //-------- utils
 
     private void checkAction(Board board, int newLeftCol, int cwRotationCnt) {

@@ -83,6 +83,9 @@ public class EvaluationState {
         x += combo * parameterWeight.get(COMBO);
         x += prevStateEval * parameterWeight.get(PREV_STATE);
         x += skipCnt * parameterWeight.get(SKIP_CNT);
+        if (tSpinPattern) {
+            x += parameterWeight.get(T_SPIN_PATTERN);
+        }
 
         return x;
     }
