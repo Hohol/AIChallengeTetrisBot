@@ -5,6 +5,7 @@ import tetris.*;
 import java.util.*;
 
 import static tetris.Move.*;
+import static tetris.TetriminoType.*;
 import static tetris.logic.EvaluationParameter.*;
 
 public class BestMoveFinder {
@@ -60,13 +61,19 @@ public class BestMoveFinder {
 
         TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
         List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
+        TetriminoType type = fallingTetrimino.getTetrimino().getType();
         for (int row = bfs.length - 1; row >= 0; row--) {
             for (int col = 0; col < bfs[0].length; col++) {
                 for (int orientation = 0; orientation < bfs[0][0].length; orientation++) {
                     if (bfs[row][col][orientation] == null) {
                         continue;
                     }
-                    TetriminoWithPosition t = new TetriminoWithPosition(row, col, Tetrimino.of(fallingTetrimino.getTetrimino().getType(), orientation));
+                    if ((orientation == 2 || orientation == 3)
+                            && (type == I || type == S || type == Z)
+                            && bfs[row][col][orientation - 2] != null) {
+                        continue;
+                    }
+                    TetriminoWithPosition t = new TetriminoWithPosition(row, col, Tetrimino.of(type, orientation));
                     if (board.collides(t.moveDown())) {
                         availableFinalPositions.add(t);
                     }
