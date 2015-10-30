@@ -49,9 +49,9 @@ public class BotStarter {
     }
 
     public ArrayList<MoveType> getMoves(BotState state, long timeout) {
-        /*if (state.getMyBot().getPoints() != expectedScore) {
+        if (state.getMyBot().getPoints() != expectedScore) {
             throw new RuntimeException("wrong score. expected = " + expectedScore + ", actual = " + state.getMyBot().getPoints());
-        }*/
+        }
         GameState gameState = getGameState(state);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
 
@@ -73,6 +73,9 @@ public class BotStarter {
     }
 
     private void updateExpectedScore(GameState gameState, List<Move> moves) {
+        if (!moves.isEmpty() && moves.get(0) == Move.SKIP) {
+            return;
+        }
         TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
         Board board = gameState.getBoard();
         for (Move move : moves) {
@@ -101,6 +104,8 @@ public class BotStarter {
                 return MoveType.TURNLEFT;
             case DOWN:
                 return MoveType.DOWN;
+            case SKIP:
+                return MoveType.SKIP;
             default:
                 throw new RuntimeException();
         }
@@ -129,7 +134,8 @@ public class BotStarter {
                 fallingTetrimino,
                 convertTetrimino(state.getNextShape()),
                 state.getMyBot().getCombo(),
-                state.getRound()
+                state.getRound(),
+                state.getSkip()
         );
     }
 

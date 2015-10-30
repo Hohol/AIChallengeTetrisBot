@@ -2,6 +2,7 @@ package tetris;
 
 public class Board {
 
+    public static final int SOLID_BLOCK_PERIOD = 15;
     public static int STANDARD_HEIGHT = 21;
     public static int STANDARD_WIDTH = 10;
 
@@ -19,7 +20,7 @@ public class Board {
         b = new boolean[height][width];
     }
 
-    private Board(Board board) {
+    public Board(Board board) {
         width = board.width;
         height = board.height;
         b = new boolean[height][width];
@@ -137,9 +138,7 @@ public class Board {
             }
         }
         r.setPenalty(penalty);
-        if (round % 15 == 0) {
-            r.addPenalty();
-        }
+        r.addPenaltyIfNeeded(round);
         int linesCleared = r.clearFullRows();
 
         boolean wasTSpin = wasTSpin(twp, lastMove, linesCleared);
@@ -161,7 +160,15 @@ public class Board {
             scoreDelta = getScore(linesCleared, comboScore, wasTSpin);
         }
 
-        return new DropResult(r, scoreDelta, newCombo);
+        boolean skipAdded = wasTSpin && linesCleared == 2 || linesCleared == 4;
+
+        return new DropResult(r, scoreDelta, newCombo, skipAdded);
+    }
+
+    public void addPenaltyIfNeeded(int round) {
+        if (round % SOLID_BLOCK_PERIOD == 0) {
+            addPenalty();
+        }
     }
 
     private int getScore(int linesCleared, int comboScore, boolean wasTSpin) {

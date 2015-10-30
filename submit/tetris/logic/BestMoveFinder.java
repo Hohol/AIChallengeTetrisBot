@@ -25,7 +25,7 @@ public class BestMoveFinder {
 
     public List<Move> findBestMoves(GameState gameState) {
         Board board = gameState.getBoard();
-        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo(), gameState.getRound(), 0).getMoves();
+        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo(), gameState.getRound(), 0, gameState.getSkipCnt()).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
         while (moves.size() > 0 && moves.get(moves.size() - 1) == DOWN) {
@@ -38,12 +38,23 @@ public class BestMoveFinder {
         return moves;
     }
 
-    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round, double prevStateEval) {
+    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round, double prevStateEval, int skipCnt) {
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(null, EvaluationState.LOST);
         }
         EvaluationState bestState = null;
         TetriminoWithPosition bestPosition = null;
+
+        if (skipCnt > 0) {
+            Board newBoard = new Board(board);
+            newBoard.addPenaltyIfNeeded(round);
+            if (nextTetrimino == null) {
+                bestState = evaluator.getEvaluation(newBoard, score, combo, prevStateEval);
+            } else {
+                double curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval).evaluation;
+                bestState = findBestMoves(newBoard, newBoard.newFallingTetrimino(nextTetrimino), null, score, combo, round + 1, curEvaluation, skipCnt - 1).getState();
+            }
+        }
 
         TetriminoWithPosition[][][] bfs = bfs(board, fallingTetrimino);
         List<TetriminoWithPosition> availableFinalPositions = new ArrayList<>();
@@ -62,7 +73,6 @@ public class BestMoveFinder {
         }
 
         for (TetriminoWithPosition finalPosition : availableFinalPositions) {
-
             DropResult dropResult = board.drop(finalPosition, getPrevMove(
                             finalPosition,
                             bfs[finalPosition.getTopRow()][finalPosition.getLeftCol()][finalPosition.getTetrimino().getOrientation()]),
@@ -76,6 +86,10 @@ public class BestMoveFinder {
 
             int newScore = score + dropResult.getScoreAdded();
             int newCombo = dropResult.getCombo();
+            int newSkipCnt = skipCnt;
+            if (dropResult.getSkipAdded()) {
+                newSkipCnt++;
+            }
 
             EvaluationState curState;
 
@@ -83,12 +97,16 @@ public class BestMoveFinder {
                 curState = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval);
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
-                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval).evaluation).getState();
+                double curStateEvaluation = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval).evaluation;
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curStateEvaluation, newSkipCnt).getState();
             }
             if (curState != null && curState.better(bestState)) {
                 bestState = curState;
                 bestPosition = finalPosition;
             }
+        }
+        if (bestPosition == null && bestState != null) { // Skip was the best move. Warning! Very ugly code!
+            return new MovesWithEvaluation(Collections.singletonList(SKIP), bestState);
         }
         if (bestPosition == null) {
             return new MovesWithEvaluation(Collections.emptyList(), EvaluationState.LOST);

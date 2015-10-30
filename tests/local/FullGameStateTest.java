@@ -34,7 +34,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -62,7 +62,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                4, 2, false, 0,
+                4, 2, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -90,7 +90,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                5, 0, false, 1,
+                5, 0, false, 1, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -120,7 +120,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                10, 1, false, 3,
+                10, 1, false, 3, 1,
                 new Board(
                         "" +
                                 "....\n" +
@@ -150,7 +150,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                18, 1, false, 6,
+                18, 1, false, 6, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -178,7 +178,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -206,7 +206,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -229,7 +229,7 @@ public class FullGameStateTest {
         state.addGarbage(new Holes(0));
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -251,7 +251,7 @@ public class FullGameStateTest {
         state.addGarbage();
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -276,7 +276,7 @@ public class FullGameStateTest {
         state.addGarbage(new Holes(2), new Holes(3));
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -305,7 +305,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, true, 0,
+                0, 0, true, 0, 0,
                 new Board(
                         "" +
                                 "xx..\n" +
@@ -332,7 +332,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, true, 0,
+                0, 0, true, 0, 0,
                 new Board(
                         "" +
                                 "...x\n" +
@@ -354,7 +354,7 @@ public class FullGameStateTest {
         state.addGarbage(new Holes(0));
         check(
                 state,
-                0, 0, true, 0,
+                0, 0, true, 0, 0,
                 new Board(
                         "" +
                                 "...x\n" +
@@ -380,7 +380,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, false, 0,
+                0, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -406,7 +406,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, true, 0,
+                0, 0, true, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -433,7 +433,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                20, 0, false, 0,
+                20, 0, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -459,13 +459,108 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                18, 1, false, 6,
+                18, 1, false, 6, 0,
                 new Board(
                         "" +
                                 "....\n" +
                                 "....\n" +
                                 "....\n" +
                                 "oooo"
+                ));
+    }
+
+    @Test
+    void testSkip() {
+        FullGameState state = new FullGameState(new Board(
+                "" +
+                        "....\n" +
+                        "..xx\n" +
+                        "..xx\n" +
+                        "oooo"
+        ));
+        state.combo = 3;
+        state.score = 1;
+        state.skipCnt = 2;
+        state.makeMove(
+                O,
+                null,
+                bmf(SKIP)
+        );
+        check(
+                state,
+                1, 3, false, 0, 1,
+                new Board(
+                        "" +
+                                "....\n" +
+                                "..xx\n" +
+                                "..xx\n" +
+                                "oooo"
+                ));
+    }
+
+    @Test
+    void getNewSkip() {
+        FullGameState state = new FullGameState(new Board(
+                "" +
+                        "....\n" +
+                        "....\n" +
+                        "..xx\n" +
+                        "...x\n" +
+                        "x.xx"
+        ));
+        state.makeMove(
+                T,
+                null,
+                bmf(ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
+        );
+        check(
+                state,
+                10, 1, false, 3, 1,
+                new Board(
+                        "" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "..xx"
+                ));
+    }
+
+    @Test
+    void getNewSkip2() {
+        FullGameState state = new FullGameState(new Board(
+                "" +
+                        "....\n" +
+                        "....\n" +
+                        "....\n" +
+                        "....\n" +
+                        "....\n" +
+                        "...x\n" +
+                        ".xxx\n" +
+                        ".xxx\n" +
+                        ".xxx\n" +
+                        ".xxx"
+        ));
+        state.makeMove(
+                I,
+                null,
+                bmf(DOWN, ROTATE_CW, LEFT, LEFT, DROP)
+        );
+        check(
+                state,
+                10, 1, false, 3, 1,
+                new Board(
+                        "" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "....\n" +
+                                "...x"
                 ));
     }
 
@@ -477,12 +572,14 @@ public class FullGameStateTest {
             int combo,
             boolean lost,
             int garbageSentOnLastMove,
+            int skipCnt,
             Board board
     ) {
         assertEquals(state.board, board, "board: \n" + state.board);
         assertEquals(state.score, score, "score");
         assertEquals(state.combo, combo, "combo");
         assertEquals(state.lost, lost, "lost");
+        assertEquals(state.skipCnt, skipCnt, "skipCnt");
         assertEquals(state.garbageSentOnLastMove, garbageSentOnLastMove, "garbage");
     }
 

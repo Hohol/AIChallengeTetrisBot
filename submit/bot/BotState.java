@@ -109,6 +109,9 @@ public class BotState {
                 String[] split = value.split(",");
                 this.shapeLocation = new Point(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
                 break;
+            case "skips":
+                players.get(player).setSkip(Integer.parseInt(value));
+                break;
             default:
                 System.err.printf("Cannot parse updates with key \"%s\"\n", key);
                 break;
@@ -148,5 +151,9 @@ public class BotState {
 
     public int getRound() {
         return this.round;
+    }
+
+    public int getSkip() {
+        return myBot.getSkip();
     }
 }

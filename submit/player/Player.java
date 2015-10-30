@@ -34,7 +34,8 @@ public class Player {
 	private String name;
 	private int points;
 	private int combo;
-	
+	private int skip;
+
 	public Player(String name) {
 		this.name = name;
 	}
@@ -65,5 +66,13 @@ public class Player {
 	
 	public int getCombo() {
 		return this.combo;
+	}
+
+	public void setSkip(int skip) {
+		this.skip = skip;
+	}
+
+	public int getSkip() {
+		return skip;
 	}
 }

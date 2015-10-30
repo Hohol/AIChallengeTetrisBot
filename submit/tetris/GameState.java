@@ -6,13 +6,15 @@ public class GameState {
     private final TetriminoWithPosition fallingTetrimino;
     private final int combo;
     private final int round;
+    private final int skipCnt;
 
-    public GameState(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo, int round) {
+    public GameState(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo, int round, int skipCnt) {
         this.board = board;
         this.nextTetrimino = nextTetrimino;
         this.fallingTetrimino = fallingTetrimino;
         this.combo = combo;
         this.round = round;
+        this.skipCnt = skipCnt;
     }
 
     public Board getBoard() {
@@ -55,5 +57,9 @@ public class GameState {
 
     public int getRound() {
         return round;
+    }
+
+    public int getSkipCnt() {
+        return skipCnt;
     }
 }
