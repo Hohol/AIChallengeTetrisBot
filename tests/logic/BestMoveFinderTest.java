@@ -30,8 +30,7 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(board.getWidth() - 1, 1));
+        checkAction(board, board.getWidth() - 1, 1);
     }
 
     @Test
@@ -86,9 +85,7 @@ public class BestMoveFinderTest {
                 "x.xxxxxxxx.\n" +
                 "x.xxxxxxxx.\n" +
                 "x.xxxxxxxx.");
-        Tetrimino tetrimino = Tetrimino.of(I);
-        Action action = findBestAction(board, tetrimino);
-        assertEquals(action, new Action(1, 1));
+        checkAction(board, I, 1, 1);
     }
 
     @Test
@@ -163,8 +160,7 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 ".xxxxxxxx.";
         Board board = board(s);
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(board.getWidth() - 1, 1));
+        checkAction(board, board.getWidth() - 1, 1);
     }
 
     @Test
@@ -187,8 +183,7 @@ public class BestMoveFinderTest {
                 "xxxxxxx.x.\n" +
                 "xxxxxxxx.x\n" +
                 "xxxxxxxxx.");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(board.getWidth() - 1, 0));
+        checkAction(board, board.getWidth() - 1, 0);
     }
 
     @Test
@@ -236,8 +231,7 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(5, 0));
+        checkAction(board, 5, 0);
     }
 
     @Test
@@ -291,8 +285,7 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action action = findBestAction(board, Tetrimino.of(I));
-        assertEquals(action, new Action(board.getWidth() - 1, 1));
+        checkAction(board, I, board.getWidth() - 1, 1);
     }
 
     @Test
@@ -537,8 +530,7 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "..........\n" +
                 ".x........");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(2, 0));
+        checkAction(board, 2, 0);
     }
 
     @Test
@@ -606,8 +598,7 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 ".xxxxxxxxx\n" +
                 ".xxxxxxxxx");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(0, 0));
+        checkAction(board, 0, 0);
     }
 
     @Test
@@ -909,20 +900,20 @@ public class BestMoveFinderTest {
     @Test
     void useSkip() {
         Board board = board("" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "x.x.x.x.x.\n" +
-                "x.x.x.x.x.\n" +
-                "x.x.x.x.x.\n" +
-                "x.x.x.x.x.\n" +
-                "x.x.x.x.x."
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "x.x.x.x.x.\n" +
+                        "x.x.x.x.x.\n" +
+                        "x.x.x.x.x.\n" +
+                        "x.x.x.x.x.\n" +
+                        "x.x.x.x.x."
         );
 
         checkMoves(
@@ -932,6 +923,16 @@ public class BestMoveFinderTest {
     }
 
     //-------- utils
+
+    private void checkAction(Board board, int newLeftCol, int cwRotationCnt) {
+        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
+        assertEquals(bestAction, new Action(newLeftCol, cwRotationCnt));
+    }
+
+    private void checkAction(Board board, TetriminoType tetriminoType, int newLeftCol, int cwRotationCnt) {
+        Action action = findBestAction(board, Tetrimino.of(tetriminoType));
+        assertEquals(action, new Action(newLeftCol, cwRotationCnt));
+    }
 
     private void checkMoves(List<Move> actualMoves, Move... expectedMoves) {
         assertEquals(actualMoves, Arrays.asList(expectedMoves), "\n" + "expected: " + Arrays.toString(expectedMoves) + "\n" + "actual: " + actualMoves + "\n");
