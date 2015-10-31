@@ -826,7 +826,7 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void dontWasteSkip() {
         Board board = board("" +
                 "..........\n" +
@@ -844,7 +844,7 @@ public class BestMoveFinderTest {
         assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void testBug2() {
         Board board = board("" +
                 "..........\n" +
@@ -950,10 +950,10 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
-                        "...xxxxxxx\n" +
+                        "...xxxxxx.\n" +
                         "x.xxxxxxxx"
         );
-        checkAction(board, I, 2, 0);
+        checkAction(board, T, board.getWidth() - 2, 3);
     }
 
     //-------- utils

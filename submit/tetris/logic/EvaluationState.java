@@ -90,6 +90,9 @@ public class EvaluationState {
         if (tSpinPattern) {
             x += parameterWeight.get(T_SPIN_PATTERN);
         }
+        if (semiTSpinPattern) {
+            x += parameterWeight.get(SEMI_T_SPIN_PATTERN);
+        }
 
         return x;
     }

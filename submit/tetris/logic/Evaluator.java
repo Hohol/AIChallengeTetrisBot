@@ -90,6 +90,9 @@ public class Evaluator {
     private boolean checkSemiTSpinPattern(Board board) {
         for (int leftCol = 0; leftCol + 3 - 1 < board.getWidth(); leftCol++) {
             int leftTop = board.getTopRowInColumn(leftCol);
+            if (leftTop < 3) {
+                return false;
+            }
             int midTop = board.getTopRowInColumn(leftCol + 1);
             int rightTop = board.getTopRowInColumn(leftCol + 2);
             if (leftTop == rightTop && leftTop < midTop) {
