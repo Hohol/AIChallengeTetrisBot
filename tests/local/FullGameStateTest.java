@@ -488,7 +488,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                1, 3, false, 0, 1,
+                4, 3, false, 1, 1,
                 new Board(
                         "" +
                                 "....\n" +

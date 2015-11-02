@@ -159,12 +159,18 @@ public class Board {
             scoreDelta = getScore(linesCleared, combo, wasTSpin);
         }
 
-        boolean skipAdded = wasTSpin && linesCleared == 2 || linesCleared == 4;
+        int skipAdded = (wasTSpin && linesCleared == 2 || linesCleared == 4) ? 1 : 0;
 
         return new DropResult(r, scoreDelta, newCombo, skipAdded);
     }
 
-    public void addPenaltyIfNeeded(int round) {
+    public DropResult skipMove(int combo, int round) {
+        Board r = new Board(this);
+        r.addPenaltyIfNeeded(round);
+        return new DropResult(r, combo, combo, -1);
+    }
+
+    private void addPenaltyIfNeeded(int round) {
         if (round % SOLID_BLOCK_PERIOD == 0) {
             addPenalty();
         }

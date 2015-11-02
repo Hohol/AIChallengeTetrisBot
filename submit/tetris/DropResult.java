@@ -4,9 +4,9 @@ public class DropResult {
     private final Board board;
     private final int scoreAdded;
     private final int newCombo;
-    private final boolean skipAdded;
+    private final int skipAdded;
 
-    public DropResult(Board board, int scoreAdded, int newCombo, boolean skipAdded) {
+    public DropResult(Board board, int scoreAdded, int newCombo, int skipAdded) {
         this.board = board;
         this.scoreAdded = scoreAdded;
         this.newCombo = newCombo;
@@ -25,7 +25,7 @@ public class DropResult {
         return newCombo;
     }
 
-    public boolean getSkipAdded() {
+    public int getSkipAdded() {
         return skipAdded;
     }
 }

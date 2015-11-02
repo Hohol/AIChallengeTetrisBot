@@ -15,8 +15,7 @@ public class BestMoveFinder {
             .put(PREV_STATE, 0.2)
             .put(SKIP_CNT, -3)
             .put(T_SPIN_PATTERN, -8)
-            .put(SEMI_T_SPIN_PATTERN, 0)
-            ;
+            .put(SEMI_T_SPIN_PATTERN, 0);
 
     private final Evaluator evaluator;
 
@@ -51,8 +50,7 @@ public class BestMoveFinder {
         TetriminoWithPosition bestPosition = null;
 
         if (skipCnt > 0) {
-            Board newBoard = new Board(board);
-            newBoard.addPenaltyIfNeeded(round);
+            Board newBoard = board.skipMove(score, combo).getBoard();
             EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1);
             if (nextTetrimino == null) {
                 bestState = curEvaluation;
@@ -98,9 +96,7 @@ public class BestMoveFinder {
             int newScore = score + dropResult.getScoreAdded();
             int newCombo = dropResult.getCombo();
             int newSkipCnt = skipCnt;
-            if (dropResult.getSkipAdded()) {
-                newSkipCnt++;
-            }
+            newSkipCnt += dropResult.getSkipAdded();
 
             EvaluationState curState;
 

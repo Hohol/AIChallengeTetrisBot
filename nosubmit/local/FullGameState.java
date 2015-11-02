@@ -29,22 +29,21 @@ class FullGameState {
             return;
         }
         List<Move> moves = player.findBestMoves(new GameState(board, fallingTetrimino, nextTetrimino, combo, round, skipCnt));
+        DropResult dropResult;
         if (!moves.isEmpty() && moves.get(0) == Move.SKIP) {
-            board.addPenaltyIfNeeded(round);
-            garbageSentOnLastMove = 0;
-            round++;
-            skipCnt--;
-            return;
+            dropResult = board.skipMove(combo, round);
+        } else {
+            for (Move move : moves) {
+                fallingTetrimino = fallingTetrimino.move(move, board);
+            }
+            Move lastMove = moves.isEmpty() ? null : moves.get(moves.size() - 1);
+            if (!board.collides(fallingTetrimino.moveDown())) {
+                fallingTetrimino = fallingTetrimino.move(Move.DROP, board);
+                lastMove = Move.DROP;
+            }
+            dropResult = board.drop(fallingTetrimino, lastMove, combo, round);
         }
-        for (Move move : moves) {
-            fallingTetrimino = fallingTetrimino.move(move, board);
-        }
-        Move lastMove = moves.isEmpty() ? null : moves.get(moves.size() - 1);
-        if (!board.collides(fallingTetrimino.moveDown())) {
-            fallingTetrimino = fallingTetrimino.move(Move.DROP, board);
-            lastMove = Move.DROP;
-        }
-        DropResult dropResult = board.drop(fallingTetrimino, lastMove, combo, round);
+
         board = dropResult.getBoard();
         combo = dropResult.getCombo();
         int newScore = score + dropResult.getScoreAdded();
@@ -55,9 +54,7 @@ class FullGameState {
         if (board.getMaxColumnHeight() == board.getHeight()) {
             lost = true;
         }
-        if (dropResult.getSkipAdded()) {
-            skipCnt++;
-        }
+        skipCnt += dropResult.getSkipAdded();
     }
 
     public void addGarbage(Holes... holes) {
