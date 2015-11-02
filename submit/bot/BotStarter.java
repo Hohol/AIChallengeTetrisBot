@@ -42,6 +42,7 @@ public class BotStarter {
 
     private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
     static int expectedScore;
+    static int expectedCombo;
 
     public static void main(String[] args) {
         BotParser parser = new BotParser(new BotStarter());
@@ -51,6 +52,9 @@ public class BotStarter {
     public ArrayList<MoveType> getMoves(BotState state, long timeout) {
         /*if (state.getMyBot().getPoints() != expectedScore) {
             throw new RuntimeException("wrong score. expected = " + expectedScore + ", actual = " + state.getMyBot().getPoints());
+        }
+        if (state.getMyBot().getCombo() != expectedCombo) {
+            throw new RuntimeException("wrong combo. expected = " + expectedCombo + ", actual = " + state.getMyBot().getCombo());
         }*/
         GameState gameState = getGameState(state);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
@@ -88,6 +92,7 @@ public class BotStarter {
         }
         DropResult dropResult = board.drop(fallingTetrimino, lastMove, gameState.getCombo(), gameState.getRound());
         expectedScore += dropResult.getScoreAdded();
+        expectedCombo = dropResult.getCombo();
     }
 
     private MoveType convertMove(Move move) {

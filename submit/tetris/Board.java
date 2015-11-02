@@ -146,18 +146,17 @@ public class Board {
         int newCombo;
         if (linesCleared == 0) {
             newCombo = 0;
-        } else if (linesCleared == 1) {
-            newCombo = combo;
-        } else { // linesCleared >= 2
+        } else if (linesCleared >= 2 || wasTSpin) {
             newCombo = combo + 1;
+        } else { // linesCleared == 1
+            newCombo = combo;
         }
 
         int scoreDelta;
         if (r.getMaxColumnHeight() == penalty) { // perfect clear
             scoreDelta = 18;
         } else {
-            int comboScore = Math.max(0, newCombo - 1);
-            scoreDelta = getScore(linesCleared, comboScore, wasTSpin);
+            scoreDelta = getScore(linesCleared, combo, wasTSpin);
         }
 
         boolean skipAdded = wasTSpin && linesCleared == 2 || linesCleared == 4;

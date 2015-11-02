@@ -939,7 +939,7 @@ public class BestMoveFinderTest {
         checkAction(board, I, 2, 0);
     }
 
-    @Test
+    @Test (enabled = false)
     void semiTSpinPattern() {
         Board board = board("" +
                         "..........\n" +

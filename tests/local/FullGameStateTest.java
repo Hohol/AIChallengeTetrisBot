@@ -62,7 +62,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                4, 2, false, 0, 0,
+                5, 2, false, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -90,7 +90,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                5, 0, false, 1, 0,
+                5, 1, false, 1, 0,
                 new Board(
                         "" +
                                 "....\n" +
