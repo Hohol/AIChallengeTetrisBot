@@ -1,5 +1,6 @@
 package logic;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tetris.*;
 import tetris.logic.Action;
@@ -18,9 +19,16 @@ public class BestMoveFinderTest {
 
     private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
 
+    TestBuilder testBuilder;
+
+    @BeforeMethod
+    void init() {
+        testBuilder = new TestBuilder();
+    }
+
     @Test
     void test() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "....xxxx..\n" +
                 "..........\n" +
@@ -30,12 +38,12 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        checkAction(board, board.getWidth() - 1, 1);
+        checkAction(width() - 1, 1);
     }
 
     @Test
     void testClearFull() {
-        Board board = board("" +
+        Board board = newBoard("" +
                 "x.........\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
@@ -43,7 +51,7 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.");
         Tetrimino tetrimino = Tetrimino.of(I).rotateCW();
         Board newBoard = board.drop(new TetriminoWithPosition(board.getHeight() - 4, board.getWidth() - 1, tetrimino), DOWN, 0, 1).getBoard();
-        Board expectedNewBoard = board("" +
+        Board expectedNewBoard = newBoard("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -54,7 +62,7 @@ public class BestMoveFinderTest {
 
     @Test
     void testNextTetrimino() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -69,14 +77,14 @@ public class BestMoveFinderTest {
                 "xxxxxxxx..\n" +
                 "xxxxxxxx..\n" +
                 "xxxxxxxx..\n");
-        Tetrimino tetrimino = Tetrimino.of(I);
-        Action action = findBestAction(board, tetrimino, I);
-        assertEquals(action, new Action(board.getWidth() - 2, 1));
+        fallingType(I);
+        nextType(I);
+        checkAction(width() - 2, 1);
     }
 
     @Test
     void minimizeLowTiles() {
-        Board board = board("" +
+        board("" +
                 "......x....\n" +
                 "......x....\n" +
                 "......x....\n" +
@@ -85,7 +93,8 @@ public class BestMoveFinderTest {
                 "x.xxxxxxxx.\n" +
                 "x.xxxxxxxx.\n" +
                 "x.xxxxxxxx.");
-        checkAction(board, I, 1, 1);
+        fallingType(I);
+        checkAction(1, 1);
     }
 
     @Test
@@ -144,7 +153,7 @@ public class BestMoveFinderTest {
 
     @Test
     void testBug() {
-        String s = "" +
+        board("" +
                 "..........\n" +
                 "...xxxx...\n" +
                 "..........\n" +
@@ -158,14 +167,14 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
-                ".xxxxxxxx.";
-        Board board = board(s);
-        checkAction(board, board.getWidth() - 1, 1);
+                ".xxxxxxxx.");
+        checkAction(width() - 1, 1);
     }
 
     @Test
     void testBug4() {
-        Board board = board("....x.....\n" +
+        board("" +
+                "....x.....\n" +
                 "....x.....\n" +
                 "....x.....\n" +
                 "....x.....\n" +
@@ -183,12 +192,12 @@ public class BestMoveFinderTest {
                 "xxxxxxx.x.\n" +
                 "xxxxxxxx.x\n" +
                 "xxxxxxxxx.");
-        checkAction(board, board.getWidth() - 1, 0);
+        checkAction(width() - 1, 0);
     }
 
     @Test
     void avoidBigHeight() {
-        Board board = board("" +
+        board("" +
                 "....x.....\n" +
                 "....x.....\n" +
                 "....x.....\n" +
@@ -202,14 +211,12 @@ public class BestMoveFinderTest {
                 "xxxxxxxx..\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        Action forbiddenAction = new Action(board.getWidth() - 2, 0);
-        assertFalse(bestAction.equals(forbiddenAction));
+        checkForbidden(width() - 2, 0);
     }
 
     @Test
     void testBug3() {
-        Board board = board("" +
+        board("" +
                 ".....x....\n" +
                 ".....x....\n" +
                 ".....x....\n" +
@@ -231,12 +238,12 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        checkAction(board, 5, 0);
+        checkAction(5, 0);
     }
 
     @Test
     void testNew() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "...xxxx...\n" +
                 "..........\n" +
@@ -258,13 +265,13 @@ public class BestMoveFinderTest {
                 "xxx.xxxxxx\n" +
                 "xxx.xxxxxx\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), L);
-        assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
+        nextType(L);
+        checkForbidden(width() - 2, 1);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void testTooHigh() {
-        Board board = board("" +
+        board("" +
                 "x.........\n" +
                 "x.........\n" +
                 "x.........\n" +
@@ -285,12 +292,13 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        checkAction(board, I, board.getWidth() - 1, 1);
+        fallingType(I);
+        checkAction(width() - 1, 1);
     }
 
     @Test
     void testCombo() {
-        Board board = board("" +
+        board("" +
                 "...x......\n" +
                 "...xxx....\n" +
                 "..........\n" +
@@ -312,13 +320,14 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "..........\n" +
                 "xxxxxxxxx.");
-        Action action = findBestAction(board, board.extractFallingTetrimino(), J, 3, 1);
-        assertEquals(action, new Action(board.getWidth() - 3, 2));
+        nextType(J);
+        combo(3);
+        checkAction(width() - 3, 2);
     }
 
     @Test
     void getDontPutOnTopBad() {
-        Board board = board("" +
+        board("" +
                 "...xx.....\n" +
                 "...xx.....\n" +
                 "..........\n" +
@@ -340,12 +349,12 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "xxxxxxxxx.\n" +
                 ".xxxxxxxxx");
-        checkForbidden(board, new Action(0, 0));
+        checkForbidden(0, 0);
     }
 
     @Test
     void testComplexMove() {
-        Board board = board("" +
+        board("" +
                 ".........\n" +
                 ".........\n" +
                 ".........\n" +
@@ -366,9 +375,7 @@ public class BestMoveFinderTest {
                 "...xx....\n" +
                 "x........\n" +
                 ".........");
-        List<Move> bestMoves = findBestMoves(board);
         checkMoves(
-                bestMoves,
                 LEFT,
                 LEFT,
                 DOWN,
@@ -392,7 +399,7 @@ public class BestMoveFinderTest {
 
     @Test
     void testTSpin() {
-        Board board = board("" +
+        board("" +
                 ".........\n" +
                 ".........\n" +
                 "...x.....\n" +
@@ -402,9 +409,7 @@ public class BestMoveFinderTest {
                 "xx.......\n" +
                 "x...xxxxx\n" +
                 "xx.xxxxxx");
-        List<Move> bestMoves = findBestMoves(board);
         checkMoves(
-                bestMoves,
                 ROTATE_CW,
                 ROTATE_CW,
                 LEFT,
@@ -418,7 +423,7 @@ public class BestMoveFinderTest {
 
     @Test
     void testPrepareForTSpin() {
-        Board board = board("" +
+        board("" +
                 "....x.....\n" +
                 "...xxx....\n" +
                 "..........\n" +
@@ -432,13 +437,13 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "....xxxxxx\n" +
                 "xx.xxxxxxx");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), T);
-        assertEquals(bestAction, new Action(0, 1));
+        nextType(T);
+        checkAction(0, 1);
     }
 
     @Test(enabled = false)
     void badIsNotSoBad() {
-        Board board = board("" +
+        board("" +
                 "...xx.....\n" +
                 "...xx.....\n" +
                 "..........\n" +
@@ -459,12 +464,12 @@ public class BestMoveFinderTest {
                 ".......xx.\n" +
                 ".......xx.\n" +
                 ".x.x.x.xxx");
-        checkForbidden(board, new Action(board.getWidth() - 3, 0));
+        checkForbidden(width() - 3, 0);
     }
 
     @Test(enabled = false)
     void badIsNotSoBad2() {
-        Board board = board("" +
+        board("" +
                 "...xx.....\n" +
                 "...xx.....\n" +
                 "..........\n" +
@@ -485,12 +490,12 @@ public class BestMoveFinderTest {
                 "....xx....\n" +
                 "....xx....\n" +
                 ".x.xxx.x.x");
-        checkForbidden(board, new Action(4, 0));
+        checkForbidden(4, 0);
     }
 
     @Test
     void badIsNotSoBad3() {
-        Board board = board("" +
+        board("" +
                 "...xx.....\n" +
                 "...xx.....\n" +
                 "..........\n" +
@@ -511,12 +516,12 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        checkForbidden(board, new Action(board.getWidth() - 2, 0));
+        checkForbidden(width() - 2, 0);
     }
 
     @Test
     void testSemiBad() {
-        Board board = board("" +
+        board("" +
                 "....xx....\n" +
                 "...xx.....\n" +
                 "..........\n" +
@@ -530,12 +535,12 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "..........\n" +
                 ".x........");
-        checkAction(board, 2, 0);
+        checkAction(2, 0);
     }
 
     @Test
     void testBug5() {
-        Board board = board("" +
+        board("" +
                 ".....x....\n" +
                 "...xxx....\n" +
                 "..........\n" +
@@ -557,8 +562,8 @@ public class BestMoveFinderTest {
                 "xx.xxxxxxx\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
+        nextType(T);
         checkMoves(
-                bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), T, 0, 1, 0)),
                 DOWN,
                 DOWN,
                 DOWN,
@@ -577,7 +582,7 @@ public class BestMoveFinderTest {
 
     @Test
     void testScore() {
-        Board board = board("" +
+        board("" +
                 "....x.....\n" +
                 "....x.....\n" +
                 "....x.....\n" +
@@ -598,12 +603,12 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 ".xxxxxxxxx\n" +
                 ".xxxxxxxxx");
-        checkAction(board, 0, 0);
+        checkAction(0, 0);
     }
 
     @Test
     void testEndGame() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "xxxxxxxx..\n" +
                 "xxxxxxxxx.\n" +
@@ -624,13 +629,14 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
-        Action bestAction = findBestAction(board, Tetrimino.of(O), I);
-        assertEquals(bestAction, new Action(board.getWidth() - 2, 0));
+        fallingType(O);
+        nextType(I);
+        checkAction(width() - 2, 0);
     }
 
     @Test
     void testEndGame2() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -652,12 +658,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        findBestAction(board, Tetrimino.of(O), Z);
+        fallingType(O);
+        nextType(Z);
+        testBuilder.findBestAction(); // just no exceptions
     }
 
     @Test
     void testEndGame3() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 ".xx.......\n" +
                 ".xxxxxx...\n" +
@@ -679,13 +687,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, Tetrimino.of(O), S);
-        assertEquals(bestAction, new Action(board.getWidth() - 2, 0));
+        fallingType(O);
+        nextType(Z);
+        checkAction(width() - 2, 0);
     }
 
     @Test
     void testEndGame4() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "xxxx..xxxx\n" +
                 "xxxxxxxx.x\n" +
@@ -707,14 +716,13 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        checkMoves(
-                bestMoveFinder.findBestMoves(new GameState(board, new TetriminoWithPosition(0, 4, Tetrimino.of(O)), null, 0, 1, 0))
-        );
+        testBuilder.fallingTetrimino = new TetriminoWithPosition(0, 4, O);
+        checkMoves();
     }
 
     @Test
     void testEndGame5() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "xx.x.xx...\n" +
@@ -736,13 +744,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, Tetrimino.of(S), S);
-        assertEquals(bestAction, new Action(board.getWidth() - 3, 0));
+        fallingType(S);
+        nextType(S);
+        checkAction(width() - 3, 0);
     }
 
     @Test
     void testEndGame6() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "....xxxxx.\n" +
@@ -764,13 +773,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, Tetrimino.of(I), O);
-        assertEquals(bestAction, new Action(board.getWidth() - 4, 0));
+        fallingType(I);
+        nextType(O);
+        checkAction(width() - 4, 0);
     }
 
     @Test
     void considerSolidBlocks() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "...xxxx...\n" +
                 "..........\n" +
@@ -792,13 +802,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino(), I, 0, 20);
-        assertEquals(bestAction, new Action(board.getWidth() - 4, 1));
+        nextType(I);
+        testBuilder.round = Board.SOLID_BLOCK_PERIOD;
+        checkAction(width() - 4, 1);
     }
 
     @Test
     void testSkip() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "xxxxxxxxx.\n" +
@@ -820,15 +831,17 @@ public class BestMoveFinderTest {
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.\n" +
                 "xxxxxxxxx.");
+        fallingType(O);
+        nextType(I);
+        skipCnt(1);
         checkMoves(
-                bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), I, 0, 1, 1)),
                 SKIP
         );
     }
 
     @Test(enabled = false)
     void dontWasteSkip() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -840,13 +853,15 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 "..........\n" +
                 "..........");
-        List<Move> actualMoves = bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(S), null, 0, 1, 1));
+        fallingType(S);
+        skipCnt(1);
+        List<Move> actualMoves = testBuilder.findBestMoves();
         assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
     }
 
     @Test(enabled = false)
     void testBug2() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -868,13 +883,14 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        List<Move> actualMoves = bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), T, 0, 1, 0));
+        nextType(T);
+        List<Move> actualMoves = testBuilder.findBestMoves();
         assertFalse(actualMoves.equals(Arrays.asList(DOWN, DOWN, DOWN, DOWN, DOWN, ROTATE_CCW)));
     }
 
     @Test
     void testBug6() {
-        Board board = board("" +
+        board("" +
                 "..........\n" +
                 "..........\n" +
                 "..........\n" +
@@ -894,12 +910,15 @@ public class BestMoveFinderTest {
                 "oooooooooo\n" +
                 "oooooooooo\n" +
                 "oooooooooo");
-        bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), Z, 0, 1, 1));
+        fallingType(O);
+        nextType(Z);
+        skipCnt(1);
+        testBuilder.findBestMoves(); // just no exception
     }
 
     @Test
     void useSkip() {
-        Board board = board("" +
+        board("" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -915,16 +934,17 @@ public class BestMoveFinderTest {
                         "x.x.x.x.x.\n" +
                         "x.x.x.x.x."
         );
-
+        fallingType(O);
+        nextType(I);
+        skipCnt(1);
         checkMoves(
-                bestMoveFinder.findBestMoves(new GameState(board, board.newFallingTetrimino(O), I, 0, 1, 1)),
                 SKIP
         );
     }
 
     @Test
     void tSpinPattern() {
-        Board board = board("" +
+        board("" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -936,12 +956,13 @@ public class BestMoveFinderTest {
                         "...xxxxxxx\n" +
                         "x.xxxxxxxx"
         );
-        checkAction(board, I, 2, 0);
+        fallingType(I);
+        checkAction(2, 0);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void semiTSpinPattern() {
-        Board board = board("" +
+        board("" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -953,12 +974,13 @@ public class BestMoveFinderTest {
                         "...xxxxxx.\n" +
                         "x.xxxxxxxx"
         );
-        checkAction(board, T, board.getWidth() - 2, 3);
+        fallingType(T);
+        checkAction(width() - 2, 3);
     }
 
-    @Test
+    @Test(enabled = false)
     void avoidLowEfficiency() {
-        Board board = board("" +
+        board("" +
                         "..........\n" +
                         "..........\n" +
                         "..........\n" +
@@ -970,75 +992,10 @@ public class BestMoveFinderTest {
                         "..........\n" +
                         ".xxxxxxxxx"
         );
-        checkForbidden(board, new Action(0, 0));
+        checkForbidden(0, 0);
     }
 
     //-------- utils
-
-    private void checkAction(Board board, int newLeftCol, int cwRotationCnt) {
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertEquals(bestAction, new Action(newLeftCol, cwRotationCnt));
-    }
-
-    private void checkAction(Board board, TetriminoType tetriminoType, int newLeftCol, int cwRotationCnt) {
-        Action action = findBestAction(board, Tetrimino.of(tetriminoType));
-        assertEquals(action, new Action(newLeftCol, cwRotationCnt));
-    }
-
-    private void checkMoves(List<Move> actualMoves, Move... expectedMoves) {
-        assertEquals(actualMoves, Arrays.asList(expectedMoves), "\n" + "expected: " + Arrays.toString(expectedMoves) + "\n" + "actual: " + actualMoves + "\n");
-    }
-
-
-    private List<Move> findBestMoves(Board board) {
-        return bestMoveFinder.findBestMoves(new GameState(board, board.extractFallingTetrimino(), null, 0, 1, 0));
-    }
-
-    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino) {
-        return findBestAction(board, fallingTetrimino, nextTetrimino, 0, 1);
-    }
-
-    private Action findBestAction(Board board, Tetrimino fallingTetrimino, TetriminoType nextTetrimino) {
-        return findBestAction(board, fallingTetrimino, nextTetrimino, 0);
-    }
-
-    private Action findBestAction(Board board, TetriminoWithPosition tetrimino) {
-        return findBestAction(board, tetrimino, null, 0, 1);
-    }
-
-    private Action findBestAction(Board board, Tetrimino fallingTetrimino) {
-        return findBestAction(board, fallingTetrimino, null, 0);
-    }
-
-    private Action findBestAction(Board board, Tetrimino fallingTetrimino, TetriminoType nextTetrimino, int combo) {
-        TetriminoWithPosition tetriminoWithPosition = board.newFallingTetrimino(fallingTetrimino.getType());
-        return findBestAction(board, tetriminoWithPosition, nextTetrimino, combo, 1);
-    }
-
-    private Action findBestAction(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int combo, int round) {
-        GameState gameState = new GameState(board, fallingTetrimino, nextTetrimino, combo, round, 0);
-        List<Move> moves = bestMoveFinder.findBestMoves(gameState);
-        if (!isSimpleAction(moves)) {
-            throw new RuntimeException("not simple action: " + moves);
-        }
-        int cwRotations = 0;
-        int colShift = 0;
-        for (Move move : moves) {
-            if (move == ROTATE_CW) {
-                cwRotations = (cwRotations + 1) % 4;
-            } else if (move == ROTATE_CCW) {
-                cwRotations = (cwRotations + 3) % 4;
-            } else if (move == LEFT) {
-                colShift--;
-            } else if (move == RIGHT) {
-                colShift++;
-            }
-        }
-        for (int i = 0; i < cwRotations; i++) {
-            fallingTetrimino = fallingTetrimino.rotateCW();
-        }
-        return new Action(fallingTetrimino.getLeftCol() + colShift, cwRotations);
-    }
 
     private boolean isSimpleAction(List<Move> moves) {
         int pos = 0;
@@ -1054,12 +1011,7 @@ public class BestMoveFinderTest {
         return pos == moves.size() || pos == moves.size() - 1 && moves.get(pos) == DROP;
     }
 
-    private void checkForbidden(Board board, Action forbiddenAction) {
-        Action bestAction = findBestAction(board, board.extractFallingTetrimino());
-        assertFalse(bestAction.equals(forbiddenAction));
-    }
-
-    public static Board board(String s) {
+    public static Board newBoard(String s) {
         String[] a = s.split("\n");
         if (a.length < Board.STANDARD_HEIGHT) {
             StringBuilder b = new StringBuilder();
@@ -1078,5 +1030,98 @@ public class BestMoveFinderTest {
             throw new RuntimeException("non-standard board height");
         }
         return new Board(s);
+    }
+
+    class TestBuilder {
+        Board board;
+        TetriminoWithPosition fallingTetrimino;
+        TetriminoType fallingTetriminoType;
+        TetriminoType nextTetrimino;
+        int combo;
+        int round = 1;
+        int skipCnt;
+
+        public void build() {
+            if (fallingTetrimino == null) {
+                if (fallingTetriminoType != null) {
+                    fallingTetrimino = board.newFallingTetrimino(fallingTetriminoType);
+                } else {
+                    fallingTetrimino = board.extractFallingTetrimino();
+                }
+            }
+        }
+
+        Action findBestAction() {
+            List<Move> moves = findBestMoves();
+            if (!isSimpleAction(moves)) {
+                throw new RuntimeException("not simple action: " + moves);
+            }
+            int cwRotations = 0;
+            int colShift = 0;
+            for (Move move : moves) {
+                if (move == ROTATE_CW) {
+                    cwRotations = (cwRotations + 1) % 4;
+                } else if (move == ROTATE_CCW) {
+                    cwRotations = (cwRotations + 3) % 4;
+                } else if (move == LEFT) {
+                    colShift--;
+                } else if (move == RIGHT) {
+                    colShift++;
+                }
+            }
+            for (int i = 0; i < cwRotations; i++) {
+                fallingTetrimino = fallingTetrimino.rotateCW();
+            }
+            return new Action(fallingTetrimino.getLeftCol() + colShift, cwRotations);
+        }
+
+        private List<Move> findBestMoves() {
+            build();
+            GameState gameState = new GameState(
+                    board,
+                    fallingTetrimino,
+                    nextTetrimino,
+                    combo,
+                    round,
+                    skipCnt
+            );
+            return bestMoveFinder.findBestMoves(gameState);
+        }
+    }
+
+    private void board(String s) {
+        testBuilder.board = newBoard(s);
+    }
+
+    void checkAction(int leftCol, int cwRotations) {
+        assertEquals(testBuilder.findBestAction(), new Action(leftCol, cwRotations));
+    }
+
+    private void checkMoves(Move... moves) {
+        assertEquals(testBuilder.findBestMoves(), Arrays.asList(moves));
+    }
+
+    void checkForbidden(int leftCol, int cwRotations) {
+        assertFalse(testBuilder.findBestAction().equals(new Action(leftCol, cwRotations)));
+    }
+
+    private int width() {
+        return testBuilder.board.getWidth();
+    }
+
+    private void fallingType(TetriminoType fallingType) {
+        testBuilder.fallingTetriminoType = fallingType;
+    }
+
+    private void nextType(TetriminoType nextType) {
+        testBuilder.nextTetrimino = nextType;
+    }
+
+    private void combo(int combo) {
+        testBuilder.combo = combo;
+    }
+
+    private void skipCnt(int skipCnt) {
+        testBuilder.skipCnt = skipCnt;
     }
 }

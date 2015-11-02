@@ -10,6 +10,10 @@ public class TetriminoWithPosition {
         this.tetrimino = tetrimino;
     }
 
+    public TetriminoWithPosition(int topRow, int leftCol, TetriminoType type) {
+        this(topRow, leftCol, Tetrimino.of(type));
+    }
+
     public int getTopRow() {
         return topRow;
     }
