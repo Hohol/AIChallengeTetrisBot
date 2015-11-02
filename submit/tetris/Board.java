@@ -161,13 +161,13 @@ public class Board {
 
         int skipAdded = (wasTSpin && linesCleared == 2 || linesCleared == 4) ? 1 : 0;
 
-        return new DropResult(r, scoreDelta, newCombo, skipAdded);
+        return new DropResult(r, linesCleared, scoreDelta, newCombo, skipAdded);
     }
 
     public DropResult skipMove(int combo, int round) {
         Board r = new Board(this);
         r.addPenaltyIfNeeded(round);
-        return new DropResult(r, combo, combo, -1);
+        return new DropResult(r, 0, combo, combo, -1);
     }
 
     private void addPenaltyIfNeeded(int round) {

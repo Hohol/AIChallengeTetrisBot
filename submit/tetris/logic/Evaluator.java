@@ -9,7 +9,14 @@ public class Evaluator {
         this.parameterWeight = parameterWeight;
     }
 
-    public EvaluationState getEvaluation(Board board, int score, int combo, double prevStateEval, int skipCnt) {
+    public EvaluationState getEvaluation(
+            Board board,
+            int score,
+            int combo,
+            double prevStateEval,
+            int skipCnt,
+            int linesCleared
+    ) {
         int badCnt = 0;
         int semiBadCnt = 0;
         int w = board.getWidth();
@@ -80,6 +87,7 @@ public class Evaluator {
                 semiBadCnt,
                 prevStateEval,
                 skipCnt,
+                linesCleared,
                 tSpinPattern,
                 semiTSpinPattern,
                 false,

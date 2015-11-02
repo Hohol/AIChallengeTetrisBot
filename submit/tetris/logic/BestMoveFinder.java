@@ -15,7 +15,9 @@ public class BestMoveFinder {
             .put(PREV_STATE, 0.2)
             .put(SKIP_CNT, -3)
             .put(T_SPIN_PATTERN, -8)
-            .put(SEMI_T_SPIN_PATTERN, 0);
+            .put(SEMI_T_SPIN_PATTERN, 0)
+            .put(LOW_EFFICIENCY, 4)
+            ;
 
     private final Evaluator evaluator;
 
@@ -51,11 +53,20 @@ public class BestMoveFinder {
 
         if (skipCnt > 0) {
             Board newBoard = board.skipMove(score, combo).getBoard();
-            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1);
+            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0);
             if (nextTetrimino == null) {
                 bestState = curEvaluation;
             } else {
-                bestState = findBestMoves(newBoard, newBoard.newFallingTetrimino(nextTetrimino), null, score, combo, round + 1, curEvaluation.evaluation, skipCnt - 1).getState();
+                bestState = findBestMoves(
+                        newBoard,
+                        newBoard.newFallingTetrimino(nextTetrimino),
+                        null,
+                        score,
+                        combo,
+                        round + 1,
+                        curEvaluation.evaluation,
+                        skipCnt - 1
+                ).getState();
             }
         }
 
@@ -100,7 +111,14 @@ public class BestMoveFinder {
 
             EvaluationState curState;
 
-            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, newScore, newCombo, prevStateEval, newSkipCnt);
+            EvaluationState curEvaluation = evaluator.getEvaluation(
+                    newBoard,
+                    newScore,
+                    newCombo,
+                    prevStateEval,
+                    newSkipCnt,
+                    dropResult.getLinesCleared()
+            );
             if (nextTetrimino == null) {
                 curState = curEvaluation;
             } else {

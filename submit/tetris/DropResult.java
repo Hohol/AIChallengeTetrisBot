@@ -5,9 +5,11 @@ public class DropResult {
     private final int scoreAdded;
     private final int newCombo;
     private final int skipAdded;
+    private final int linesCleared;
 
-    public DropResult(Board board, int scoreAdded, int newCombo, int skipAdded) {
+    public DropResult(Board board, int linesCleared, int scoreAdded, int newCombo, int skipAdded) {
         this.board = board;
+        this.linesCleared = linesCleared;
         this.scoreAdded = scoreAdded;
         this.newCombo = newCombo;
         this.skipAdded = skipAdded;
@@ -27,5 +29,9 @@ public class DropResult {
 
     public int getSkipAdded() {
         return skipAdded;
+    }
+
+    public int getLinesCleared() {
+        return linesCleared;
     }
 }

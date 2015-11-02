@@ -1,6 +1,5 @@
 package logic;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import tetris.Board;
 import tetris.logic.EvaluationState;
@@ -189,7 +188,7 @@ public class EvaluatorTest {
     }
 
     private EvaluationState getEvaluation(Board board) {
-        return evaluator.getEvaluation(board, 0, 0, 0, 0);
+        return evaluator.getEvaluation(board, 0, 0, 0, 0, 0);
     }
 
     public static Board board(String s) {

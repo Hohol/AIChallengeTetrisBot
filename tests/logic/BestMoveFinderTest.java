@@ -262,7 +262,7 @@ public class BestMoveFinderTest {
         assertFalse(bestAction.equals(new Action(board.getWidth() - 2, 1)));
     }
 
-    @Test
+    @Test (enabled = false)
     void testTooHigh() {
         Board board = board("" +
                 "x.........\n" +
@@ -954,6 +954,23 @@ public class BestMoveFinderTest {
                         "x.xxxxxxxx"
         );
         checkAction(board, T, board.getWidth() - 2, 3);
+    }
+
+    @Test
+    void avoidLowEfficiency() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxx.......\n" +
+                        "x.........\n" +
+                        "..........\n" +
+                        ".xxxxxxxxx"
+        );
+        checkForbidden(board, new Action(0, 0));
     }
 
     //-------- utils

@@ -55,7 +55,7 @@ public class BotStarter {
         }
         if (state.getMyBot().getCombo() != expectedCombo) {
             throw new RuntimeException("wrong combo. expected = " + expectedCombo + ", actual = " + state.getMyBot().getCombo());
-        }*/
+        }/**/
         GameState gameState = getGameState(state);
         List<Move> moves = bestMoveFinder.findBestMoves(gameState);
 
