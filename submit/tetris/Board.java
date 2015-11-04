@@ -167,7 +167,7 @@ public class Board {
     public DropResult skipMove(int combo, int round) {
         Board r = new Board(this);
         r.addPenaltyIfNeeded(round);
-        return new DropResult(r, 0, combo, combo, -1);
+        return new DropResult(r, 0, 0, combo, -1);
     }
 
     private void addPenaltyIfNeeded(int round) {
