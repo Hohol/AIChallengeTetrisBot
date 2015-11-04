@@ -1018,6 +1018,35 @@ public class BestMoveFinderTest {
         checkForbidden(1, 0);
     }
 
+    @Test
+    void cellsAboveTopBadBug() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".xxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxxxxxx.\n" +
+                        ".xxxxxxxxx"
+        );
+        fallingType(O);
+        checkForbidden(0, 0);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {
