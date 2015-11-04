@@ -7,13 +7,13 @@ import static tetris.logic.EvaluationParameter.*;
 public class EvaluationState {
     public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, true, null);
 
-    private final int badCnt;
+    public final int badCnt;
     private final int flatRate;
     private final int holeCnt;
     private final int maxColumnHeight;
     private final int combo;
     private final int score;
-    private final int cellsAboveTopBad;
+    public final int cellsAboveTopBad;
     private final int semiBadCnt;
     private final double prevStateEval;
     private final boolean lost;

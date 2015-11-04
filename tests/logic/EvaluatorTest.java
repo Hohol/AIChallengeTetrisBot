@@ -177,6 +177,29 @@ public class EvaluatorTest {
                 true);
     }
 
+    @Test
+    void TSpinPatternAffectsOtherMetrics() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..x.......\n" +
+                        "...xxxxxxx\n" +
+                        "x.xxxxxxxx"
+        );
+        EvaluationState evaluation = getEvaluation(board);
+        assertEquals(evaluation.badCnt, 0);
+        assertEquals(evaluation.cellsAboveTopBad, 0);
+
+        board = board("" +
+                        "..........\n" +
+                        "x.........\n" +
+                        "...xxxxxxx\n" +
+                        "x.xxxxxxxx"
+        );
+        evaluation = getEvaluation(board);
+        assertEquals(evaluation.badCnt, 0);
+        assertEquals(evaluation.cellsAboveTopBad, 0);
+    }
+
     //--------- utils
 
     private void checkSemiTSpinPattern(Board board, boolean expected) {

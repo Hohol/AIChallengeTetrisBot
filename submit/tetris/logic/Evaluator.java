@@ -1,6 +1,7 @@
 package tetris.logic;
 
 import tetris.Board;
+import tetris.Cell;
 
 public class Evaluator {
     private final ParameterWeights parameterWeight;
@@ -17,6 +18,7 @@ public class Evaluator {
             int skipCnt,
             int linesCleared
     ) {
+        Cell tSpinCell = checkTSpinPattern(board);
         int badCnt = 0;
         int semiBadCnt = 0;
         int w = board.getWidth();
@@ -31,6 +33,9 @@ public class Evaluator {
                     found = true;
                 } else {
                     if (found) {
+                        if (tSpinCell != null && tSpinCell.row == row && (tSpinCell.col == col - 1 || tSpinCell.col == col + 1)) {
+                            continue;
+                        }
                         if (isSemiBad(board, row, col)) {
                             semiBadCnt++;
                         } else {
@@ -75,8 +80,8 @@ public class Evaluator {
         for (int i = 0; i < w; i++) {
             maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
         }
-        boolean tSpinPattern = checkTSpinPattern(board);
         boolean semiTSpinPattern = checkSemiTSpinPattern(board);
+        boolean tSpinPattern = tSpinCell != null;
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -160,21 +165,25 @@ public class Evaluator {
         return false;
     }
 
-    private boolean checkTSpinPattern(Board board) {
+    /**
+     * @return center of TSpin pattern
+     */
+    private Cell checkTSpinPattern(Board board) {
         for (int leftCol = 0; leftCol + 3 - 1 < board.getWidth(); leftCol++) {
             int midTop = board.getTopRowInColumn(leftCol + 1);
-            if (checkTSpinPatternLeft(board, leftCol, midTop)) {
-                return true;
+            int leftTop = board.getTopRowInColumn(leftCol);
+            if (checkTSpinPatternLeft(board, leftCol, midTop, leftTop)) {
+                return new Cell(leftTop - 1, leftCol + 1);
             }
-            if (checkTSpinPatternRight(board, leftCol, midTop)) {
-                return true;
+            int rightTop = board.getTopRowInColumn(leftCol + 2);
+            if (checkTSpinPatternRight(board, leftCol, midTop, rightTop)) {
+                return new Cell(rightTop - 1, leftCol + 1);
             }
         }
-        return false;
+        return null;
     }
 
-    private boolean checkTSpinPatternLeft(Board board, int leftCol, int midTop) {
-        int leftTop = board.getTopRowInColumn(leftCol);
+    private boolean checkTSpinPatternLeft(Board board, int leftCol, int midTop, int leftTop) {
         if (leftTop < 3) {
             return false;
         }
@@ -185,8 +194,7 @@ public class Evaluator {
                 board.blocksInRowCnt(leftTop) == board.getWidth() - 1;
     }
 
-    private boolean checkTSpinPatternRight(Board board, int leftCol, int midTop) {
-        int rightTop = board.getTopRowInColumn(leftCol + 2);
+    private boolean checkTSpinPatternRight(Board board, int leftCol, int midTop, int rightTop) {
         if (rightTop < 3) {
             return false;
         }
