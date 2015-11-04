@@ -66,8 +66,9 @@ public class Evaluator {
             int left = i == 0 ? 999 : board.getColumnHeight(i - 1);
             int mid = board.getColumnHeight(i);
             int right = i == board.getWidth() - 1 ? 999 : board.getColumnHeight(i + 1);
-            if (mid < Math.min(left, right) - 2) {
-                holeCnt++;
+            int holeHeight = Math.min(left, right) - mid;
+            if (holeHeight > 2) {
+                holeCnt += (holeHeight + 1) / 4;
             }
         }
         int maxColumnHeight = 0;

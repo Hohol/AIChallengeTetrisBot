@@ -995,6 +995,29 @@ public class BestMoveFinderTest {
         checkForbidden(0, 0);
     }
 
+    @Test
+    void testLongHole() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".xx.......\n" +
+                        ".xx.......\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "...xxxxxxx\n" +
+                        "...xxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx"
+        );
+        checkForbidden(1, 0);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {
