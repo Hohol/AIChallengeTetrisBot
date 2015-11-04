@@ -1047,6 +1047,35 @@ public class BestMoveFinderTest {
         checkForbidden(0, 0);
     }
 
+    @Test
+    void testAboveBad() {
+        board("" +
+                        "......x...\n" +
+                        ".....xx...\n" +
+                        ".....x....\n" +
+                        "xxxx......\n" +
+                        "xxxxxxxx.x\n" +
+                        "xxxxxxxxx.\n" +
+                        "xxxxx.xxxx\n" +
+                        "xxxx..xxxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxx..xxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        "xx.xxx.xxx\n" +
+                        "xx.xxxxxxx\n" +
+                        ".xxxx.xxxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxx.xxxxx.\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        nextType(O);
+        checkForbidden(width() - 2, 0);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {

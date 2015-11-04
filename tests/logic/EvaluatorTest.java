@@ -187,7 +187,6 @@ public class EvaluatorTest {
         );
         EvaluationState evaluation = getEvaluation(board);
         assertEquals(evaluation.badCnt, 0);
-        assertEquals(evaluation.cellsAboveTopBad, 0);
 
         board = board("" +
                         "..........\n" +
@@ -197,7 +196,63 @@ public class EvaluatorTest {
         );
         evaluation = getEvaluation(board);
         assertEquals(evaluation.badCnt, 0);
-        assertEquals(evaluation.cellsAboveTopBad, 0);
+    }
+
+    @Test
+    void aboveBadFactor() {
+        Board board = board("" +
+                        "..........\n" +
+                        ".........x\n" +
+                        "........xx\n" +
+                        "........x.\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxxxxx.xx\n" +
+                        "xxxxxxx.xx"
+        );
+        EvaluationState evaluation = getEvaluation(board);
+        assertEquals(evaluation.aboveBadFactor, 4);
+    }
+
+    @Test
+    void aboveBadFactor2() {
+        Board board = board("" +
+                        "..........\n" +
+                        ".........x\n" +
+                        "........xx\n" +
+                        "........x.\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "........xx\n" +
+                        "xxxxxxxx.x\n" +
+                        "xxxxxxx.xx\n" +
+                        "xxxxxxx.xx"
+        );
+        EvaluationState evaluation = getEvaluation(board);
+        assertEquals(evaluation.aboveBadFactor, 2 + 9 + 10 + 10);
+    }
+
+    @Test
+    void aboveBadFactor3() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "xxx.......\n" +
+                        ".xxxxxxxxx"
+        );
+        EvaluationState evaluation = getEvaluation(board);
+        assertEquals(evaluation.aboveBadFactor, 3);
     }
 
     //--------- utils

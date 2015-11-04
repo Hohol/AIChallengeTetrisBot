@@ -16,10 +16,8 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 2.878471664579383).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 2.133187913129006).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 4.672254358240745).put(CELLS_ABOVE_TOP, 0.8587277875132031).put(FLAT_RATE, 0.733147384274665).put(COMBO, -0.16547251812410724)
-                .put(PREV_STATE, 0.2)
-                .put(SKIP_CNT, -2)
-                .put(T_SPIN_PATTERN, -12));
+                .put(BAD_CNT,6.68473349725179).put(HOLE_CNT,2.878471664579383).put(HEIGHT,1.4631383737117991).put(SEMI_BAD_CNT,2.133187913129006).put(SCORE,-0.716393996010999).put(HEIGHT_POW,4.672254358240745).put(CELLS_ABOVE_TOP,0.05887754151955771).put(FLAT_RATE, 0.733147384274665).put(COMBO,-0.16547251812410724).put(PREV_STATE,0.1518503463877854).put(SKIP_CNT,-5.079457554219985).put(T_SPIN_PATTERN,-8.598925331599782).put(SEMI_T_SPIN_PATTERN,-0.1992487707283843).put(LOW_EFFICIENCY,1.9972101046494506)
+        );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
         while (true) {
@@ -63,11 +61,10 @@ public class MatchMaker {
             log("cur = " + curTetrimino);
             log("next = " + nextTetrimino);
             log(firstGameState.board);
-            log("lines sent: " + firstGameState.garbageSentOnLastMove);
-            log("\n");
-            log(secondGameState.board);
-            log("lines sent: " + secondGameState.garbageSentOnLastMove);
-            log("\n");
+            log("lines sent to second: " + firstGameState.garbageSentOnLastMove);
+            log("");
+            //log(secondGameState.board);
+            log("lines sent to first: " + secondGameState.garbageSentOnLastMove);
 
             if (firstGameState.lost && secondGameState.lost) {
                 return DRAW;
@@ -78,6 +75,7 @@ public class MatchMaker {
             if (secondGameState.lost) {
                 return FIRST_WON;
             }
+            log("");
 
             curTetrimino = nextTetrimino;
             nextTetrimino = getRandomTetrimino(rnd);
@@ -90,7 +88,7 @@ public class MatchMaker {
 
     private void generateGarbage(FullGameState state, Random rnd, FullGameState opponent) {
         Holes[] holes = new Holes[opponent.garbageSentOnLastMove];
-        boolean twoHoles = (opponent.garbageSentSum % 2 == 0);
+        boolean twoHoles = (state.garbageAcceptedSum % 2 == 0);
         for (int i = 0; i < opponent.garbageSentOnLastMove; i++) {
             int a = rnd.nextInt(Board.STANDARD_WIDTH);
             int b;

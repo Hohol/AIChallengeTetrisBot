@@ -13,7 +13,7 @@ class FullGameState {
     int garbageSentOnLastMove;
     int round = 1;
     int skipCnt;
-    int garbageSentSum;
+    int garbageAcceptedSum;
 
     FullGameState(Board board) {
         this.board = board;
@@ -48,7 +48,6 @@ class FullGameState {
         combo = dropResult.getCombo();
         int newScore = score + dropResult.getScoreAdded();
         garbageSentOnLastMove = newScore / 3 - score / 3;
-        garbageSentSum += garbageSentOnLastMove;
         score = newScore;
         round++;
         if (board.getMaxColumnHeight() == board.getHeight()) {
@@ -61,6 +60,7 @@ class FullGameState {
         if (lost) {
             throw new RuntimeException();
         }
+        garbageAcceptedSum += holes.length;
         board.addGarbage(holes);
         if (board.getMaxColumnHeight() == board.getHeight()) {
             lost = true;

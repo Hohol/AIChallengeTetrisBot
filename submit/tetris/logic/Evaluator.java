@@ -3,6 +3,8 @@ package tetris.logic;
 import tetris.Board;
 import tetris.Cell;
 
+import static java.lang.Math.*;
+
 public class Evaluator {
     private final ParameterWeights parameterWeight;
 
@@ -23,9 +25,6 @@ public class Evaluator {
         int semiBadCnt = 0;
         int w = board.getWidth();
 
-        int topBadRow = -1;
-        int topBadCol = -1;
-
         for (int col = 0; col < w; col++) {
             boolean found = false;
             for (int row = 0; row < board.getHeight(); row++) {
@@ -40,30 +39,15 @@ public class Evaluator {
                             semiBadCnt++;
                         } else {
                             badCnt++;
-                            if (topBadRow == -1 || row < topBadRow) {
-                                topBadRow = row;
-                                topBadCol = col;
-                            }
                         }
                     }
                 }
             }
         }
 
-        int cellsAboveTopBad = 0;
-        if (topBadRow != -1) {
-            for (int row = topBadRow - 1; row >= 0; row--) {
-                if (board.get(row, topBadCol)) {
-                    cellsAboveTopBad++;
-                } else {
-                    break;
-                }
-            }
-        }
-
         int flatRate = 0;
         for (int i = 0; i < w - 1; i++) {
-            int diff = Math.abs(board.getTopRowInColumn(i) - board.getTopRowInColumn(i + 1));
+            int diff = abs(board.getTopRowInColumn(i) - board.getTopRowInColumn(i + 1));
             flatRate += diff;
         }
         int holeCnt = 0;
@@ -71,17 +55,19 @@ public class Evaluator {
             int left = i == 0 ? 999 : board.getColumnHeight(i - 1);
             int mid = board.getColumnHeight(i);
             int right = i == board.getWidth() - 1 ? 999 : board.getColumnHeight(i + 1);
-            int holeHeight = Math.min(left, right) - mid;
+            int holeHeight = min(left, right) - mid;
             if (holeHeight > 2) {
                 holeCnt += (holeHeight + 1) / 4;
             }
         }
         int maxColumnHeight = 0;
         for (int i = 0; i < w; i++) {
-            maxColumnHeight = Math.max(maxColumnHeight, board.getColumnHeight(i));
+            maxColumnHeight = max(maxColumnHeight, board.getColumnHeight(i));
         }
         boolean semiTSpinPattern = checkSemiTSpinPattern(board);
         boolean tSpinPattern = tSpinCell != null;
+
+        int aboveBadFactor = calcAboveBadFactor(board);
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -89,7 +75,7 @@ public class Evaluator {
                 maxColumnHeight,
                 score,
                 combo,
-                cellsAboveTopBad,
+                aboveBadFactor,
                 semiBadCnt,
                 prevStateEval,
                 skipCnt,
@@ -99,6 +85,33 @@ public class Evaluator {
                 false,
                 parameterWeight
         );
+    }
+
+    private int calcAboveBadFactor(Board board) {
+        int[][] aboveBadFactor = new int[board.getHeight()][board.getWidth()];
+        int r = 0;
+        for (int row = 1; row < board.getHeight(); row++) {
+            int rowEmptyMax = 0;
+            for (int col = 0; col < board.getWidth(); col++) {
+                if (!board.get(row, col)) { // empty
+                    aboveBadFactor[row][col] = aboveBadFactor[row - 1][col];
+                    r += aboveBadFactor[row][col];
+                    rowEmptyMax = max(rowEmptyMax, aboveBadFactor[row][col]);
+                }
+            }
+            for (int col = 0; col < board.getWidth(); col++) {
+                if (board.get(row, col)) {
+                    aboveBadFactor[row][col] = max(rowEmptyMax, aboveBadFactor[row - 1][col]) + 1;
+                }
+            }
+        }
+        /*for (int row = 0; row < board.getHeight(); row++) {
+            for (int col = 0; col < board.getWidth(); col++) {
+                System.out.print(aboveBadFactor[row][col] + " ");
+            }
+            System.out.println();
+        }/**/
+        return r;
     }
 
     private boolean checkSemiTSpinPattern(Board board) {
