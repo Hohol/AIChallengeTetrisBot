@@ -325,7 +325,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test
+    @Test (enabled = false)
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +

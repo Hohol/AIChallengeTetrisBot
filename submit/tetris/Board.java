@@ -1,5 +1,7 @@
 package tetris;
 
+import java.util.List;
+
 public class Board {
 
     public static final int SOLID_BLOCK_PERIOD = 15;
@@ -168,6 +170,22 @@ public class Board {
         Board r = new Board(this);
         r.addPenaltyIfNeeded(round);
         return new DropResult(r, 0, 0, combo, -1);
+    }
+
+    public DropResult moveAndDrop(TetriminoWithPosition fallingTetrimino, List<Move> moves, int combo, int round) {
+        if (!moves.isEmpty() && moves.get(0) == Move.SKIP) {
+            return skipMove(combo, round);
+        } else {
+            for (Move move : moves) {
+                fallingTetrimino = fallingTetrimino.move(move, this);
+            }
+            Move lastMove = moves.isEmpty() ? null : moves.get(moves.size() - 1);
+            if (!collides(fallingTetrimino.moveDown())) {
+                fallingTetrimino = fallingTetrimino.move(Move.DROP, this);
+                lastMove = Move.DROP;
+            }
+            return drop(fallingTetrimino, lastMove, combo, round);
+        }
     }
 
     private void addPenaltyIfNeeded(int round) {

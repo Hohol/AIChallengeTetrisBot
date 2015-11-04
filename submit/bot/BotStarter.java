@@ -77,20 +77,12 @@ public class BotStarter {
     }
 
     private void updateExpectedScore(GameState gameState, List<Move> moves) {
-        if (!moves.isEmpty() && moves.get(0) == Move.SKIP) {
-            return;
-        }
-        TetriminoWithPosition fallingTetrimino = gameState.getFallingTetrimino();
-        Board board = gameState.getBoard();
-        for (Move move : moves) {
-            fallingTetrimino = fallingTetrimino.move(move, board);
-        }
-        Move lastMove = moves.isEmpty() ? null : moves.get(moves.size() - 1);
-        if (!board.collides(fallingTetrimino.moveDown())) {
-            fallingTetrimino = fallingTetrimino.move(Move.DROP, board);
-            lastMove = Move.DROP;
-        }
-        DropResult dropResult = board.drop(fallingTetrimino, lastMove, gameState.getCombo(), gameState.getRound());
+        DropResult dropResult = gameState.getBoard().moveAndDrop(
+                gameState.getFallingTetrimino(),
+                moves,
+                gameState.getCombo(),
+                gameState.getRound()
+        );
         expectedScore += dropResult.getScoreAdded();
         expectedCombo = dropResult.getCombo();
     }
