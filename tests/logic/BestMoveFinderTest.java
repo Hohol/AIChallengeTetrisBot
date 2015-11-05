@@ -269,33 +269,6 @@ public class BestMoveFinderTest {
         checkForbidden(width() - 2, 1);
     }
 
-    @Test(enabled = false)
-    void testTooHigh() {
-        board("" +
-                "x.........\n" +
-                "x.........\n" +
-                "x.........\n" +
-                "xxxx......\n" +
-                "xxxx...x..\n" +
-                "xxxxx.xx..\n" +
-                "xxxxxxxx..\n" +
-                "xxxxxxxxx.\n" +
-                "xxxx.xxxxx\n" +
-                "xxxxxx.xxx\n" +
-                "xxxxxxxx.x\n" +
-                ".xxxxxxxxx\n" +
-                ".xxxxxxxxx\n" +
-                "xxxxxxxx.x\n" +
-                ".xxxxxxxxx\n" +
-                "xxxxxx.xxx\n" +
-                "xxxx.xxxxx\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo");
-        fallingType(I);
-        checkAction(width() - 1, 1);
-    }
-
     @Test
     void testCombo() {
         board("" +
@@ -325,7 +298,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test(enabled = false)
+    @Test (enabled = false)
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +
@@ -441,7 +414,7 @@ public class BestMoveFinderTest {
         checkAction(0, 1);
     }
 
-    @Test(enabled = false)
+    @Test
     void badIsNotSoBad() {
         board("" +
                 "...xx.....\n" +
@@ -465,32 +438,6 @@ public class BestMoveFinderTest {
                 ".......xx.\n" +
                 ".x.x.x.xxx");
         checkForbidden(width() - 3, 0);
-    }
-
-    @Test(enabled = false)
-    void badIsNotSoBad2() {
-        board("" +
-                "...xx.....\n" +
-                "...xx.....\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                "....xx....\n" +
-                ".x.xxx.x.x");
-        checkForbidden(4, 0);
     }
 
     @Test
@@ -810,7 +757,7 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test(enabled = false)
+    @Test
     void dontWasteSkip() {
         board("" +
                 "..........\n" +
@@ -828,35 +775,6 @@ public class BestMoveFinderTest {
         skipCnt(1);
         List<Move> actualMoves = testBuilder.findBestMoves();
         assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
-    }
-
-    @Test(enabled = false)
-    void testBug2() {
-        board("" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                ".x........\n" +
-                "xx........\n" +
-                ".x........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..xxx.....\n" +
-                "...xx...xx\n" +
-                "x.xxxxxxxx\n" +
-                "xxxxx..xxx\n" +
-                ".xxxxxxxxx\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo");
-        nextType(T);
-        List<Move> actualMoves = testBuilder.findBestMoves();
-        assertFalse(actualMoves.equals(Arrays.asList(DOWN, DOWN, DOWN, DOWN, DOWN, ROTATE_CCW)));
     }
 
     @Test
@@ -931,7 +849,7 @@ public class BestMoveFinderTest {
         checkAction(2, 0);
     }
 
-    @Test(enabled = false)
+    @Test (enabled = false)
     void semiTSpinPattern() {
         board("" +
                         "..........\n" +
@@ -949,7 +867,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 2, 3);
     }
 
-    @Test(enabled = false)
+    @Test
     void avoidLowEfficiency() {
         board("" +
                         "..........\n" +
