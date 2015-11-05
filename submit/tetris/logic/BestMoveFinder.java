@@ -95,9 +95,6 @@ public class BestMoveFinder {
                     round
             );
             Board newBoard = dropResult.getBoard();
-            if (newBoard.getMaxColumnHeight() == board.getHeight()) {
-                continue;
-            }
 
             int newScore = score + dropResult.getScoreAdded();
             int newCombo = dropResult.getCombo();

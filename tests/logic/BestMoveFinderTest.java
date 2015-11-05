@@ -721,35 +721,6 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void testEndGame5() {
-        board("" +
-                "..........\n" +
-                "..........\n" +
-                "xx.x.xx...\n" +
-                "xx.xxxx...\n" +
-                "xx.xxxx.xx\n" +
-                "xxxxxxxx.x\n" +
-                "xxxxxx.xxx\n" +
-                "xxxxxxxx.x\n" +
-                "xxxxxx.xxx\n" +
-                "xxxxxxxxx.\n" +
-                "xxx.xxxxxx\n" +
-                "xxxxxx.xxx\n" +
-                "x.xxxxxxxx\n" +
-                "xxxxxxxx.x\n" +
-                "xxxx.xxxxx\n" +
-                "xxxx.xxxxx\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo\n" +
-                "oooooooooo");
-        fallingType(S);
-        nextType(S);
-        checkAction(width() - 3, 0);
-    }
-
-    @Test
     void testEndGame6() {
         board("" +
                 "..........\n" +
@@ -1074,6 +1045,35 @@ public class BestMoveFinderTest {
         );
         nextType(O);
         checkForbidden(width() - 2, 0);
+    }
+
+    @Test
+    void testEndGame7() {
+        board("" +
+                "..........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x.........\n" +
+                "x..xxxxxx.\n" +
+                "x..xxxxxx.");
+        fallingType(O);
+        testBuilder.round = 15;
+        checkAction(1, 0);
     }
 
     //-------- utils

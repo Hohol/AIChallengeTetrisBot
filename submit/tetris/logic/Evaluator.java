@@ -68,6 +68,7 @@ public class Evaluator {
         boolean tSpinPattern = tSpinCell != null;
 
         int aboveBadFactor = calcAboveBadFactor(board);
+        boolean lost = board.getMaxColumnHeight() == board.getHeight();
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -82,7 +83,7 @@ public class Evaluator {
                 linesCleared,
                 tSpinPattern,
                 semiTSpinPattern,
-                false,
+                lost,
                 parameterWeight
         );
     }
