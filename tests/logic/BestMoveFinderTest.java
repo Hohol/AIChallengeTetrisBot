@@ -325,7 +325,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +
@@ -1076,6 +1076,129 @@ public class BestMoveFinderTest {
         checkAction(1, 0);
     }
 
+    @Test
+    void watchOpponent() {
+        board("" +
+                        "..........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x.........\n" +
+                        "x......x..\n" +
+                        "xxxxxxx...\n" +
+                        "xxxxxxxx.x"
+        );
+        fallingType(I);
+        nextType(T);
+        possibleGarbage(1);
+        checkAction(width() - 2, 1);
+    }
+
+    @Test
+    void watchOpponent2() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "....xx....\n" +
+                        "xxxxxxxx..\n" +
+                        "xxxxxxxx.."
+        );
+        fallingType(O);
+        possibleGarbage(1);
+        checkAction(width() - 2, 0);
+    }
+
+    @Test
+    void watchOpponent3() {
+        board("" +
+                        "..........\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        "..x.xxxxxx\n" +
+                        "..x.xxxxxx"
+        );
+        fallingType(O);
+        possibleGarbage(1);
+        checkAction(0, 0);
+    }
+
+    @Test
+    void watchOpponent4() {
+        board("" +
+                        "..........\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".........x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx"
+        );
+        fallingType(Z);
+        nextType(I);
+        skipCnt(1);
+        possibleGarbage(1);
+        checkAction(0, 1);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {
@@ -1121,6 +1244,7 @@ public class BestMoveFinderTest {
         int combo;
         int round = 1;
         int skipCnt;
+        int possibleGarbage;
 
         public void build() {
             if (fallingTetrimino == null) {
@@ -1164,7 +1288,8 @@ public class BestMoveFinderTest {
                     nextTetrimino,
                     combo,
                     round,
-                    skipCnt
+                    skipCnt,
+                    possibleGarbage
             );
             return bestMoveFinder.findBestMoves(gameState);
         }
@@ -1204,5 +1329,9 @@ public class BestMoveFinderTest {
 
     private void skipCnt(int skipCnt) {
         testBuilder.skipCnt = skipCnt;
+    }
+
+    private void possibleGarbage(int garbage) {
+        testBuilder.possibleGarbage = garbage;
     }
 }

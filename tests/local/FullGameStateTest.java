@@ -30,7 +30,7 @@ public class FullGameStateTest {
         state.makeMove(
                 L,
                 null,
-                bmf(DOWN, DOWN)
+                0, bmf(DOWN, DOWN)
         );
         check(
                 state,
@@ -58,7 +58,7 @@ public class FullGameStateTest {
         state.makeMove(
                 L,
                 null,
-                bmf(DOWN, DOWN)
+                0, bmf(DOWN, DOWN)
         );
         check(
                 state,
@@ -86,7 +86,7 @@ public class FullGameStateTest {
         state.makeMove(
                 T,
                 null,
-                bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
+                0, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
         );
         check(
                 state,
@@ -116,7 +116,7 @@ public class FullGameStateTest {
         state.makeMove(
                 T,
                 null,
-                bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
+                0, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
         );
         check(
                 state,
@@ -146,7 +146,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf(DOWN, DOWN, DOWN, DOWN)
+                0, bmf(DOWN, DOWN, DOWN, DOWN)
         );
         check(
                 state,
@@ -174,7 +174,7 @@ public class FullGameStateTest {
         state.makeMove(
                 L,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -202,7 +202,7 @@ public class FullGameStateTest {
         state.makeMove(
                 L,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -301,7 +301,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -328,7 +328,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -376,7 +376,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -402,7 +402,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                null
+                0, null
         );
         check(
                 state,
@@ -429,7 +429,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -455,7 +455,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf()
+                0, bmf()
         );
         check(
                 state,
@@ -484,7 +484,7 @@ public class FullGameStateTest {
         state.makeMove(
                 O,
                 null,
-                bmf(SKIP)
+                0, bmf(SKIP)
         );
         check(
                 state,
@@ -511,7 +511,7 @@ public class FullGameStateTest {
         state.makeMove(
                 T,
                 null,
-                bmf(ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
+                0, bmf(ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
         );
         check(
                 state,
@@ -544,7 +544,7 @@ public class FullGameStateTest {
         state.makeMove(
                 I,
                 null,
-                bmf(DOWN, ROTATE_CW, LEFT, LEFT, DROP)
+                0, bmf(DOWN, ROTATE_CW, LEFT, LEFT, DROP)
         );
         check(
                 state,

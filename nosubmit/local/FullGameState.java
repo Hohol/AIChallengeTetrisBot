@@ -19,7 +19,7 @@ class FullGameState {
         this.board = board;
     }
 
-    public void makeMove(TetriminoType curTetrimino, TetriminoType nextTetrimino, BestMoveFinder player) {
+    public void makeMove(TetriminoType curTetrimino, TetriminoType nextTetrimino, int possibleGarbage, BestMoveFinder player) {
         if (lost) {
             throw new RuntimeException();
         }
@@ -28,12 +28,12 @@ class FullGameState {
             lost = true;
             return;
         }
-        List<Move> moves = player.findBestMoves(new GameState(board, fallingTetrimino, nextTetrimino, combo, round, skipCnt));
+        List<Move> moves = player.findBestMoves(new GameState(board, fallingTetrimino, nextTetrimino, combo, round, skipCnt, possibleGarbage));
         DropResult dropResult = board.moveAndDrop(fallingTetrimino, moves, combo, round);
         board = dropResult.getBoard();
         combo = dropResult.getCombo();
         int newScore = score + dropResult.getScoreAdded();
-        garbageSentOnLastMove = newScore / 3 - score / 3;
+        garbageSentOnLastMove = newScore / Board.SCORE_PER_GARBAGE - score / Board.SCORE_PER_GARBAGE;
         score = newScore;
         round++;
         if (board.getMaxColumnHeight() == board.getHeight()) {

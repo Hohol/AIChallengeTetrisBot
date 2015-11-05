@@ -11,8 +11,7 @@ import static tetris.logic.EvaluationParameter.*;
 public class BestMoveFinder {
 
     public static final ParameterWeights BEST_PARAMETERS = new ParameterWeights()
-            .put(BAD_CNT,5.582919899887908).put(HOLE_CNT,1.889763086518398).put(HEIGHT,1.4631383737117991).put(SEMI_BAD_CNT,1.9337455987205074).put(SCORE,-0.716393996010999).put(HEIGHT_POW,5.005283588122904).put(CELLS_ABOVE_TOP,0.05887754151955771).put(FLAT_RATE,0.733147384274665).put(COMBO,-1.295997354590228).put(PREV_STATE,0.2).put(SKIP_CNT,-4.92564597303524).put(T_SPIN_PATTERN,-8.162062275523871).put(SEMI_T_SPIN_PATTERN,-0.670110825807111).put(LOW_EFFICIENCY,2.2236858438531604)
-            ;
+            .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 1.889763086518398).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 1.9337455987205074).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 5.005283588122904).put(CELLS_ABOVE_TOP, 0.05887754151955771).put(FLAT_RATE, 0.733147384274665).put(COMBO, -1.295997354590228).put(PREV_STATE, 0.2).put(SKIP_CNT, -4.92564597303524).put(T_SPIN_PATTERN, -8.162062275523871).put(SEMI_T_SPIN_PATTERN, -0.670110825807111).put(LOW_EFFICIENCY, 2.2236858438531604);
 
     private final Evaluator evaluator;
 
@@ -26,7 +25,17 @@ public class BestMoveFinder {
 
     public List<Move> findBestMoves(GameState gameState) {
         Board board = gameState.getBoard();
-        List<Move> moves = findBestMoves(board, gameState.getFallingTetrimino(), gameState.getNextTetrimino(), 0, gameState.getCombo(), gameState.getRound(), 0, gameState.getSkipCnt()).getMoves();
+        List<Move> moves = findBestMoves(
+                board,
+                gameState.getFallingTetrimino(),
+                gameState.getNextTetrimino(),
+                0,
+                gameState.getCombo(),
+                gameState.getRound(),
+                0,
+                gameState.getSkipCnt(),
+                gameState.getPossibleGarbage()
+        ).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
         while (moves.size() > 0 && moves.get(moves.size() - 1) == DOWN) {
@@ -39,7 +48,16 @@ public class BestMoveFinder {
         return moves;
     }
 
-    private MovesWithEvaluation findBestMoves(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round, double prevStateEval, int skipCnt) {
+    private MovesWithEvaluation findBestMoves(
+            Board board, TetriminoWithPosition fallingTetrimino,
+            TetriminoType nextTetrimino,
+            int score,
+            int combo,
+            int round,
+            double prevStateEval,
+            int skipCnt,
+            int possibleGarbage
+    ) {
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(null, EvaluationState.LOST);
         }
@@ -48,8 +66,11 @@ public class BestMoveFinder {
 
         if (skipCnt > 0) {
             Board newBoard = board.skipMove(score, combo).getBoard();
+            for (int i = 0; i < possibleGarbage; i++) {
+                newBoard.addPenalty();
+            }
             EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0);
-            if (nextTetrimino == null) {
+            if (nextTetrimino == null || curEvaluation.lost) {
                 bestState = curEvaluation;
             } else {
                 bestState = findBestMoves(
@@ -60,7 +81,8 @@ public class BestMoveFinder {
                         combo,
                         round + 1,
                         curEvaluation.evaluation,
-                        skipCnt - 1
+                        skipCnt - 1,
+                        0
                 ).getState();
             }
         }
@@ -95,6 +117,9 @@ public class BestMoveFinder {
                     round
             );
             Board newBoard = dropResult.getBoard();
+            for (int i = 0; i < possibleGarbage; i++) {
+                newBoard.addPenalty();
+            }
 
             int newScore = score + dropResult.getScoreAdded();
             int newCombo = dropResult.getCombo();
@@ -111,11 +136,11 @@ public class BestMoveFinder {
                     newSkipCnt,
                     dropResult.getLinesCleared()
             );
-            if (nextTetrimino == null) {
+            if (nextTetrimino == null || curEvaluation.lost) {
                 curState = curEvaluation;
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
-                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curEvaluation.evaluation, newSkipCnt).getState();
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curEvaluation.evaluation, newSkipCnt, 0).getState();
             }
             if (curState != null && curState.better(bestState)) {
                 bestState = curState;

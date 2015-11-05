@@ -21,8 +21,10 @@ import field.CellType;
 import field.Field;
 import field.ShapeType;
 import moves.MoveType;
+import player.Player;
 import tetris.*;
 import tetris.logic.BestMoveFinder;
+import tetris.logic.PossibleGarbageCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,7 @@ import static tetris.TetriminoType.*;
 public class BotStarter {
 
     private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
+    private final PossibleGarbageCalculator possibleGarbageCalculator = new PossibleGarbageCalculator();
     static int expectedScore;
     static int expectedCombo;
 
@@ -110,6 +113,31 @@ public class BotStarter {
 
     private GameState getGameState(BotState state) {
         Field field = state.getMyField();
+        Board board = getBoard(field);
+        TetriminoType tetrimino = convertTetrimino(state.getCurrentShape());
+        TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
+                state.getShapeLocation().y + (tetrimino == I ? 2 : 1),
+                state.getShapeLocation().x,
+                Tetrimino.of(tetrimino)
+        );
+        Board opponentBoard = getBoard(state.getOpponentField());
+        Player opponent = state.getOpponent();
+        int possibleGarbage = possibleGarbageCalculator.calculatePossibleGarbage(opponentBoard, tetrimino, opponent.getPoints(), opponent.getCombo());
+        /*System.err.println("Opponent field:");
+        System.err.println(opponentBoard);
+        System.err.println("possible garbage = " + possibleGarbage);*/
+        return new GameState(
+                board,
+                fallingTetrimino,
+                convertTetrimino(state.getNextShape()),
+                state.getMyBot().getCombo(),
+                state.getRound(),
+                state.getSkip(),
+                possibleGarbage
+        );
+    }
+
+    private Board getBoard(Field field) {
         Board board = new Board(field.getHeight() + 1, field.getWidth());
         for (int i = 0; i < field.getHeight(); i++) {
             for (int j = 0; j < field.getWidth(); j++) {
@@ -120,20 +148,7 @@ public class BotStarter {
                 }
             }
         }
-        TetriminoType tetrimino = convertTetrimino(state.getCurrentShape());
-        TetriminoWithPosition fallingTetrimino = new TetriminoWithPosition(
-                state.getShapeLocation().y + (tetrimino == I ? 2 : 1),
-                state.getShapeLocation().x,
-                Tetrimino.of(tetrimino)
-        );
-        return new GameState(
-                board,
-                fallingTetrimino,
-                convertTetrimino(state.getNextShape()),
-                state.getMyBot().getCombo(),
-                state.getRound(),
-                state.getSkip()
-        );
+        return board;
     }
 
     private TetriminoType convertTetrimino(ShapeType shape) {

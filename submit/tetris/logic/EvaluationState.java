@@ -16,7 +16,7 @@ public class EvaluationState {
     public final int aboveBadFactor;
     private final int semiBadCnt;
     private final double prevStateEval;
-    private final boolean lost;
+    public final boolean lost;
     private final int skipCnt;
     public final int linesCleared;
     public final boolean tSpinPattern;
