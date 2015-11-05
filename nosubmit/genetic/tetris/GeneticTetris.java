@@ -23,8 +23,8 @@ public class GeneticTetris {
         List<CreatureAndWinCnt> species = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             species.add(new CreatureAndWinCnt(
-                    //randomParameters(rnd)
-                    BestMoveFinder.BEST_PARAMETERS
+                    randomParameters(rnd)
+                    //BestMoveFinder.BEST_PARAMETERS
             ));
             //species.add(BestMoveFinder.BEST_PARAMETERS);
         }

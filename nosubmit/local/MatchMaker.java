@@ -17,7 +17,7 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT,6.68473349725179).put(HOLE_CNT,2.878471664579383).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT,2.133187913129006).put(SCORE,-0.716393996010999).put(HEIGHT_POW,4.672254358240745).put(CELLS_ABOVE_TOP,0.05887754151955771).put(FLAT_RATE, 0.733147384274665).put(COMBO,-0.16547251812410724).put(PREV_STATE,0.1518503463877854).put(SKIP_CNT,-5.079457554219985).put(T_SPIN_PATTERN, -8.598925331599782).put(SEMI_T_SPIN_PATTERN, -0.1992487707283843).put(LOW_EFFICIENCY, 1.9972101046494506)
+                .put(BAD_CNT,4.04244799470303).put(HOLE_CNT,2.224387958782543).put(HEIGHT,3.2032807202434537).put(SEMI_BAD_CNT,2.836906632838518).put(SCORE,-0.9228753064157523).put(HEIGHT_POW,0.0760321369445548).put(CELLS_ABOVE_TOP,0.10197293352695808).put(FLAT_RATE,0.5225395672967282).put(COMBO,-0.1).put(PREV_STATE,0.5943002519764304).put(SKIP_CNT,-2.5071420556737536).put(T_SPIN_PATTERN,-4.8708535119578205).put(SEMI_T_SPIN_PATTERN,-0.1363560523225238).put(LOW_EFFICIENCY,6.450545991594334)
         );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
@@ -44,15 +44,29 @@ public class MatchMaker {
 
         while (true) {
             log("Round = " + firstGameState.round);
+            int possibleGarbageToFirst = possibleGarbageCalculator.calculatePossibleGarbage(
+                    secondGameState.board,
+                    curTetrimino,
+                    secondGameState.score,
+                    secondGameState.combo
+            );
+            int possibleGarbageToSecond = possibleGarbageCalculator.calculatePossibleGarbage(
+                    firstGameState.board,
+                    curTetrimino,
+                    firstGameState.score,
+                    firstGameState.combo
+            );
             firstGameState.makeMove(
                     curTetrimino,
                     nextTetrimino,
-                    possibleGarbageCalculator.calculatePossibleGarbage(secondGameState.board, curTetrimino, secondGameState.score, secondGameState.combo), firstPlayer
+                    possibleGarbageToFirst,
+                    firstPlayer
             );
             secondGameState.makeMove(
                     curTetrimino,
                     nextTetrimino,
-                    possibleGarbageCalculator.calculatePossibleGarbage(firstGameState.board, curTetrimino, firstGameState.score, firstGameState.combo), secondPlayer
+                    possibleGarbageToSecond,
+                    secondPlayer
             );
 
             if (firstGameState.lost && secondGameState.lost) {
