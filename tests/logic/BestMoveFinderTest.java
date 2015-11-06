@@ -298,7 +298,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +
@@ -849,7 +849,7 @@ public class BestMoveFinderTest {
         checkAction(2, 0);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     void semiTSpinPattern() {
         board("" +
                         "..........\n" +
@@ -936,7 +936,7 @@ public class BestMoveFinderTest {
         checkForbidden(0, 0);
     }
 
-    @Test
+    @Test(enabled = false)
     void testAboveBad() {
         board("" +
                         "......x...\n" +
@@ -1115,6 +1115,67 @@ public class BestMoveFinderTest {
         skipCnt(1);
         possibleGarbage(1);
         checkAction(0, 1);
+    }
+
+    @Test
+    void endGameBug() {
+        board("" +
+                        "..........\n" +
+                        "xx........\n" +
+                        "xxxxx....x\n" +
+                        "xxxxxxx.xx\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x.xxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxx.x\n" +
+                        "xxxxxxxx.x\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        fallingType(O);
+        nextType(S);
+        checkForbidden(2, 0);
+    }
+
+    @Test
+    void endGameBug2() {
+        board("" +
+                        "..........\n" +
+                        "xx........\n" +
+                        "xxxxx....x\n" +
+                        "xxxxxxx.xx\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x.xxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxx.x\n" +
+                        "xxxxxxxx.x\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        fallingType(O);
+        nextType(S);
+        skipCnt(1);
+        checkMoves(SKIP);
     }
 
     //-------- utils

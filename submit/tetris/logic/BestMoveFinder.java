@@ -65,7 +65,7 @@ public class BestMoveFinder {
         TetriminoWithPosition bestPosition = null;
 
         if (skipCnt > 0) {
-            Board newBoard = board.skipMove(score, combo).getBoard();
+            Board newBoard = board.skipMove(score, round).getBoard();
             for (int i = 0; i < possibleGarbage; i++) {
                 newBoard.addPenalty();
             }
