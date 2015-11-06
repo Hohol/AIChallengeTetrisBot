@@ -23,8 +23,9 @@ public class GeneticTetris {
         List<CreatureAndWinCnt> species = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             species.add(new CreatureAndWinCnt(
-                    randomParameters(rnd)
-                    //BestMoveFinder.BEST_PARAMETERS
+                    //randomMinusOneParameters(rnd)
+                    //randomParameters(rnd)
+                    BestMoveFinder.BEST_PARAMETERS
             ));
             //species.add(BestMoveFinder.BEST_PARAMETERS);
         }
@@ -61,6 +62,14 @@ public class GeneticTetris {
                 System.out.println("winCnt = " + specy.winCnt + " " + specy.parameterWeights);
             }
         }
+    }
+
+    private static ParameterWeights randomMinusOneParameters(Random rnd) {
+        ParameterWeights parameterWeights = new ParameterWeights();
+        for (EvaluationParameter parameter : EvaluationParameter.values()) {
+            parameterWeights.put(parameter, rnd.nextDouble() - 0.5);
+        }
+        return parameterWeights;
     }
 
     private static MatchResult getMatchSeriesResult(MatchMaker matchMaker, ParameterWeights first, ParameterWeights second) {

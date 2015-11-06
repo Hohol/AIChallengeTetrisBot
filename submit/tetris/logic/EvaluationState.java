@@ -5,7 +5,7 @@ import tetris.Board;
 import static tetris.logic.EvaluationParameter.*;
 
 public class EvaluationState {
-    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, true, null);
+    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, true, null);
 
     public final int badCnt;
     private final int flatRate;
@@ -19,6 +19,7 @@ public class EvaluationState {
     public final boolean lost;
     private final int skipCnt;
     public final int linesCleared;
+    public final int monotonicRate;
     public final boolean tSpinPattern;
     public final boolean semiTSpinPattern;
 
@@ -36,6 +37,7 @@ public class EvaluationState {
             double prevStateEval,
             int skipCnt,
             int linesCleared,
+            int monotonicRate,
             boolean tSpinPattern,
             boolean semiTSpinPattern,
             boolean lost,
@@ -52,6 +54,7 @@ public class EvaluationState {
         this.prevStateEval = prevStateEval;
         this.skipCnt = skipCnt;
         this.linesCleared = linesCleared;
+        this.monotonicRate = monotonicRate;
         this.tSpinPattern = tSpinPattern;
         this.semiTSpinPattern = semiTSpinPattern;
         this.lost = lost;
@@ -89,6 +92,7 @@ public class EvaluationState {
         x += combo * parameterWeight.get(COMBO);
         x += prevStateEval * parameterWeight.get(PREV_STATE);
         x += skipCnt * parameterWeight.get(SKIP_CNT);
+        x += monotonicRate * parameterWeight.get(MONOTONIC_RATE);
         if (tSpinPattern) {
             x += parameterWeight.get(T_SPIN_PATTERN);
         }

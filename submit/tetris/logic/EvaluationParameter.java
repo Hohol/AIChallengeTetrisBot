@@ -14,5 +14,6 @@ public enum EvaluationParameter {
     SKIP_CNT,
     T_SPIN_PATTERN,
     SEMI_T_SPIN_PATTERN,
-    LOW_EFFICIENCY
+    LOW_EFFICIENCY,
+    MONOTONIC_RATE
 }

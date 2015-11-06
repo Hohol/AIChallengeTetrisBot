@@ -69,6 +69,7 @@ public class Evaluator {
 
         int aboveBadFactor = calcAboveBadFactor(board);
         boolean lost = board.getMaxColumnHeight() == board.getHeight();
+        int monotonicRate = calcMonotonicRate(board);
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -81,11 +82,31 @@ public class Evaluator {
                 prevStateEval,
                 skipCnt,
                 linesCleared,
+                monotonicRate,
                 tSpinPattern,
                 semiTSpinPattern,
                 lost,
                 parameterWeight
         );
+    }
+
+    private int calcMonotonicRate(Board board) {
+        int r = 0;
+        for (int col = 0; col <= board.getWidth() / 2 - 2; col++) {
+            int h1 = board.getColumnHeight(col);
+            int h2 = board.getColumnHeight(col + 1);
+            if (h1 < h2) {
+                r += h2 - h1;
+            }
+        }
+        for (int col = board.getWidth() / 2; col <= board.getWidth() - 2; col++) {
+            int h1 = board.getColumnHeight(col);
+            int h2 = board.getColumnHeight(col + 1);
+            if (h2 < h1) {
+                r += h1 - h2;
+            }
+        }
+        return r;
     }
 
     private int calcAboveBadFactor(Board board) {

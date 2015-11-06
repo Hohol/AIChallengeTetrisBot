@@ -17,7 +17,7 @@ public class MatchMaker {
     public static void main(String[] args) {
         BestMoveFinder first = BestMoveFinder.getBest();
         BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT,4.04244799470303).put(HOLE_CNT,2.224387958782543).put(HEIGHT,3.2032807202434537).put(SEMI_BAD_CNT,2.836906632838518).put(SCORE,-0.9228753064157523).put(HEIGHT_POW,0.0760321369445548).put(CELLS_ABOVE_TOP,0.10197293352695808).put(FLAT_RATE,0.5225395672967282).put(COMBO,-0.1).put(PREV_STATE,0.5943002519764304).put(SKIP_CNT,-2.5071420556737536).put(T_SPIN_PATTERN,-4.8708535119578205).put(SEMI_T_SPIN_PATTERN,-0.1363560523225238).put(LOW_EFFICIENCY,6.450545991594334)
+                .put(BAD_CNT, 5.582919899887908).put(HOLE_CNT, 1.889763086518398).put(HEIGHT, 1.4631383737117991).put(SEMI_BAD_CNT, 1.9337455987205074).put(SCORE, -0.716393996010999).put(HEIGHT_POW, 5.005283588122904).put(CELLS_ABOVE_TOP, 0.05887754151955771).put(FLAT_RATE, 0.3).put(COMBO, -1.295997354590228).put(PREV_STATE, 0.2).put(SKIP_CNT, -4).put(T_SPIN_PATTERN, -7).put(SEMI_T_SPIN_PATTERN, -0.670110825807111).put(LOW_EFFICIENCY, 2.2236858438531604).put(MONOTONIC_RATE, 0.7)
         );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
@@ -84,10 +84,10 @@ public class MatchMaker {
 
             log("cur = " + curTetrimino);
             log("next = " + nextTetrimino);
-            log(firstGameState.board);
+            //log(firstGameState.board);
             log("lines sent to second: " + firstGameState.garbageSentOnLastMove);
             log("");
-            //log(secondGameState.board);
+            log(secondGameState.board);
             log("lines sent to first: " + secondGameState.garbageSentOnLastMove);
 
             if (firstGameState.lost && secondGameState.lost) {
