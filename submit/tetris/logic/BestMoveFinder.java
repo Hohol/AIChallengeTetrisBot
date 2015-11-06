@@ -34,7 +34,8 @@ public class BestMoveFinder {
                 gameState.getRound(),
                 0,
                 gameState.getSkipCnt(),
-                gameState.getPossibleGarbage()
+                gameState.getPossibleGarbage(),
+                0
         ).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
@@ -56,7 +57,8 @@ public class BestMoveFinder {
             int round,
             double prevStateEval,
             int skipCnt,
-            int possibleGarbage
+            int possibleGarbage,
+            int linesCleared
     ) {
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(null, EvaluationState.LOST);
@@ -82,7 +84,8 @@ public class BestMoveFinder {
                         round + 1,
                         curEvaluation.evaluation,
                         skipCnt - 1,
-                        0
+                        0,
+                        linesCleared
                 ).getState();
             }
         }
@@ -125,6 +128,7 @@ public class BestMoveFinder {
             int newCombo = dropResult.getCombo();
             int newSkipCnt = skipCnt;
             newSkipCnt += dropResult.getSkipAdded();
+            int newLinesCleared = linesCleared+dropResult.getLinesCleared();
 
             EvaluationState curState;
 
@@ -134,13 +138,13 @@ public class BestMoveFinder {
                     newCombo,
                     prevStateEval,
                     newSkipCnt,
-                    dropResult.getLinesCleared()
+                    newLinesCleared
             );
             if (nextTetrimino == null || curEvaluation.lost) {
                 curState = curEvaluation;
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
-                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curEvaluation.evaluation, newSkipCnt, 0).getState();
+                curState = findBestMoves(newBoard, nextTwp, null, newScore, newCombo, round + 1, curEvaluation.evaluation, newSkipCnt, 0, newLinesCleared).getState();
             }
             if (curState != null && curState.better(bestState)) {
                 bestState = curState;

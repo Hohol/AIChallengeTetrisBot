@@ -1178,6 +1178,19 @@ public class BestMoveFinderTest {
         checkMoves(SKIP);
     }
 
+    @Test
+    void testEfficiencyBug() {
+        board("" +
+                        "..........\n" +
+                        "...xxx....\n" +
+                        ".....x....\n" +
+                        "..........\n" +
+                        "xxxxxxxxx."
+        );
+        nextType(O);
+        checkForbidden(width() - 3, 0);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {
