@@ -266,7 +266,7 @@ public class EvaluatorTest {
     }
 
     private EvaluationState getEvaluation(Board board) {
-        return evaluator.getEvaluation(board, 0, 0, 0, 0, 0);
+        return evaluator.getEvaluation(board, 0, 0, 0, 0, 0, false, 0);
     }
 
     public static Board board(String s) {

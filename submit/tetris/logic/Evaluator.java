@@ -18,7 +18,9 @@ public class Evaluator {
             int combo,
             double prevStateEval,
             int skipCnt,
-            int linesCleared
+            int linesCleared,
+            boolean lost,
+            int lastRound
     ) {
         Cell tSpinCell = checkTSpinPattern(board);
         int badCnt = 0;
@@ -68,7 +70,7 @@ public class Evaluator {
         boolean tSpinPattern = tSpinCell != null;
 
         int aboveBadFactor = calcAboveBadFactor(board);
-        boolean lost = board.getMaxColumnHeight() == board.getHeight();
+        boolean lostLocal = lost || board.getMaxColumnHeight() == board.getHeight();
         int monotonicRate = calcMonotonicRate(board);
         return new EvaluationState(
                 badCnt,
@@ -85,7 +87,8 @@ public class Evaluator {
                 monotonicRate,
                 tSpinPattern,
                 semiTSpinPattern,
-                lost,
+                lostLocal,
+                lastRound,
                 parameterWeight
         );
     }

@@ -61,7 +61,10 @@ public class BestMoveFinder {
             int linesCleared
     ) {
         if (board.collides(fallingTetrimino)) {
-            return new MovesWithEvaluation(null, EvaluationState.LOST);
+            return new MovesWithEvaluation(
+                    null,
+                    evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round)
+            );
         }
         EvaluationState bestState = null;
         TetriminoWithPosition bestPosition = null;
@@ -71,7 +74,7 @@ public class BestMoveFinder {
             for (int i = 0; i < possibleGarbage; i++) {
                 newBoard.addPenalty();
             }
-            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0);
+            EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0, false, round);
             if (nextTetrimino == null || curEvaluation.lost) {
                 bestState = curEvaluation;
             } else {
@@ -128,7 +131,7 @@ public class BestMoveFinder {
             int newCombo = dropResult.getCombo();
             int newSkipCnt = skipCnt;
             newSkipCnt += dropResult.getSkipAdded();
-            int newLinesCleared = linesCleared+dropResult.getLinesCleared();
+            int newLinesCleared = linesCleared + dropResult.getLinesCleared();
 
             EvaluationState curState;
 
@@ -138,7 +141,9 @@ public class BestMoveFinder {
                     newCombo,
                     prevStateEval,
                     newSkipCnt,
-                    newLinesCleared
+                    newLinesCleared,
+                    false,
+                    round
             );
             if (nextTetrimino == null || curEvaluation.lost) {
                 curState = curEvaluation;
@@ -155,7 +160,10 @@ public class BestMoveFinder {
             return new MovesWithEvaluation(Collections.singletonList(SKIP), bestState);
         }
         if (bestPosition == null) {
-            return new MovesWithEvaluation(Collections.emptyList(), EvaluationState.LOST);
+            return new MovesWithEvaluation(
+                    Collections.emptyList(),
+                    evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round)
+            );
         }
         List<Move> moves = new ArrayList<>();
         TetriminoWithPosition cur = bestPosition;

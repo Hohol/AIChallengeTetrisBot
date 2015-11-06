@@ -5,8 +5,6 @@ import tetris.Board;
 import static tetris.logic.EvaluationParameter.*;
 
 public class EvaluationState {
-    public static final EvaluationState LOST = new EvaluationState(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, true, null);
-
     public final int badCnt;
     private final int flatRate;
     private final int holeCnt;
@@ -20,6 +18,7 @@ public class EvaluationState {
     private final int skipCnt;
     public final int linesCleared;
     public final int monotonicRate;
+    public final int lastRound;
     public final boolean tSpinPattern;
     public final boolean semiTSpinPattern;
 
@@ -41,6 +40,7 @@ public class EvaluationState {
             boolean tSpinPattern,
             boolean semiTSpinPattern,
             boolean lost,
+            int lastRound,
             ParameterWeights parameterWeight
     ) {
         this.badCnt = badCnt;
@@ -58,6 +58,7 @@ public class EvaluationState {
         this.tSpinPattern = tSpinPattern;
         this.semiTSpinPattern = semiTSpinPattern;
         this.lost = lost;
+        this.lastRound = lastRound;
         this.evaluation = calcEvaluation(parameterWeight);
     }
 
@@ -68,6 +69,11 @@ public class EvaluationState {
 
         if (lost != st.lost) {
             return !lost;
+        }
+        if (lost) {
+            if (lastRound != st.lastRound) {
+                return lastRound > st.lastRound;
+            }
         }
 
         if (evaluation != st.evaluation) {
