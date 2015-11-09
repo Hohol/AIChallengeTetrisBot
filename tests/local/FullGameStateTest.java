@@ -365,7 +365,7 @@ public class FullGameStateTest {
     }
 
     @Test
-    void almostLost() {
+    void endGame2() {
         FullGameState state = new FullGameState(new Board(
                 "" +
                         "....\n" +
@@ -380,7 +380,7 @@ public class FullGameStateTest {
         );
         check(
                 state,
-                0, 0, false, 0, 0,
+                0, 0, true, 0, 0,
                 new Board(
                         "" +
                                 "....\n" +
@@ -562,6 +562,61 @@ public class FullGameStateTest {
                                 "....\n" +
                                 "...x"
                 ));
+    }
+
+    @Test
+    void endGame() {
+        FullGameState state = new FullGameState(new Board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxx.xx\n" +
+                        "xxxxxxx.xx\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x.xxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxx.x\n" +
+                        "xxxxxxxx.x\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        ));
+        state.makeMove(
+                I, null, 0, bmf(RIGHT, RIGHT, ROTATE_CW)
+        );
+        check(
+                state, 3, 1, true, 1, 0, new Board(""+
+                        "..........\n" +
+                        "..........\n" +
+                        ".......x..\n" +
+                        ".......x..\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x.xxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxx.x\n" +
+                        "xxxxxxxx.x\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+                )
+        );
     }
 
     // --------------- utils

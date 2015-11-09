@@ -142,7 +142,7 @@ public class BestMoveFinder {
                     prevStateEval,
                     newSkipCnt,
                     newLinesCleared,
-                    false,
+                    dropResult.isLost(),
                     round
             );
             if (nextTetrimino == null || curEvaluation.lost) {

@@ -6,13 +6,15 @@ public class DropResult {
     private final int newCombo;
     private final int skipAdded;
     private final int linesCleared;
+    private final boolean lost;
 
-    public DropResult(Board board, int linesCleared, int scoreAdded, int newCombo, int skipAdded) {
+    public DropResult(Board board, int linesCleared, int scoreAdded, int newCombo, int skipAdded, boolean lost) {
         this.board = board;
         this.linesCleared = linesCleared;
         this.scoreAdded = scoreAdded;
         this.newCombo = newCombo;
         this.skipAdded = skipAdded;
+        this.lost = lost;
     }
 
     public Board getBoard() {
@@ -33,5 +35,9 @@ public class DropResult {
 
     public int getLinesCleared() {
         return linesCleared;
+    }
+
+    public boolean isLost() {
+        return lost;
     }
 }

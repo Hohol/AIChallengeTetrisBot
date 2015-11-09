@@ -36,7 +36,7 @@ class FullGameState {
         garbageSentOnLastMove = newScore / Board.SCORE_PER_GARBAGE - score / Board.SCORE_PER_GARBAGE;
         score = newScore;
         round++;
-        if (board.getMaxColumnHeight() == board.getHeight()) {
+        if (board.getMaxColumnHeight() == board.getHeight() || dropResult.isLost()) {
             lost = true;
         }
         skipCnt += dropResult.getSkipAdded();

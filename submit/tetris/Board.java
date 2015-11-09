@@ -141,6 +141,7 @@ public class Board {
                 }
             }
         }
+        boolean lost = r.getMaxColumnHeight() == r.getHeight();
         r.addPenaltyIfNeeded(round);
         int linesCleared = r.clearFullRows();
 
@@ -164,13 +165,13 @@ public class Board {
 
         int skipAdded = (wasTSpin && linesCleared == 2 || linesCleared == 4) ? 1 : 0;
 
-        return new DropResult(r, linesCleared, scoreDelta, newCombo, skipAdded);
+        return new DropResult(r, linesCleared, scoreDelta, newCombo, skipAdded, lost);
     }
 
     public DropResult skipMove(int combo, int round) {
         Board r = new Board(this);
         r.addPenaltyIfNeeded(round);
-        return new DropResult(r, 0, 0, combo, -1);
+        return new DropResult(r, 0, 0, combo, -1, false);
     }
 
     public DropResult moveAndDrop(TetriminoWithPosition fallingTetrimino, List<Move> moves, int combo, int round) {

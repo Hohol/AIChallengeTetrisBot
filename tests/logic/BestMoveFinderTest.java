@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotSame;
 import static tetris.Move.*;
 import static tetris.TetriminoType.*;
 
@@ -757,7 +758,7 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test
+    @Test(enabled = false)
     void dontWasteSkip() {
         board("" +
                 "..........\n" +
@@ -1191,6 +1192,68 @@ public class BestMoveFinderTest {
         checkForbidden(width() - 3, 0);
     }
 
+    @Test
+    void endGameBug3() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxx.xx\n" +
+                        "xxxxxxx.xx\n" +
+                        ".xxxxxxxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xxxx.x\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x.xxxxxxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "x.xxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxx.xxx.x\n" +
+                        "xxxxxxxx.x\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        fallingType(I);
+        checkForbiddenMoves(
+                RIGHT, RIGHT, ROTATE_CW
+        );
+    }
+
+    @Test
+    void endGameBug4() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "......xx..\n" +
+                        "x...xxxxx.\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xxxxxxx\n" +
+                        "xx.xx.xxxx\n" +
+                        "x.xxxxxxxx\n" +
+                        "xxx.xx.xxx\n" +
+                        "xxxx.xxxxx\n" +
+                        "xxxxx.xxx.\n" +
+                        "xxx.xxxxxx\n" +
+                        "xxxxx.xx.x\n" +
+                        "xxxx.xxxxx\n" +
+                        "x.xxxxx.xx\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo\n" +
+                        "oooooooooo"
+        );
+        testBuilder.round = 14;
+        fallingType(O);
+        nextType(Z);
+        checkForbidden(4, 0);
+    }
+
     //-------- utils
 
     private boolean isSimpleAction(List<Move> moves) {
@@ -1297,6 +1360,10 @@ public class BestMoveFinderTest {
 
     private void checkMoves(Move... moves) {
         assertEquals(testBuilder.findBestMoves(), Arrays.asList(moves));
+    }
+
+    private void checkForbiddenMoves(Move... moves) {
+        assertFalse(testBuilder.findBestMoves().equals(Arrays.asList(moves)));
     }
 
     void checkForbidden(int leftCol, int cwRotations) {
