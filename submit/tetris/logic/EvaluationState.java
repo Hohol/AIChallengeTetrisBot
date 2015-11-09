@@ -21,6 +21,7 @@ public class EvaluationState {
     public final int lastRound;
     public final boolean tSpinPattern;
     public final boolean semiTSpinPattern;
+    public final int iPatternFactor;
 
     final double evaluation;
 
@@ -41,6 +42,7 @@ public class EvaluationState {
             boolean semiTSpinPattern,
             boolean lost,
             int lastRound,
+            int iPatternFactor,
             ParameterWeights parameterWeight
     ) {
         this.badCnt = badCnt;
@@ -59,6 +61,7 @@ public class EvaluationState {
         this.semiTSpinPattern = semiTSpinPattern;
         this.lost = lost;
         this.lastRound = lastRound;
+        this.iPatternFactor = iPatternFactor;
         this.evaluation = calcEvaluation(parameterWeight);
     }
 
@@ -99,6 +102,7 @@ public class EvaluationState {
         x += prevStateEval * parameterWeight.get(PREV_STATE);
         x += skipCnt * parameterWeight.get(SKIP_CNT);
         x += monotonicRate * parameterWeight.get(MONOTONIC_RATE);
+        x += iPatternFactor * parameterWeight.get(I_PATTERN);
         if (tSpinPattern) {
             x += parameterWeight.get(T_SPIN_PATTERN);
         }

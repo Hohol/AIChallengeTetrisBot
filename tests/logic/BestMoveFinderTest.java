@@ -903,7 +903,7 @@ public class BestMoveFinderTest {
                         ".xxxxxxxxx\n" +
                         ".xxxxxxxxx\n" +
                         ".xxxxxxxxx\n" +
-                        ".xxxxxxxxx"
+                        ".xxxxxxxx."
         );
         checkForbidden(1, 0);
     }
@@ -1222,6 +1222,22 @@ public class BestMoveFinderTest {
                 RIGHT, RIGHT, ROTATE_CW
         );
     }
+
+    @Test
+    void testIPattern() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "x...xxxxxx\n" +
+                        "x...xxxxxx\n" +
+                        "xxx.xxxxxx\n" +
+                        "xxx.xxxxxx"
+        );
+        fallingType(O);
+        checkAction(1, 0);
+    }
+
+
 
     @Test
     void endGameBug4() {

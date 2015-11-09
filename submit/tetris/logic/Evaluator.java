@@ -72,6 +72,7 @@ public class Evaluator {
         int aboveBadFactor = calcAboveBadFactor(board);
         boolean lostLocal = lost || board.getMaxColumnHeight() == board.getHeight();
         int monotonicRate = calcMonotonicRate(board);
+        int iPatternFactor = calcIPatternFactor(board);
         return new EvaluationState(
                 badCnt,
                 flatRate,
@@ -89,8 +90,27 @@ public class Evaluator {
                 semiTSpinPattern,
                 lostLocal,
                 lastRound,
+                iPatternFactor,
                 parameterWeight
         );
+    }
+
+    private int calcIPatternFactor(Board board) {
+        int minH = Integer.MAX_VALUE;
+        for (int col = 0; col < board.getWidth(); col++) {
+            int h = board.getColumnHeight(col);
+            if (h < minH) {
+                minH = h;
+            }
+        }
+        int topRowInMinCol = board.getHeight() - minH;
+        int row = topRowInMinCol - 1;
+        int r = 0;
+        while (row > 0 && board.getBlocksInRowCnt(row) == board.getWidth() - 1) {
+            r++;
+            row--;
+        }
+        return r;
     }
 
     private int calcMonotonicRate(Board board) {
@@ -228,8 +248,8 @@ public class Evaluator {
         return leftTop < midTop &&
                 !board.get(leftTop - 1, leftCol + 2) &&
                 board.get(leftTop - 2, leftCol + 2) &&
-                board.blocksInRowCnt(leftTop - 1) == board.getWidth() - 3 &&
-                board.blocksInRowCnt(leftTop) == board.getWidth() - 1;
+                board.getBlocksInRowCnt(leftTop - 1) == board.getWidth() - 3 &&
+                board.getBlocksInRowCnt(leftTop) == board.getWidth() - 1;
     }
 
     private boolean checkTSpinPatternRight(Board board, int leftCol, int midTop, int rightTop) {
@@ -239,8 +259,8 @@ public class Evaluator {
         return rightTop < midTop &&
                 !board.get(rightTop - 1, leftCol) &&
                 board.get(rightTop - 2, leftCol) &&
-                board.blocksInRowCnt(rightTop - 1) == board.getWidth() - 3 &&
-                board.blocksInRowCnt(rightTop) == board.getWidth() - 1;
+                board.getBlocksInRowCnt(rightTop - 1) == board.getWidth() - 3 &&
+                board.getBlocksInRowCnt(rightTop) == board.getWidth() - 1;
     }
 
     private boolean isSemiBad(Board board, int row, int col) {

@@ -402,7 +402,7 @@ public class Board {
         }
     }
 
-    public int blocksInRowCnt(int row) {
+    public int getBlocksInRowCnt(int row) {
         int r = 0;
         for (int col = 0; col < width; col++) {
             if (get(row, col)) {

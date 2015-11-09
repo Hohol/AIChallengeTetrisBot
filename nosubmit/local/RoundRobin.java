@@ -17,16 +17,12 @@ public class RoundRobin {
         List<PlayerEntry> entries = new ArrayList<>();
 
         ParameterWeights parameters = BestMoveFinder.BEST_PARAMETERS;
-        int steps = 3;
-        for (int flatRate = 0; flatRate < steps; flatRate++) {
-            for (int monotonicRate = 0; monotonicRate < steps; monotonicRate++) {
-                addInitial(
-                        entries,
-                        new ParameterWeights(parameters)
-                                .put(FLAT_RATE, flatRate * 1.0 / steps)
-                                .put(MONOTONIC_RATE, monotonicRate * 1.0 / steps)
-                );
-            }
+        for (double iPattern = 0; iPattern < 3; iPattern += 0.5) {
+            addInitial(
+                    entries,
+                    new ParameterWeights(parameters)
+                            .put(I_PATTERN, -iPattern)
+            );
         }
 
         int round = 0;

@@ -255,6 +255,44 @@ public class EvaluatorTest {
         assertEquals(evaluation.aboveBadFactor, 3);
     }
 
+    @Test
+    void IPatternFactorTest() {
+        Board board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".xxxxxxxxx"
+        );
+        EvaluationState evaluation = getEvaluation(board);
+        assertEquals(evaluation.iPatternFactor, 1);
+
+        board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".x........\n" +
+                        ".xxxxxxxxx\n" +
+                        ".x........\n" +
+                        ".xxxxxxxxx"
+        );
+        evaluation = getEvaluation(board);
+        assertEquals(evaluation.iPatternFactor, 1);
+        board = board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..x.....x.\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        "xxxxxx.xxx\n" +
+                        ".xxxxxxxxx"
+        );
+        evaluation = getEvaluation(board);
+        assertEquals(evaluation.iPatternFactor, 3);
+    }
+
     //--------- utils
 
     private void checkSemiTSpinPattern(Board board, boolean expected) {
