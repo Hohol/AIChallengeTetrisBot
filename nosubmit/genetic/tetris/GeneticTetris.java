@@ -13,7 +13,7 @@ import static local.MatchResult.*;
 
 public class GeneticTetris {
 
-    public static final int GAMES_CNT = 1;
+    public static final int GAMES_CNT = 3;
 
     public static void main(String[] args) {
         Random rnd = new Random();

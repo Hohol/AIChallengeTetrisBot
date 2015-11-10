@@ -1375,7 +1375,9 @@ public class BestMoveFinderTest {
     }
 
     private void checkMoves(Move... moves) {
-        assertEquals(testBuilder.findBestMoves(), Arrays.asList(moves));
+        List<Move> actual = testBuilder.findBestMoves();
+        List<Move> expected = Arrays.asList(moves);
+        assertEquals(actual, expected, "\nactual = " + actual + "\nexpected = " + expected + "\n");
     }
 
     private void checkForbiddenMoves(Move... moves) {
