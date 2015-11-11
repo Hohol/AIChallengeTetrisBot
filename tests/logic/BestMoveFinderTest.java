@@ -299,7 +299,7 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test(enabled = false)
+    @Test (enabled = false) // todo rework to defense only
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +
@@ -416,32 +416,6 @@ public class BestMoveFinderTest {
     }
 
     @Test
-    void badIsNotSoBad() {
-        board("" +
-                "...xx.....\n" +
-                "...xx.....\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".......xx.\n" +
-                ".x.x.x.xxx");
-        checkForbidden(width() - 3, 0);
-    }
-
-    @Test
     void badIsNotSoBad3() {
         board("" +
                 "...xx.....\n" +
@@ -484,48 +458,6 @@ public class BestMoveFinderTest {
                 "..........\n" +
                 ".x........");
         checkAction(2, 0);
-    }
-
-    @Test
-    void testBug5() {
-        board("" +
-                ".....x....\n" +
-                "...xxx....\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "......xx..\n" +
-                ".......xx.\n" +
-                ".......xxx\n" +
-                ".xx.xxxxxx\n" +
-                ".xx.xxxxxx\n" +
-                ".xxxxxxxxx\n" +
-                ".xxxxxxxxx\n" +
-                "xx.xxxxxxx\n" +
-                "oooooooooo\n" +
-                "oooooooooo");
-        nextType(T);
-        checkMoves(
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                DOWN,
-                RIGHT
-        );
     }
 
     @Test
@@ -758,7 +690,7 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test(enabled = false)
+    @Test (enabled = false) // todo rework to more obvious
     void dontWasteSkip() {
         board("" +
                 "..........\n" +
@@ -850,7 +782,7 @@ public class BestMoveFinderTest {
         checkAction(2, 0);
     }
 
-    @Test(enabled = false)
+    @Test
     void semiTSpinPattern() {
         board("" +
                         "..........\n" +
@@ -937,7 +869,7 @@ public class BestMoveFinderTest {
         checkForbidden(0, 0);
     }
 
-    @Test(enabled = false)
+    @Test
     void testAboveBad() {
         board("" +
                         "......x...\n" +
@@ -1146,37 +1078,6 @@ public class BestMoveFinderTest {
         fallingType(O);
         nextType(S);
         checkForbidden(2, 0);
-    }
-
-    @Test
-    void endGameBug2() {
-        board("" +
-                        "..........\n" +
-                        "xx........\n" +
-                        "xxxxx....x\n" +
-                        "xxxxxxx.xx\n" +
-                        ".xxxxxxxxx\n" +
-                        "x.xxxxxxxx\n" +
-                        "xxx.xxxx.x\n" +
-                        ".xxxxxxxxx\n" +
-                        ".x.xxxxxxx\n" +
-                        "xxxxxx.xxx\n" +
-                        "x.xxxx.xxx\n" +
-                        "xxxxxx.xxx\n" +
-                        "xxxx.xxx.x\n" +
-                        "xxxxxxxx.x\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo"
-        );
-        fallingType(O);
-        nextType(S);
-        skipCnt(1);
-        checkMoves(SKIP);
     }
 
     @Test
