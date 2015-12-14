@@ -65,10 +65,6 @@ public class EvaluationState {
         this.evaluation = calcEvaluation(parameterWeight);
     }
 
-    public boolean better(EvaluationState st) {
-        return evaluation < st.evaluation;
-    }
-
     private double calcEvaluation(ParameterWeights parameterWeight) {
         if (parameterWeight == null) {
             return 0;
