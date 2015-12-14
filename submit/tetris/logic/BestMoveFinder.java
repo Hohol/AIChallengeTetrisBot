@@ -166,7 +166,7 @@ public class BestMoveFinder {
                                 newLinesCleared
                         )).getState();
             }
-            if (curState != null && curState.better(bestState)) {
+            if (bestState == null || curState.better(bestState)) {
                 bestState = curState;
                 bestPosition = finalPosition;
             }

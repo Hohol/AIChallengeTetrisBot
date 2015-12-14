@@ -66,24 +66,7 @@ public class EvaluationState {
     }
 
     public boolean better(EvaluationState st) {
-        if (st == null) {
-            return true;
-        }
-
-        if (lost != st.lost) {
-            return !lost;
-        }
-        if (lost) {
-            if (lastRound != st.lastRound) {
-                return lastRound > st.lastRound;
-            }
-        }
-
-        if (evaluation != st.evaluation) {
-            return evaluation < st.evaluation;
-        }
-
-        return false;
+        return evaluation < st.evaluation;
     }
 
     private double calcEvaluation(ParameterWeights parameterWeight) {
@@ -111,6 +94,11 @@ public class EvaluationState {
         }
         if (linesCleared > 0 && score == 0) {
             x += parameterWeight.get(LOW_EFFICIENCY);
+        }
+
+        if (lost) {
+            x += 1e9;
+            x -= lastRound * 1e6;
         }
 
         return x;
