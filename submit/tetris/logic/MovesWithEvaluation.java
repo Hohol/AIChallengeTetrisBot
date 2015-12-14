@@ -6,9 +6,9 @@ import java.util.List;
 
 public class MovesWithEvaluation {
     private final List<Move> moves;
-    private final EvaluationState state;
+    private final double state;
 
-    public MovesWithEvaluation(List<Move> moves, EvaluationState state) {
+    public MovesWithEvaluation(List<Move> moves, double state) {
         this.moves = moves;
         this.state = state;
     }
@@ -17,7 +17,7 @@ public class MovesWithEvaluation {
         return moves;
     }
 
-    public EvaluationState getState() {
+    public double getEvaluation() {
         return state;
     }
 

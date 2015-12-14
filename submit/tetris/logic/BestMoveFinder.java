@@ -66,7 +66,7 @@ public class BestMoveFinder {
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(
                     null,
-                    evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round)
+                    evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round).evaluation
             );
         }
 
@@ -79,7 +79,7 @@ public class BestMoveFinder {
             }
             EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0, false, round);
             if (nextTetrimino == null || curEvaluation.lost) {
-                searchStates.add(new SearchState(curEvaluation, null, null));
+                searchStates.add(new SearchState(curEvaluation.evaluation, null, null));
             } else {
                 GameState2 newGameState = new GameState2(
                         newBoard,
@@ -93,7 +93,7 @@ public class BestMoveFinder {
                         0,
                         linesCleared
                 );
-                EvaluationState evaluation = findBestMoves(newGameState, false).getState();
+                double evaluation = findBestMoves(newGameState, false).getEvaluation();
                 searchStates.add(new SearchState(evaluation, newGameState, null));
             }
         }
@@ -138,8 +138,6 @@ public class BestMoveFinder {
             newSkipCnt += dropResult.getSkipAdded();
             int newLinesCleared = linesCleared + dropResult.getLinesCleared();
 
-            EvaluationState curState;
-
             EvaluationState curEvaluation = evaluator.getEvaluation(
                     newBoard,
                     newScore,
@@ -151,7 +149,7 @@ public class BestMoveFinder {
                     round
             );
             if (nextTetrimino == null || curEvaluation.lost) {
-                searchStates.add(new SearchState(curEvaluation, null, finalPosition));
+                searchStates.add(new SearchState(curEvaluation.evaluation, null, finalPosition));
             } else {
                 TetriminoWithPosition nextTwp = newBoard.newFallingTetrimino(nextTetrimino);
                 GameState2 newGameState = new GameState2(
@@ -166,41 +164,35 @@ public class BestMoveFinder {
                         0,
                         newLinesCleared
                 );
-                curState = findBestMoves(newGameState, false).getState();
-                searchStates.add(new SearchState(curState, newGameState, finalPosition));
+                double nextEvaluation = findBestMoves(newGameState, false).getEvaluation();
+                searchStates.add(new SearchState(nextEvaluation, newGameState, finalPosition));
             }
         }
 
         Collections.sort(searchStates);
         SearchState bestSearchState = searchStates.get(0);
 
-        if (bestSearchState.position == null && bestSearchState.evaluationState != null) { // Skip was the best move. Warning! Very ugly code!
-            return new MovesWithEvaluation(Collections.singletonList(SKIP), bestSearchState.evaluationState);
-        }
-        if (bestSearchState.position == null) {
-            return new MovesWithEvaluation(
-                    Collections.emptyList(),
-                    evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round)
-            );
+        if (bestSearchState.position == null) { // Skip was the best move. Warning! Very ugly code!
+            return new MovesWithEvaluation(Collections.singletonList(SKIP), bestSearchState.evaluation);
         }
         List<Move> moves = shouldFindMoves ? PathFinder.findMoves(fallingTetrimino, bfs, bestSearchState) : null;
-        return new MovesWithEvaluation(moves, bestSearchState.evaluationState);
+        return new MovesWithEvaluation(moves, bestSearchState.evaluation);
     }
 
     static class SearchState implements Comparable<SearchState> {
-        final EvaluationState evaluationState;
+        final double evaluation;
         final GameState2 gameState;
         final TetriminoWithPosition position; // null means move is skip. ugly =(
 
-        SearchState(EvaluationState evaluationState, GameState2 gameState, TetriminoWithPosition position) {
-            this.evaluationState = evaluationState;
+        SearchState(double evaluation, GameState2 gameState, TetriminoWithPosition position) {
+            this.evaluation = evaluation;
             this.gameState = gameState;
             this.position = position;
         }
 
         @Override
         public int compareTo(SearchState o) {
-            return Double.compare(evaluationState.evaluation, o.evaluationState.evaluation);
+            return Double.compare(evaluation, o.evaluation);
         }
     }
 
