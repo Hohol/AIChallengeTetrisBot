@@ -37,7 +37,8 @@ public class BestMoveFinder {
                         gameState.getSkipCnt(),
                         gameState.getPossibleGarbage(),
                         0
-                )
+                ),
+                true
         ).getMoves();
         Collections.reverse(moves);
         boolean removedSomeDowns = false;
@@ -51,7 +52,7 @@ public class BestMoveFinder {
         return moves;
     }
 
-    private MovesWithEvaluation findBestMoves(GameState2 gameState) {
+    private MovesWithEvaluation findBestMoves(GameState2 gameState, boolean shouldFindMoves) {
         final Board board = gameState.board;
         final TetriminoWithPosition fallingTetrimino = gameState.fallingTetrimino;
         final TetriminoType nextTetrimino = gameState.nextTetrimino;
@@ -92,7 +93,7 @@ public class BestMoveFinder {
                         0,
                         linesCleared
                 );
-                EvaluationState evaluation = findBestMoves(newGameState).getState();
+                EvaluationState evaluation = findBestMoves(newGameState, false).getState();
                 searchStates.add(new SearchState(evaluation, newGameState, null));
             }
         }
@@ -165,7 +166,7 @@ public class BestMoveFinder {
                         0,
                         newLinesCleared
                 );
-                curState = findBestMoves(newGameState).getState();
+                curState = findBestMoves(newGameState, false).getState();
                 searchStates.add(new SearchState(curState, newGameState, finalPosition));
             }
         }
@@ -182,14 +183,7 @@ public class BestMoveFinder {
                     evaluator.getEvaluation(board, score, 0, prevStateEval, 0, linesCleared, true, round)
             );
         }
-        List<Move> moves = new ArrayList<>();
-        TetriminoWithPosition cur = bestSearchState.position;
-        while (!cur.equals(fallingTetrimino)) {
-            TetriminoWithPosition prev = bfs[cur.getTopRow()][cur.getLeftCol()][cur.getTetrimino().getOrientation()];
-            Move prevMove = PathFinder.getPrevMove(cur, prev);
-            moves.add(prevMove);
-            cur = prev;
-        }
+        List<Move> moves = shouldFindMoves ? PathFinder.findMoves(fallingTetrimino, bfs, bestSearchState) : null;
         return new MovesWithEvaluation(moves, bestSearchState.evaluationState);
     }
 

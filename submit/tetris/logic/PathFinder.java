@@ -59,4 +59,16 @@ class PathFinder {
         }
         return from;
     }
+
+    static List<Move> findMoves(TetriminoWithPosition fallingTetrimino, TetriminoWithPosition[][][] bfs, BestMoveFinder.SearchState bestSearchState) {
+        List<Move> moves = new ArrayList<>();
+        TetriminoWithPosition cur = bestSearchState.position;
+        while (!cur.equals(fallingTetrimino)) {
+            TetriminoWithPosition prev = bfs[cur.getTopRow()][cur.getLeftCol()][cur.getTetrimino().getOrientation()];
+            Move prevMove = PathFinder.getPrevMove(cur, prev);
+            moves.add(prevMove);
+            cur = prev;
+        }
+        return moves;
+    }
 }
