@@ -37,7 +37,7 @@ public class RoundRobin {
                     ParameterWeights first = firstEntry.parameters;
                     ParameterWeights second = secondEntry.parameters;
 
-                    MatchResult matchResult = matchMaker.playMatch(new BestMoveFinder(first), new BestMoveFinder(second));
+                    MatchResult matchResult = matchMaker.playMatch(new BestMoveFinder(first, BestMoveFinder.DEFAULT_ONE_MORE_LEVEL_NODES_CNT), new BestMoveFinder(second, BestMoveFinder.DEFAULT_ONE_MORE_LEVEL_NODES_CNT));
                     update(firstEntry, secondEntry, matchResult, round);
 
                     Collections.sort(entries, Comparator.comparing(PlayerEntry::getWinRate));

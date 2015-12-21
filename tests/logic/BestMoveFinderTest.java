@@ -5,25 +5,29 @@ import org.testng.annotations.Test;
 import tetris.*;
 import tetris.logic.Action;
 import tetris.logic.BestMoveFinder;
+import tetris.logic.EvaluationParameter;
+import tetris.logic.ParameterWeights;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotSame;
 import static tetris.Move.*;
 import static tetris.TetriminoType.*;
+import static tetris.logic.EvaluationParameter.*;
 
 @Test
 public class BestMoveFinderTest {
 
-    private final BestMoveFinder bestMoveFinder = BestMoveFinder.getBest();
+    public static final ParameterWeights HEIGHT_ONLY = ParameterWeights.zero().put(HEIGHT, 1).put(HEIGHT_POW, 1);
+    private BestMoveFinder bestMoveFinder;
 
     TestBuilder testBuilder;
 
     @BeforeMethod
     void init() {
+        bestMoveFinder = BestMoveFinder.getBest();
         testBuilder = new TestBuilder();
     }
 
@@ -299,7 +303,8 @@ public class BestMoveFinderTest {
         checkAction(width() - 3, 2);
     }
 
-    @Test (enabled = false) // todo rework to defense only
+    @Test(enabled = false)
+        // todo rework to defense only
     void getDontPutOnTopBad() {
         board("" +
                 "...xx.....\n" +
@@ -690,7 +695,8 @@ public class BestMoveFinderTest {
         );
     }
 
-    @Test (enabled = false) // todo rework to more obvious
+    @Test(enabled = false)
+        // todo rework to more obvious
     void dontWasteSkip() {
         board("" +
                 "..........\n" +
@@ -1139,7 +1145,6 @@ public class BestMoveFinderTest {
     }
 
 
-
     @Test
     void endGameBug4() {
         board("" +
@@ -1169,6 +1174,78 @@ public class BestMoveFinderTest {
         fallingType(O);
         nextType(Z);
         checkForbidden(4, 0);
+    }
+
+    @Test
+    void testOneMoreLevel() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxxxxxx...\n" +
+                        "xxxxxxx..."
+        );
+        bestMoveFinder = new BestMoveFinder(HEIGHT_ONLY, 2);
+        fallingType(O);
+        checkAction(width() - 2, 0);
+    }
+
+    @Test
+    void testOneMoreLevel2() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x........\n" +
+                        ".x..xxxx..\n" +
+                        ".x..xxxx..\n" +
+                        ".x..xxxxxx\n" +
+                        ".xx.xxxxxx"
+        );
+        bestMoveFinder = new BestMoveFinder(HEIGHT_ONLY, 2);
+        fallingType(O);
+        nextType(T);
+        checkAction(width() - 2, 0);
+    }
+
+    @Test
+    void testOneMoreLevel3() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "..........\n" +
+                        "........x.\n" +
+                        "........x.\n" +
+                        "........x.\n" +
+                        "..xxxxxxxx\n" +
+                        ".xxxxxxxxx\n" +
+                        ".xxxxxxxxx"
+        );
+        bestMoveFinder = new BestMoveFinder(ParameterWeights.zero().put(SCORE, -1), 2);
+        fallingType(O);
+        checkForbidden(0, 0);
+    }
+
+    @Test
+    void testOneMoreLevel4() {
+        board("" +
+                        "..........\n" +
+                        "..........\n" +
+                        "xxx.....xx\n" +
+                        "xxxx.xxxxx"
+        );
+        bestMoveFinder = new BestMoveFinder(ParameterWeights.zero().put(SCORE, -1), 4);
+        fallingType(O);
+        nextType(O);
+        checkAction(6, 0);
     }
 
     //-------- utils

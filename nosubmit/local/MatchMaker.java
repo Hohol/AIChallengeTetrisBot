@@ -15,9 +15,15 @@ import static tetris.logic.EvaluationParameter.*;
 public class MatchMaker {
 
     public static void main(String[] args) {
-        BestMoveFinder first = BestMoveFinder.getBest();
-        BestMoveFinder second = new BestMoveFinder(new ParameterWeights()
-                .put(BAD_CNT,17.064971771382382).put(HOLE_CNT,5.733177366629449).put(HEIGHT,1.4076593440352523).put(SEMI_BAD_CNT,5.076315939386729).put(SCORE,-2.2862666329869157).put(HEIGHT_POW,8.751944794972278).put(CELLS_ABOVE_TOP,0.23822656903576234).put(FLAT_RATE,0.6922331319044679).put(COMBO,-0.3614692532280521).put(PREV_STATE,0.017307843006568957).put(SKIP_CNT,-7.438704615109288).put(T_SPIN_PATTERN,-12.47511154380235).put(SEMI_T_SPIN_PATTERN,-2.3599588643506335).put(LOW_EFFICIENCY,12.290719514160582).put(MONOTONIC_RATE,2.1585022287073583).put(I_PATTERN, -5.377388018547392)
+        BestMoveFinder first = new BestMoveFinder(
+                BestMoveFinder.BEST_PARAMETERS
+                ,
+                5
+        );
+        BestMoveFinder second = new BestMoveFinder(
+                BestMoveFinder.BEST_PARAMETERS
+                ,
+                10
         );
         int matchCnt = 0;
         int[] resultToCnt = new int[3];
@@ -62,12 +68,14 @@ public class MatchMaker {
                     possibleGarbageToFirst,
                     firstPlayer
             );
+            long start = System.currentTimeMillis();
             secondGameState.makeMove(
                     curTetrimino,
                     nextTetrimino,
                     possibleGarbageToSecond,
                     secondPlayer
             );
+            System.out.println(System.currentTimeMillis() - start);
 
             if (firstGameState.lost && secondGameState.lost) {
                 return DRAW;

@@ -45,7 +45,7 @@ public class ResultsLogger implements Runnable {
             }
             int pts = 0; // 0 for loss, 1 for draw, 2 for win
             for (int i = 0; i < GAMES_CNT; i++) {
-                MatchResult matchResult = matchMaker.playMatch(BestMoveFinder.getBest(), new BestMoveFinder(currentBest));
+                MatchResult matchResult = matchMaker.playMatch(BestMoveFinder.getBest(), new BestMoveFinder(currentBest, BestMoveFinder.DEFAULT_ONE_MORE_LEVEL_NODES_CNT));
                 if (matchResult == SECOND_WON) {
                     pts += 2;
                 } else if (matchResult == DRAW) {

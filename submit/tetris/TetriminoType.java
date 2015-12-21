@@ -37,6 +37,8 @@ public enum TetriminoType {
                     "xxx"
     );
 
+    public static TetriminoType[] ALL = values();
+
     public final boolean[][] b;
 
     private TetriminoType(String s) {

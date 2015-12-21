@@ -10,7 +10,7 @@ import static org.testng.Assert.assertEquals;
 
 @Test
 public class EvaluatorTest {
-    Evaluator evaluator = new Evaluator(new ParameterWeights().zeroOut());
+    Evaluator evaluator = new Evaluator(ParameterWeights.zero());
 
     @Test
     void testTSpinPattern() {

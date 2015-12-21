@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PossibleGarbageCalculator {
 
-    private final BestMoveFinder bestMoveFinder = new BestMoveFinder(new ParameterWeights().zeroOut().put(EvaluationParameter.SCORE, -1));
+    private final BestMoveFinder bestMoveFinder = new BestMoveFinder(ParameterWeights.zero().put(EvaluationParameter.SCORE, -1), 1);
 
     public int calculatePossibleGarbage(Board board, TetriminoType tetriminoType, int prevScore, int combo) {
         TetriminoWithPosition fallingTetrimino = board.newFallingTetrimino(tetriminoType);

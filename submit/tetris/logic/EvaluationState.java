@@ -109,6 +109,9 @@ public class EvaluationState {
     }
 
     private static double getHeightFactor(int maxColumnHeight, double heightRatioQ, double heightPow) {
+        if (heightPow == 0) {
+            return 0;
+        }
         double heightRatio = maxColumnHeight / (double) Board.STANDARD_HEIGHT;
         return Math.pow(heightRatio * heightRatioQ, heightPow);
     }

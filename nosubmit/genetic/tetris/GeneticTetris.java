@@ -23,8 +23,8 @@ public class GeneticTetris {
         List<CreatureAndWinCnt> species = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             species.add(new CreatureAndWinCnt(
-                    randomParameters(rnd)
-                    //new ParameterWeights(BestMoveFinder.BEST_PARAMETERS).put(EvaluationParameter.LOW_EFFICIENCY, 0)
+                    //randomParameters(rnd)
+                    new ParameterWeights(BestMoveFinder.BEST_PARAMETERS)
             ));
             //species.add(BestMoveFinder.BEST_PARAMETERS);
         }
@@ -66,7 +66,10 @@ public class GeneticTetris {
     private static MatchResult getMatchSeriesResult(MatchMaker matchMaker, ParameterWeights first, ParameterWeights second) {
         int pts = 0; // 0 for loss, 1 for draw, 2 for win
         for (int i = 0; i < GAMES_CNT; i++) {
-            MatchResult matchResult = matchMaker.playMatch(new BestMoveFinder(first), new BestMoveFinder(second));
+            MatchResult matchResult = matchMaker.playMatch(
+                    new BestMoveFinder(first, BestMoveFinder.DEFAULT_ONE_MORE_LEVEL_NODES_CNT),
+                    new BestMoveFinder(second, BestMoveFinder.DEFAULT_ONE_MORE_LEVEL_NODES_CNT)
+            );
             if (matchResult == FIRST_WON) {
                 pts += 2;
             } else if (matchResult == DRAW) {
@@ -86,14 +89,6 @@ public class GeneticTetris {
         ParameterWeights parameterWeights = new ParameterWeights();
         for (EvaluationParameter parameter : EvaluationParameter.values()) {
             parameterWeights.put(parameter, rnd.nextDouble() - 0.5);
-        }
-        return parameterWeights;
-    }
-
-    private static ParameterWeights zeroParameters() {
-        ParameterWeights parameterWeights = new ParameterWeights();
-        for (EvaluationParameter parameter : EvaluationParameter.values()) {
-            parameterWeights.put(parameter, 0);
         }
         return parameterWeights;
     }
