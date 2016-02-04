@@ -11,7 +11,7 @@ public class Board {
 
     private final int height;
     private final int width;
-    private final boolean b[][];
+    private final int b[];
     private int penalty;
 
     public Board(int height, int width) {
@@ -20,28 +20,27 @@ public class Board {
         }
         this.height = height;
         this.width = width;
-        b = new boolean[height][width];
+        b = new int[height];
     }
 
     public Board(Board board) {
         width = board.width;
         height = board.height;
-        b = new boolean[height][width];
+        b = board.b.clone();
         this.penalty = board.penalty;
-        for (int i = 0; i < height; i++) {
-            System.arraycopy(board.b[i], 0, b[i], 0, width);
-        }
     }
 
     public Board(String s) {
         String[] a = s.split("\n");
         height = a.length;
         width = a[0].length();
-        b = new boolean[height][width];
+        b = new int[height];
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 char ch = a[row].charAt(col);
-                b[row][col] = (ch != '.');
+                if (ch != '.') {
+                    set(row, col, true);
+                }
                 if (ch == 'o') {
                     if (penalty == 0) {
                         penalty = height - row;
@@ -52,11 +51,15 @@ public class Board {
     }
 
     public void set(int row, int col, boolean value) {
-        b[row][col] = value;
+        if (value) {
+            b[row] |= 1 << col;
+        } else {
+            b[row] &= ~(1 << col);
+        }
     }
 
     public boolean get(int row, int col) {
-        return b[row][col];
+        return (b[row] & (1 << col)) != 0;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class Board {
         StringBuilder r = new StringBuilder();
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                if (b[row][col]) {
+                if (get(row, col)) {
                     if (row >= height - penalty) {
                         r.append('o');
                     } else {
@@ -114,7 +117,7 @@ public class Board {
         }
         for (int row = 0; row < tetrimino.getHeight(); row++) {
             for (int col = 0; col < tetrimino.getWidth(); col++) {
-                if (tetrimino.get(row, col) != b[topRow + row][leftCol + col]) {
+                if (tetrimino.get(row, col) != get(topRow + row, leftCol + col)) {
                     return false;
                 }
             }
@@ -259,7 +262,7 @@ public class Board {
         for (int row = 0; row < height - penalty; row++) {
             full[row] = true;
             for (int col = 0; col < width; col++) {
-                if (!b[row][col]) {
+                if (!get(row, col)) {
                     full[row] = false;
                     break;
                 }
@@ -272,12 +275,12 @@ public class Board {
             int botRow = height - 1;
             for (int row = height - 1; row >= 0; row--) {
                 if (!full[row]) {
-                    b[botRow][col] = b[row][col];
+                    set(botRow, col, get(row, col));
                     botRow--;
                 }
             }
             while (botRow >= 0) {
-                b[botRow][col] = false;
+                set(botRow, col, false);
                 botRow--;
             }
         }
@@ -287,7 +290,7 @@ public class Board {
     public int getTopRowInColumn(int col) {
         int boardTopRow = height; // if empty column
         for (int i = 0; i < height; i++) {
-            if (b[i][col]) {
+            if (get(i, col)) {
                 boardTopRow = i;
                 break;
             }
@@ -311,7 +314,7 @@ public class Board {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (b[i][j] != board.b[i][j]) {
+                if (get(i, j) != board.get(i, j)) {
                     return false;
                 }
             }
@@ -374,11 +377,11 @@ public class Board {
     public void addPenalty() {
         for (int row = 0; row < height - 1; row++) {
             for (int col = 0; col < width; col++) {
-                b[row][col] = b[row + 1][col];
+                set(row, col, get(row + 1, col));
             }
         }
         for (int col = 0; col < width; col++) {
-            b[height - 1][col] = true;
+            set(height - 1, col, true);
         }
         penalty++;
     }
@@ -387,16 +390,16 @@ public class Board {
         int linesAdded = holes.length;
         for (int row = 0; row < height - penalty - linesAdded; row++) {
             for (int col = 0; col < width; col++) {
-                b[row][col] = b[row + linesAdded][col];
+                set(row, col, get(row + linesAdded, col));
             }
         }
         for (int row = 0; row < linesAdded; row++) {
             for (int col = 0; col < width; col++) {
                 int realRow = height - penalty - linesAdded + row;
                 if (col == holes[row].oneCol || col == holes[row].otherCol) {
-                    b[realRow][col] = false;
+                    set(realRow, col, false);
                 } else {
-                    b[realRow][col] = true;
+                    set(realRow, col, true);
                 }
             }
         }
