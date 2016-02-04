@@ -16,5 +16,6 @@ public enum EvaluationParameter {
     SEMI_T_SPIN_PATTERN,
     LOW_EFFICIENCY,
     MONOTONIC_RATE,
-    I_PATTERN
+    I_PATTERN,
+    LOW_EFFICIENCY2
 }

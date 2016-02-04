@@ -91,6 +91,9 @@ public class EvaluationState {
         if (linesCleared > 0 && score == 0) {
             x += parameterWeight.get(LOW_EFFICIENCY);
         }
+        if (linesCleared == 2 && score <= 3) {
+            x += parameterWeight.get(LOW_EFFICIENCY2); // todo generalize?
+        }
 
         if (lost) {
             x += 1e9;
