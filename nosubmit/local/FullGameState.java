@@ -33,7 +33,7 @@ class FullGameState {
         board = dropResult.getBoard();
         combo = dropResult.getCombo();
         int newScore = score + dropResult.getScoreAdded();
-        garbageSentOnLastMove = newScore / Board.SCORE_PER_GARBAGE - score / Board.SCORE_PER_GARBAGE;
+        garbageSentOnLastMove = Rules.calculateGarbage(score, newScore);
         score = newScore;
         round++;
         if (board.getMaxColumnHeight() == board.getHeight() || dropResult.isLost()) {

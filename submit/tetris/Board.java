@@ -5,7 +5,6 @@ import java.util.List;
 public class Board {
 
     public static final int SOLID_BLOCK_PERIOD = 15;
-    public static final int SCORE_PER_GARBAGE = 3;
     public static int STANDARD_HEIGHT = 21;
     public static int STANDARD_WIDTH = 10;
 

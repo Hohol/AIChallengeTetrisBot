@@ -15,6 +15,7 @@ public class PossibleGarbageCalculator {
         }
         List<Move> moves = bestMoveFinder.findBestMoves(new GameState(board, fallingTetrimino, null, combo, 1, 0, 0));
         DropResult dropResult = board.moveAndDrop(fallingTetrimino, moves, combo, 1);
-        return (prevScore + dropResult.getScoreAdded()) / Board.SCORE_PER_GARBAGE - prevScore / Board.SCORE_PER_GARBAGE;
+        int newScore = prevScore + dropResult.getScoreAdded();
+        return Rules.calculateGarbage(prevScore, newScore);
     }
 }
