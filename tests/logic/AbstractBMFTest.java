@@ -1,5 +1,6 @@
 package logic;
 
+import org.testng.annotations.BeforeMethod;
 import tetris.*;
 import tetris.logic.Action;
 import tetris.logic.BestMoveFinder;
@@ -14,6 +15,12 @@ import static tetris.Move.*;
 public class AbstractBMFTest {
     protected BestMoveFinder bestMoveFinder;
     BestMoveFinderTest.TestBuilder testBuilder;
+
+    @BeforeMethod
+    void init() {
+        bestMoveFinder = BestMoveFinder.getBest();
+        testBuilder = new TestBuilder();
+    }
 
     public static Board newBoard(String s) {
         String[] a = s.split("\n");

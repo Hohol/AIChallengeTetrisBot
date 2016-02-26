@@ -18,12 +18,6 @@ public class BestMoveFinderTest extends AbstractBMFTest {
 
     public static final ParameterWeights HEIGHT_ONLY = ParameterWeights.zero().put(HEIGHT, 1).put(HEIGHT_POW, 1);
 
-    @BeforeMethod
-    void init() {
-        bestMoveFinder = BestMoveFinder.getBest();
-        testBuilder = new TestBuilder();
-    }
-
     @Test
     void test() {
         board("" +
