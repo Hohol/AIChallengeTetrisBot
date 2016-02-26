@@ -1,14 +1,17 @@
 package logic;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tetris.Board;
+import tetris.Move;
 import tetris.Tetrimino;
 import tetris.TetriminoWithPosition;
 import tetris.logic.BestMoveFinder;
 import tetris.logic.ParameterWeights;
 
+import java.util.List;
+
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static tetris.Move.*;
 import static tetris.TetriminoType.*;
 import static tetris.logic.EvaluationParameter.*;
@@ -1186,4 +1189,23 @@ public class BestMoveFinderTest extends AbstractBMFTest {
         checkAction(6, 0);
     }
 
+    @Test
+    void dontWasteSkip() {
+        board("" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........");
+        fallingType(S);
+        skipCnt(1);
+        List<Move> actualMoves = testBuilder.findBestMoves();
+        assertFalse(actualMoves.size() == 1 && actualMoves.get(0) == SKIP);
+    }
 }
