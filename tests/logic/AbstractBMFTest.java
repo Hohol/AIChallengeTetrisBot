@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static tetris.Move.*;
 
 public class AbstractBMFTest {
