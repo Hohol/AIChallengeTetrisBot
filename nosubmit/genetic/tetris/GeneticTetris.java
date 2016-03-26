@@ -10,10 +10,13 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static local.MatchResult.*;
+import static tetris.logic.EvaluationParameter.*;
 
 public class GeneticTetris {
 
     public static final int GAMES_CNT = 3;
+
+    private static EvaluationParameter[] parametersToMutate = EvaluationParameter.values();
 
     public static void main(String[] args) {
         Random rnd = new Random();
@@ -47,10 +50,10 @@ public class GeneticTetris {
 
             MatchResult matchResult = getMatchSeriesResult(matchMaker, first, second);
             if (matchResult == FIRST_WON) {
-                species.set(b, new CreatureAndWinCnt(child(first, rnd)));
+                species.set(b, new CreatureAndWinCnt(child(first, rnd, parametersToMutate)));
                 firstPair.winCnt++;
             } else if (matchResult == SECOND_WON) {
-                species.set(a, new CreatureAndWinCnt(child(second, rnd)));
+                species.set(a, new CreatureAndWinCnt(child(second, rnd, parametersToMutate)));
                 secondPair.winCnt++;
             }
             Collections.sort(species, Comparator.comparing(CreatureAndWinCnt::getWinCnt));
@@ -93,9 +96,9 @@ public class GeneticTetris {
         return parameterWeights;
     }
 
-    private static ParameterWeights child(ParameterWeights parameterWeights, Random rnd) {
+    private static ParameterWeights child(ParameterWeights parameterWeights, Random rnd, EvaluationParameter[] parametersToMutate) {
         ParameterWeights child = new ParameterWeights(parameterWeights);
-        EvaluationParameter parameter = EvaluationParameter.values()[rnd.nextInt(EvaluationParameter.values().length)];
+        EvaluationParameter parameter = parametersToMutate[rnd.nextInt(parametersToMutate.length)];
         child.put(parameter, child.get(parameter) + rnd.nextGaussian());
         return child;
     }
