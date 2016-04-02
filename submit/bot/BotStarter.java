@@ -122,7 +122,7 @@ public class BotStarter {
         );
         Board opponentBoard = getBoard(state.getOpponentField());
         Player opponent = state.getOpponent();
-        int possibleGarbage = possibleGarbageCalculator.calculatePossibleGarbage(opponentBoard, tetrimino, opponent.getPoints(), opponent.getCombo());
+        List<Integer> possibleGarbage = possibleGarbageCalculator.calculatePossibleGarbage(opponentBoard, tetrimino, opponent.getPoints(), opponent.getCombo());
         /*System.err.println("Opponent field:");
         System.err.println(opponentBoard);
         System.err.println("possible garbage = " + possibleGarbage);*/

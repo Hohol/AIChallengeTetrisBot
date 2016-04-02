@@ -19,7 +19,7 @@ class FullGameState {
         this.board = board;
     }
 
-    public void makeMove(TetriminoType curTetrimino, TetriminoType nextTetrimino, int possibleGarbage, BestMoveFinder player) {
+    public void makeMove(TetriminoType curTetrimino, TetriminoType nextTetrimino, List<Integer> possibleGarbage, BestMoveFinder player) {
         if (lost) {
             throw new RuntimeException();
         }

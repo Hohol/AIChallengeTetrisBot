@@ -1,5 +1,7 @@
 package tetris;
 
+import java.util.List;
+
 public class GameState {
     private final Board board;
     private final TetriminoType nextTetrimino;
@@ -7,7 +9,7 @@ public class GameState {
     private final int combo;
     private final int round;
     private final int skipCnt;
-    private final int possibleGarbage;
+    private final List<Integer> possibleGarbage; // doesn't actually belong here
 
     public GameState(
             Board board,
@@ -16,7 +18,7 @@ public class GameState {
             int combo,
             int round,
             int skipCnt,
-            int possibleGarbage
+            List<Integer> possibleGarbage
     ) {
         this.board = board;
         this.nextTetrimino = nextTetrimino;
@@ -73,7 +75,7 @@ public class GameState {
         return skipCnt;
     }
 
-    public int getPossibleGarbage() {
+    public List<Integer> getPossibleGarbage() {
         return possibleGarbage;
     }
 }

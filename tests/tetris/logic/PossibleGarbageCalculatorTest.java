@@ -4,6 +4,8 @@ import org.testng.annotations.Test;
 import tetris.Board;
 import tetris.TetriminoType;
 
+import java.util.Collections;
+
 import static org.testng.Assert.*;
 
 @Test
@@ -17,7 +19,7 @@ public class PossibleGarbageCalculatorTest {
                         "...xxxxxxx\n" +
                         "x.xxxxxxxx"
         );
-        assertEquals(4, possibleGarbageCalculator.calculatePossibleGarbage(board, TetriminoType.T, 2, 0));
+        assertEquals(possibleGarbageCalculator.calculatePossibleGarbage(board, TetriminoType.T, 2, 0), Collections.singletonList(4));
     }
 
     @Test
@@ -31,8 +33,8 @@ public class PossibleGarbageCalculatorTest {
                         "x.xxxxxxxx"
         );
         assertEquals(
-                1,
-                possibleGarbageCalculator.calculatePossibleGarbage(board, TetriminoType.L, 2, 1)
+                possibleGarbageCalculator.calculatePossibleGarbage(board, TetriminoType.L, 2, 1),
+                Collections.singletonList(1)
         );
     }
 

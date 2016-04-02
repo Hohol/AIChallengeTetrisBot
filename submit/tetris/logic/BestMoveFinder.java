@@ -68,7 +68,7 @@ public class BestMoveFinder {
         final int round = gameState.round;
         final double prevStateEval = gameState.prevStateEval;
         final int skipCnt = gameState.skipCnt;
-        final int possibleGarbage = gameState.possibleGarbage;
+        final List<Integer> possibleGarbage = gameState.possibleGarbage;
         final int linesCleared = gameState.linesCleared;
         if (board.collides(fallingTetrimino)) {
             return new MovesWithEvaluation(
@@ -81,7 +81,7 @@ public class BestMoveFinder {
 
         if (skipCnt > 0) {
             Board newBoard = board.skipMove(score, round).getBoard();
-            for (int i = 0; i < possibleGarbage; i++) {
+            for (int i = 0; i < possibleGarbage.get(0); i++) { // todo garbage
                 newBoard.addPenalty();
             }
             EvaluationState curEvaluation = evaluator.getEvaluation(newBoard, score, combo, prevStateEval, skipCnt - 1, 0, false, round);
@@ -96,7 +96,7 @@ public class BestMoveFinder {
                     round + 1,
                     curEvaluation.evaluation,
                     skipCnt - 1,
-                    0,
+                    Collections.singletonList(0), // todo garbage
                     linesCleared
             );
 
@@ -113,13 +113,13 @@ public class BestMoveFinder {
 
         for (TetriminoWithPosition finalPosition : availableFinalPositions) {
             DropResult dropResult = board.drop(finalPosition, PathFinder.getPrevMove(
-                            finalPosition,
-                            bfs[finalPosition.getTopRow()][finalPosition.getLeftCol()][finalPosition.getTetrimino().getOrientation()]),
+                    finalPosition,
+                    bfs[finalPosition.getTopRow()][finalPosition.getLeftCol()][finalPosition.getTetrimino().getOrientation()]),
                     combo,
                     round
             );
             Board newBoard = dropResult.getBoard();
-            for (int i = 0; i < possibleGarbage; i++) {
+            for (int i = 0; i < possibleGarbage.get(0); i++) { // todo garbage
                 newBoard.addPenalty();
             }
 
@@ -149,7 +149,7 @@ public class BestMoveFinder {
                     round + 1,
                     curEvaluation.evaluation,
                     newSkipCnt,
-                    0,
+                    Collections.singletonList(0), // todo garbage
                     newLinesCleared
             );
             if (nextTetrimino == null || curEvaluation.lost) {

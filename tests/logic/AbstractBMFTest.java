@@ -5,7 +5,9 @@ import tetris.*;
 import tetris.logic.Action;
 import tetris.logic.BestMoveFinder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -58,8 +60,12 @@ public class AbstractBMFTest {
         return pos == moves.size() || pos == moves.size() - 1 && moves.get(pos) == DROP;
     }
 
-    protected void possibleGarbage(int garbage) {
-        testBuilder.possibleGarbage = garbage;
+    protected void possibleGarbage(int... garbage) {
+        List<Integer> g = new ArrayList<>();
+        for (int v : garbage) {
+            g.add(v);
+        }
+        testBuilder.possibleGarbage = g;
     }
 
     protected void skipCnt(int skipCnt) {
@@ -112,7 +118,7 @@ public class AbstractBMFTest {
         int combo;
         int round = 1;
         int skipCnt;
-        int possibleGarbage;
+        List<Integer> possibleGarbage = Collections.singletonList(0);
 
         public void build() {
             if (fallingTetrimino == null) {

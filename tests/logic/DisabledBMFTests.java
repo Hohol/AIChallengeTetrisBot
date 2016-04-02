@@ -33,7 +33,7 @@ public class DisabledBMFTests extends AbstractBMFTest {
         checkForbidden(0, 0);
     }
 
-    @Test
+    @Test(enabled = false)
     void testBug() {
         board("" +
                 "....x.....\n" +

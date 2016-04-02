@@ -4,6 +4,8 @@ import tetris.Board;
 import tetris.TetriminoType;
 import tetris.TetriminoWithPosition;
 
+import java.util.List;
+
 public class GameState2 {
     final Board board;
     final TetriminoType nextTetrimino;
@@ -12,11 +14,11 @@ public class GameState2 {
     final int combo;
     final int round;
     final int skipCnt;
-    final int possibleGarbage;
+    final List<Integer> possibleGarbage;
     final double prevStateEval;
     final int linesCleared;
 
-    public GameState2(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round, double prevStateEval, int skipCnt, int possibleGarbage, int linesCleared) {
+    public GameState2(Board board, TetriminoWithPosition fallingTetrimino, TetriminoType nextTetrimino, int score, int combo, int round, double prevStateEval, int skipCnt, List<Integer> possibleGarbage, int linesCleared) {
         this.board = board;
         this.nextTetrimino = nextTetrimino;
         this.fallingTetrimino = fallingTetrimino;

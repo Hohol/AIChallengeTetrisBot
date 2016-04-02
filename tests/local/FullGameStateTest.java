@@ -8,9 +8,11 @@ import tetris.Move;
 import static tetris.Move.*;
 import static tetris.TetriminoType.*;
 
+import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -27,11 +29,7 @@ public class FullGameStateTest {
                         "...."
         ));
         state.combo = 1;
-        state.makeMove(
-                L,
-                null,
-                0, bmf(DOWN, DOWN)
-        );
+        makeMove(state, L, bmf(DOWN, DOWN));
         check(
                 state,
                 0, 0, false, 0, 0,
@@ -55,11 +53,7 @@ public class FullGameStateTest {
         ));
         state.combo = 2;
         state.score = 3;
-        state.makeMove(
-                L,
-                null,
-                0, bmf(DOWN, DOWN)
-        );
+        makeMove(state, L, bmf(DOWN, DOWN));
         check(
                 state,
                 5, 2, false, 0, 0,
@@ -83,11 +77,7 @@ public class FullGameStateTest {
                         "....\n" +
                         "x.xx"
         ));
-        state.makeMove(
-                T,
-                null,
-                0, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
-        );
+        makeMove(state, T, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW));
         check(
                 state,
                 5, 1, false, 1, 0,
@@ -113,11 +103,7 @@ public class FullGameStateTest {
                         "...x\n" +
                         "x.xx"
         ));
-        state.makeMove(
-                T,
-                null,
-                0, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
-        );
+        makeMove(state, T, bmf(DOWN, ROTATE_CCW, DOWN, DOWN, ROTATE_CCW));
         check(
                 state,
                 10, 1, false, 3, 1,
@@ -143,11 +129,7 @@ public class FullGameStateTest {
                         "..xx\n" +
                         "..xx"
         ));
-        state.makeMove(
-                O,
-                null,
-                0, bmf(DOWN, DOWN, DOWN, DOWN)
-        );
+        makeMove(state, O, bmf(DOWN, DOWN, DOWN, DOWN));
         check(
                 state,
                 18, 1, false, 6, 0,
@@ -171,11 +153,7 @@ public class FullGameStateTest {
                         "...x\n" +
                         "x..."
         ));
-        state.makeMove(
-                L,
-                null,
-                0, bmf()
-        );
+        makeMove(state, L, bmf());
         check(
                 state,
                 0, 0, false, 0, 0,
@@ -199,11 +177,7 @@ public class FullGameStateTest {
                         "x..."
         ));
         state.round = 15;
-        state.makeMove(
-                L,
-                null,
-                0, bmf()
-        );
+        makeMove(state, L, bmf());
         check(
                 state,
                 0, 0, false, 0, 0,
@@ -298,11 +272,7 @@ public class FullGameStateTest {
                         "x...\n" +
                         "x..."
         ));
-        state.makeMove(
-                O,
-                null,
-                0, bmf()
-        );
+        makeMove(state, O, bmf());
         check(
                 state,
                 0, 0, true, 0, 0,
@@ -325,11 +295,7 @@ public class FullGameStateTest {
                         "...x"
         ));
         state.round = 30;
-        state.makeMove(
-                O,
-                null,
-                0, bmf()
-        );
+        makeMove(state, O, bmf());
         check(
                 state,
                 0, 0, true, 0, 0,
@@ -373,11 +339,7 @@ public class FullGameStateTest {
                         "xxx.\n" +
                         "xxx."
         ));
-        state.makeMove(
-                O,
-                null,
-                0, bmf()
-        );
+        makeMove(state, O, bmf());
         check(
                 state,
                 0, 0, true, 0, 0,
@@ -399,11 +361,7 @@ public class FullGameStateTest {
                         "xxx.\n" +
                         "xxx."
         ));
-        state.makeMove(
-                O,
-                null,
-                0, null
-        );
+        makeMove(state, O, null);
         check(
                 state,
                 0, 0, true, 0, 0,
@@ -426,11 +384,7 @@ public class FullGameStateTest {
                         "...."
         ));
         state.score = 20;
-        state.makeMove(
-                O,
-                null,
-                0, bmf()
-        );
+        makeMove(state, O, bmf());
         check(
                 state,
                 20, 0, false, 0, 0,
@@ -452,11 +406,7 @@ public class FullGameStateTest {
                         "..xx\n" +
                         "oooo"
         ));
-        state.makeMove(
-                O,
-                null,
-                0, bmf()
-        );
+        makeMove(state, O, bmf());
         check(
                 state,
                 18, 1, false, 6, 0,
@@ -481,11 +431,7 @@ public class FullGameStateTest {
         state.combo = 3;
         state.score = 1;
         state.skipCnt = 2;
-        state.makeMove(
-                O,
-                null,
-                0, bmf(SKIP)
-        );
+        makeMove(state, O, bmf(SKIP));
         check(
                 state,
                 1, 3, false, 0, 1,
@@ -508,11 +454,7 @@ public class FullGameStateTest {
                         "...x\n" +
                         "x.xx"
         ));
-        state.makeMove(
-                T,
-                null,
-                0, bmf(ROTATE_CCW, DOWN, DOWN, ROTATE_CCW)
-        );
+        makeMove(state, T, bmf(ROTATE_CCW, DOWN, DOWN, ROTATE_CCW));
         check(
                 state,
                 10, 1, false, 3, 1,
@@ -541,11 +483,7 @@ public class FullGameStateTest {
                         ".xxx\n" +
                         ".xxx"
         ));
-        state.makeMove(
-                I,
-                null,
-                0, bmf(DOWN, ROTATE_CW, LEFT, LEFT, DROP)
-        );
+        makeMove(state, I, bmf(DOWN, ROTATE_CW, LEFT, LEFT, DROP));
         check(
                 state,
                 10, 1, false, 3, 1,
@@ -567,33 +505,31 @@ public class FullGameStateTest {
     @Test
     void endGame() {
         FullGameState state = new FullGameState(new Board("" +
-                        "..........\n" +
-                        "..........\n" +
-                        "xxxxxxx.xx\n" +
-                        "xxxxxxx.xx\n" +
-                        ".xxxxxxxxx\n" +
-                        "x.xxxxxxxx\n" +
-                        "xxx.xxxx.x\n" +
-                        ".xxxxxxxxx\n" +
-                        ".x.xxxxxxx\n" +
-                        "xxxxxx.xxx\n" +
-                        "x.xxxx.xxx\n" +
-                        "xxxxxx.xxx\n" +
-                        "xxxx.xxx.x\n" +
-                        "xxxxxxxx.x\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo\n" +
-                        "oooooooooo"
+                "..........\n" +
+                "..........\n" +
+                "xxxxxxx.xx\n" +
+                "xxxxxxx.xx\n" +
+                ".xxxxxxxxx\n" +
+                "x.xxxxxxxx\n" +
+                "xxx.xxxx.x\n" +
+                ".xxxxxxxxx\n" +
+                ".x.xxxxxxx\n" +
+                "xxxxxx.xxx\n" +
+                "x.xxxx.xxx\n" +
+                "xxxxxx.xxx\n" +
+                "xxxx.xxx.x\n" +
+                "xxxxxxxx.x\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo\n" +
+                "oooooooooo"
         ));
-        state.makeMove(
-                I, null, 0, bmf(RIGHT, RIGHT, ROTATE_CW)
-        );
+        makeMove(state, I, bmf(RIGHT, RIGHT, ROTATE_CW));
         check(
-                state, 3, 1, true, 1, 0, new Board(""+
+                state, 3, 1, true, 1, 0, new Board("" +
                         "..........\n" +
                         "..........\n" +
                         ".......x..\n" +
@@ -620,6 +556,14 @@ public class FullGameStateTest {
     }
 
     // --------------- utils
+
+    private void makeMove(FullGameState state, TetriminoType curTetrimino, BestMoveFinder bmf) {
+        state.makeMove(
+                curTetrimino,
+                null,
+                Collections.singletonList(0), bmf
+        );
+    }
 
     private void check(
             FullGameState state,

@@ -4,13 +4,12 @@ import tetris.Board;
 import tetris.Holes;
 import tetris.TetriminoType;
 import tetris.logic.BestMoveFinder;
-import tetris.logic.ParameterWeights;
 import tetris.logic.PossibleGarbageCalculator;
 
+import java.util.List;
 import java.util.Random;
 
 import static local.MatchResult.*;
-import static tetris.logic.EvaluationParameter.*;
 
 public class MatchMaker {
 
@@ -50,13 +49,13 @@ public class MatchMaker {
 
         while (true) {
             log("Round = " + firstGameState.round);
-            int possibleGarbageToFirst = possibleGarbageCalculator.calculatePossibleGarbage(
+            List<Integer> possibleGarbageToFirst = possibleGarbageCalculator.calculatePossibleGarbage(
                     secondGameState.board,
                     curTetrimino,
                     secondGameState.score,
                     secondGameState.combo
             );
-            int possibleGarbageToSecond = possibleGarbageCalculator.calculatePossibleGarbage(
+            List<Integer> possibleGarbageToSecond = possibleGarbageCalculator.calculatePossibleGarbage(
                     firstGameState.board,
                     curTetrimino,
                     firstGameState.score,
