@@ -15,14 +15,15 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package bot;
+package tetris;
 
-import field.CellType;
-import field.Field;
-import field.ShapeType;
-import moves.MoveType;
-import player.Player;
-import tetris.*;
+import samplebot.bot.BotParser;
+import samplebot.bot.BotState;
+import samplebot.field.CellType;
+import samplebot.field.Field;
+import samplebot.field.ShapeType;
+import samplebot.moves.MoveType;
+import samplebot.player.Player;
 import tetris.logic.BestMoveFinder;
 import tetris.logic.PossibleGarbageCalculator;
 

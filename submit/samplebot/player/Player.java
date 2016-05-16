@@ -15,21 +15,64 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package moves;
+package samplebot.player;
+
+import samplebot.field.Field;
 
 /**
- * MoveType class
+ * Player class
  * 
- * Enum for all possible move types
+ * Represents one of the players. Stores some
+ * data about them.
  * 
  * @author Jim van Eeden <jim@starapple.nl>
  */
 
-public enum MoveType {
-	DOWN, LEFT, RIGHT, TURNLEFT, TURNRIGHT, DROP, SKIP;
+public class Player {
+
+	private Field field;
+	private String name;
+	private int points;
+	private int combo;
+	private int skip;
+
+	public Player(String name) {
+		this.name = name;
+	}
 	
-	@Override
-	public String toString() {
-		return this.name().toLowerCase();
+	public void setField(Field field) {
+		this.field = field;
+	}
+	
+	public Field getField() {
+		return this.field;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	
+	public int getPoints() {
+		return this.points;
+	}
+	
+	public void setCombo(int combo) {
+		this.combo = combo;
+	}
+	
+	public int getCombo() {
+		return this.combo;
+	}
+
+	public void setSkip(int skip) {
+		this.skip = skip;
+	}
+
+	public int getSkip() {
+		return skip;
 	}
 }

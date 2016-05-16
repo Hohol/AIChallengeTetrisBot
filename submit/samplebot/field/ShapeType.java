@@ -15,64 +15,16 @@
 //    For the full copyright and license information, please view the LICENSE
 //    file that was distributed with this source code.
 
-package player;
-
-import field.Field;
+package samplebot.field;
 
 /**
- * Player class
+ * ShapeType class
  * 
- * Represents one of the players. Stores some
- * data about them.
+ * Enum for all possible Shape types
  * 
  * @author Jim van Eeden <jim@starapple.nl>
  */
 
-public class Player {
-
-	private Field field;
-	private String name;
-	private int points;
-	private int combo;
-	private int skip;
-
-	public Player(String name) {
-		this.name = name;
-	}
-	
-	public void setField(Field field) {
-		this.field = field;
-	}
-	
-	public Field getField() {
-		return this.field;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setPoints(int points) {
-		this.points = points;
-	}
-	
-	public int getPoints() {
-		return this.points;
-	}
-	
-	public void setCombo(int combo) {
-		this.combo = combo;
-	}
-	
-	public int getCombo() {
-		return this.combo;
-	}
-
-	public void setSkip(int skip) {
-		this.skip = skip;
-	}
-
-	public int getSkip() {
-		return skip;
-	}
+public enum ShapeType {
+	I, J, L, O, S, T, Z, NONE;
 }
