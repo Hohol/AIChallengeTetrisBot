@@ -150,12 +150,6 @@ public class Evaluator {
                 }
             }
         }
-        /*for (int row = 0; row < board.getHeight(); row++) {
-            for (int col = 0; col < board.getWidth(); col++) {
-                System.out.print(aboveBadFactor[row][col] + " ");
-            }
-            System.out.println();
-        }/**/
         return r;
     }
 

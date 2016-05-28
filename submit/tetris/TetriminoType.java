@@ -41,7 +41,7 @@ public enum TetriminoType {
 
     public final boolean[][] b;
 
-    private TetriminoType(String s) {
+    TetriminoType(String s) {
         String[] a = s.split("\n");
         b = new boolean[a.length][a[0].length()];
         for (int i = 0; i < b.length; i++) {

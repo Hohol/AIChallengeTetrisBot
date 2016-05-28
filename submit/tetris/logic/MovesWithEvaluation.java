@@ -6,11 +6,11 @@ import java.util.List;
 
 public class MovesWithEvaluation {
     private final List<Move> moves;
-    private final double state;
+    private final double evaluation;
 
-    public MovesWithEvaluation(List<Move> moves, double state) {
+    public MovesWithEvaluation(List<Move> moves, double evaluation) {
         this.moves = moves;
-        this.state = state;
+        this.evaluation = evaluation;
     }
 
     public List<Move> getMoves() {
@@ -18,14 +18,14 @@ public class MovesWithEvaluation {
     }
 
     public double getEvaluation() {
-        return state;
+        return evaluation;
     }
 
     @Override
     public String toString() {
         return "ActionWithEvaluation{" +
                 "moves=" + moves +
-                ", state=" + state +
+                ", evaluation=" + evaluation +
                 '}';
     }
 }

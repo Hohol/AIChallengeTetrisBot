@@ -428,32 +428,6 @@ public class BestMoveFinderTest extends AbstractBMFTest {
     }
 
     @Test
-    void testScore() {
-        board("" +
-                "....x.....\n" +
-                "....x.....\n" +
-                "....x.....\n" +
-                "....x.....\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                "..........\n" +
-                ".xxxxxxxxx\n" +
-                ".xxxxxxxxx");
-        checkAction(0, 0);
-    }
-
-    @Test
     void testEndGame() {
         board("" +
                 "..........\n" +

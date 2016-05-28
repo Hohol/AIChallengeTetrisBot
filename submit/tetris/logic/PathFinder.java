@@ -40,7 +40,7 @@ class PathFinder {
         q.add(t);
         while (!q.isEmpty()) {
             t = q.remove();
-            List<TetriminoWithPosition> nextPositions = new ArrayList<>(); // todo not recreate?
+            List<TetriminoWithPosition> nextPositions = new ArrayList<>();
             nextPositions.add(t.rotateCW());
             nextPositions.add(t.rotateCCW());
             nextPositions.add(t.moveLeft());
